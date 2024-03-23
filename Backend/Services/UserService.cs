@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Backend.Models;
 
 namespace Backend.Services
 {
@@ -31,7 +32,7 @@ namespace Backend.Services
 
         public bool doesUserExist(string username)
         {
-            query = "SELECT CASE WHEN EXISTS (SELECT 1 FROM Roles WHERE [Description] = '" + username + "')  THEN 1 ELSE 0 END;";
+            query = @"SELECT CASE WHEN EXISTS (SELECT 1 FROM Users WHERE [Username] = '" + username + "')  THEN 1 ELSE 0 END;";
             SqlDataReader reader = executeQuery();
 
             int flag = -1;
@@ -49,6 +50,22 @@ namespace Backend.Services
             {
                 return false;
             }
+        }
+
+        public User createUser(User user)
+        {
+            query = @"INSERT INTO Users ([FirstName], [LastName], [Username], [Email], [Password], [RoleId]) VALUES ('" + user.FirstName + "', '" + user.LastName +"', '" + user.Username + "', '" + user.Email + "', '" + user.Password + "', " + user.RoleId + ");" +
+                     "SELECT * FROM Users WHERE Id = SCOPE_IDENTITY()";
+            SqlDataReader reader = executeQuery();
+
+            User new_user = new User();
+
+            while (reader.Read())
+            {
+                new_user = new User() { Id = reader.GetInt32(0), FirstName = reader.GetString(1), LastName = reader.GetString(2), Username = reader.GetString(3), Email = reader.GetString(4), Password = reader.GetString(5), RoleId = reader.GetInt32(6) } ;
+            }
+
+            return new_user;
         }
 
     }

@@ -21,5 +21,12 @@ namespace Backend.Controllers
         {
             return _userService.doesUserExist(username);
         }
+
+        [HttpPost]
+        [Route("api/User/Add")]
+        public User UsernameCheck([FromBody] User user)
+        {
+            return _userService.createUser(user);
+        }
     }
 }
