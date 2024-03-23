@@ -4,6 +4,6 @@
 
 .vs/
 obj/
-/bin/
+bin/
 .git/
 .github/
