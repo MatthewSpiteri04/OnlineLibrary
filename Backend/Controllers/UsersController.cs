@@ -10,7 +10,7 @@ namespace Backend.Controllers
 
         [HttpGet]
         [Route("api/User/Roles")]
-        public IEnumerable<string> Get()
+        public IEnumerable<string> GetRoles()
         {
             return _userService.getRoles();
         }
@@ -22,9 +22,21 @@ namespace Backend.Controllers
             return _userService.doesUserExist(username);
         }
 
+        [HttpGet]
+        [Route("api/User/Login/{username}/{password}")]
+        public User Login(string username, string password)
+        {
+            Login login = new Login();
+            login.Username = username;
+            login.Password = password;
+
+            return _userService.loginUser(login);
+        }
+
+
         [HttpPost]
         [Route("api/User/Add")]
-        public User UsernameCheck([FromBody] User user)
+        public User CreateUser([FromBody] User user)
         {
             return _userService.createUser(user);
         }

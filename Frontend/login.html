@@ -1,0 +1,16 @@
+<html lang="en" ng-app="OnlineLibrary">
+    <head>
+        <title>Online Library</title>
+        <script src="app\lib\angular.min.js"></script>
+        <script src="app\app.js"></script>
+    </head>
+    <body>
+        <div ng-controller="users-controller">
+            <form ng-submit="login(loginForm)">
+                <input type="text" placeholder="Username" ng-model="loginForm.username"><br>
+                <input type="text" placeholder="Password" ng-model="loginForm.password"><br>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </body>
+</html>

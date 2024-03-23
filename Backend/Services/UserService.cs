@@ -68,5 +68,21 @@ namespace Backend.Services
             return new_user;
         }
 
+        public User loginUser(Login loginData)
+        { 
+            query = "SELECT * FROM Users WHERE [Username] = '" + loginData.Username + "' AND  [Password] = '" + loginData.Password + "';";
+
+            SqlDataReader reader = executeQuery();
+
+            User user = new User();
+
+            while (reader.Read())
+            {
+                user = new User() { Id = reader.GetInt32(0), FirstName = reader.GetString(1), LastName = reader.GetString(2), Username = reader.GetString(3), Email = reader.GetString(4), Password = reader.GetString(5), RoleId = reader.GetInt32(6) };
+            }
+
+            return user;
+        }
+
     }
 }
