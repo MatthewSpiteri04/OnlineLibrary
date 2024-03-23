@@ -1,0 +1,20 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/OnlineLibrary/v17
+/Backend/OnlineLibraryBackend/obj/Debug/net8.0/OnlineLibraryBackend.AssemblyInfo.cs
+/Backend/OnlineLibraryBackend/obj/Debug/net8.0/OnlineLibraryBackend.AssemblyInfoInputs.cache
+/Backend/OnlineLibraryBackend/obj/Debug/net8.0/OnlineLibraryBackend.assets.cache
+/Backend/OnlineLibraryBackend/obj/Debug/net8.0/OnlineLibraryBackend.GeneratedMSBuildEditorConfig.editorconfig
+/Backend/OnlineLibraryBackend/obj/OnlineLibraryBackend.csproj.nuget.dgspec.json
+/Backend/OnlineLibraryBackend/obj/project.assets.json
+/Backend/OnlineLibraryBackend/obj/project.nuget.cache
+/Backend/.vs/Backend/DesignTimeBuild/.dtbcache.v2
+/Backend/.vs/Backend/FileContentIndex/28438537-ee73-4850-a529-530f2f125943.vsidx
+/Backend/.vs/Backend/FileContentIndex/3d6c2f86-d8fd-46ec-9534-b2603001fdbf.vsidx
+/Backend/.vs/Backend/FileContentIndex/6f8b9b92-ffc9-4b8d-831e-9bd3ce9ecb93.vsidx
+/Backend/.vs/Backend/FileContentIndex/add3f1e6-5f0d-47b2-acfc-fb0cf5cc4226.vsidx
+/Backend/.vs/Backend/FileContentIndex/f6123f0e-8492-411a-8d15-63854dc3fc13.vsidx
+/Backend/.vs/OnlineLibraryBackend/FileContentIndex/55abad88-7460-42d6-a346-bb89de973731.vsidx
+/Backend/.vs/OnlineLibraryBackend/FileContentIndex/7982a713-763c-4f07-abd7-ec0bf95ea9eb.vsidx
