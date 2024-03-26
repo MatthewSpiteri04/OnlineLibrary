@@ -3,14 +3,35 @@
         <title>Online Library</title>
         <script src="app\lib\angular.min.js"></script>
         <script src="app\app.js"></script>
+        <script src="https://kit.fontawesome.com/39935beceb.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="assets/css/main.css">
+        <link rel = "stylesheet" href = "https://fonts.googleapis.com/css2?family=Lato">
+        <link rel = "stylesheet" href = "https://fonts.googleapis.com/css2?family=PT+Sans">
     </head>
-    <body>
-        <div ng-controller="users-controller">
-            <form ng-submit="doesUserExist(loginForm)">
-                <input type="text" placeholder="Username" ng-model="loginForm.username"><br>
-                <input type="text" placeholder="Password" ng-model="loginForm.password"><br>
+   
+        <div class="Login-Container" ng-controller="users-controller">
+            <div class = "Login">
+                <h1>Login to Online Library</h1>
+            <form class="Login-Form" classng-submit="doesUserExist(loginForm)">
+               
+                <h2>Email</h2>
+                <input type="text" placeholder="Email" ng-model="loginForm.username"><br>
+                <div class="Password">
+                    
+                    <input type="text" placeholder="Password" ng-model="loginForm.password">
+                    <i class="fa-solid fa-eye-slash"></i>
+                    
+                </div>
                 <button type="submit">Login</button>
+                
+               
             </form>
+            <div class = "SignUp">
+                <h3>Don't have an account yet? </h3>
+                <button type="submit">Login</button>
+            </div>
         </div>
-    </body>
+        </div>
+        
+    
 </html>
