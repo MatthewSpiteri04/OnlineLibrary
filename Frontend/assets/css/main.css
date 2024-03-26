@@ -1,0 +1,38 @@
+body, html {
+    margin: 0;
+}
+
+.header{
+    background: #BA0C2F;
+    color: white;
+    font-family: 'PT Sans';
+    display: flex;
+    padding: 10px 50px 10px 10px;
+}
+
+.header h1{
+    font-weight: 600;
+    font-size: 45px;
+    align-self: center;
+    margin: 10px;
+}
+
+.header-element {
+    flex: 1;
+    display: flex;
+} 
+
+.header a{
+    text-decoration: none;
+    color: white;
+    align-self: center;
+    margin-left: auto;
+    font-size: 20px;
+}
+
+.um-logo{
+    width: 80px; 
+    height: 80px; 
+    align-self: center;
+    margin: 15px;
+}
