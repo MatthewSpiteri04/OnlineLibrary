@@ -4,7 +4,7 @@ var OnlineLibrary = angular.module('OnlineLibrary', []);
 OnlineLibrary.controller('users-controller', ['$scope', function($scope){
     $scope.currentUser = {};
 
-    $scope.login = function(loginForm) {
+    $scope.doesUserExist = function(loginForm) {
         $scope.userFound = false;
     
         fetch('https://localhost:44311/api/User/Exists/'+ loginForm.username)
@@ -18,7 +18,7 @@ OnlineLibrary.controller('users-controller', ['$scope', function($scope){
         });
     };
 
-    $scope.loginUser = function(userFound, loginForm) {
+    $scope.login = function(userFound, loginForm) {
         if (userFound) {
             fetch('https://localhost:44311/api/User/Login/' + loginForm.username + '/' + loginForm.password)
             .then(response => {
@@ -31,6 +31,4 @@ OnlineLibrary.controller('users-controller', ['$scope', function($scope){
             })
         };
     };
-    
-
 }]);
