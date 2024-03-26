@@ -1,33 +1,24 @@
 var OnlineLibrary = angular.module('OnlineLibrary', []);
 
 // USERS CONTROLLER
-OnlineLibrary.controller('users-controller', ['$scope', function($scope){
+OnlineLibrary.controller('users-controller', ['$scope', '$http', function($scope, $http){
     $scope.currentUser = {};
 
     $scope.doesUserExist = function(loginForm) {
         $scope.userFound = false;
-    
-        fetch('https://localhost:44311/api/User/Exists/'+ loginForm.username)
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            $scope.$apply(() => {
-                $scope.loginUser(data, loginForm);
-            });
-        });
+
+        $http.get('https://localhost:44311/api/User/Exists/'+ loginForm.username)
+            .then(data => {
+                $scope.login(data, loginForm);
+            })
     };
 
     $scope.login = function(userFound, loginForm) {
         if (userFound) {
-            fetch('https://localhost:44311/api/User/Login/' + loginForm.username + '/' + loginForm.password)
-            .then(response => {
-                return response.json();
-            })
+            $http.get('https://localhost:44311/api/User/Login/' + loginForm.username + '/' + loginForm.password)
             .then(data => {
-                $scope.$apply(() => {
-                    $scope.currentUser = data;
-                });
+                $scope.currentUser = data;
+                console.log($scope.currentUser)
             })
         };
     };
