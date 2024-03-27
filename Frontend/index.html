@@ -1,10 +1,15 @@
 <html lang="en" ng-app="OnlineLibrary">
     <head>
         <title>Online Library</title>
+        <link rel="stylesheet" href="assets/css/main.css" type="text/css">
         <script src="app\lib\angular.min.js"></script>
         <script src="app\lib\angular-route.min.js"></script>
         <script src="app\app.js"></script>
+        <script src="https://kit.fontawesome.com/39935beceb.js" crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Lato" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=PT+Sans" rel="stylesheet">
     </head>
+    <header ng-include="'assets/elements/header.html'"></header>
     <body>
         <main ng-view></main>
     </body>

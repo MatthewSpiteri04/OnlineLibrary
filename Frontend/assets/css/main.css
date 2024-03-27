@@ -1,0 +1,166 @@
+.Login-Container {
+    display: flex;
+    justify-content: center;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1%;
+    border: 5px;
+    border-color: #BA0C2F;
+    border-style: solid;
+    border-radius: 10px;
+
+    padding-left: 3%;
+    padding-right: 3%;
+    
+
+}
+
+.Login-Form{
+    margin-bottom: 0;
+}
+
+.Login {
+
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-family: "PT Sans";
+}
+
+.Login > h1 {
+    margin-bottom: 5px;
+    font-weight: bolder;
+}
+
+
+.Login-Form > h2{
+    margin-bottom: 5px;
+}
+
+.Login-form>input {
+    font-weight: lighter;
+    font-family: "Lato", "Calibri";
+    padding: 3px;
+    width: 100%;
+}
+
+
+
+.Password{
+    width: 100%;
+}
+
+.Password > input {
+    width: 100%;
+    padding: 3px;
+    margin-bottom: 25px;
+}
+
+.Password > button{
+    float: right;
+    margin-right: 5px;
+    margin-top: -45px;
+    position: relative;
+    background: none;
+    border: none;
+
+}
+#eye:hover{
+    cursor: pointer;
+
+}
+
+.Login-Form >  button {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    background-color: #BA0C2F;
+    color: white;
+    padding: 10px;
+    border: none;
+    width: 100px;
+    border-radius: 7px;
+    font-size: 1.17em;
+    font-weight: bolder;
+    
+   
+}
+
+.Login-Form >  button:hover{
+    cursor: pointer;
+}
+
+.SignUp {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+}
+
+.SignUp > h3 {
+    margin-right: 15px;
+}
+
+
+.SignUp > a{
+    text-decoration: none;
+    color: #BA0C2F;
+    font-weight: bolder;
+    font-size: 1.17em ;  /*Online Library text */
+    
+   
+
+}
+
+body,
+html {
+    margin: 0;
+}
+
+.header {
+    background: #BA0C2F;
+    color: white;
+    font-family: 'PT Sans';
+    display: flex;
+    padding: 10px 50px 10px 10px;
+}
+
+
+
+.header-element {
+    
+    display: flex;
+    padding: 10px;
+    
+}
+
+/*Online Library text */
+.header-element > a{
+    font-weight: 600;
+    font-size: 45px;
+    align-self: center;
+  
+    text-decoration: none;
+    
+    color: white;
+}
+
+/*Login text > to select direct child elements*/
+.header > a {
+    text-decoration: none;
+    color: white;
+    align-self: center;
+    margin-left: auto;
+    font-size: 20px;
+}
+
+.um-logo {
+    width: 80px;
+    height: 80px;
+    align-self: center;
+    margin-right: 15px;
+    vertical-align: middle; /* Vertically align image middle */
+
+}
