@@ -1,4 +1,18 @@
-var OnlineLibrary = angular.module('OnlineLibrary', []);
+var OnlineLibrary = angular.module('OnlineLibrary', ['ngRoute']);
+
+OnlineLibrary.config(['$routeProvider', function($routeProvider) {
+    $routeProvider
+    .when('/home', {
+        templateUrl:'views/home.html'
+    })
+    .when('/login', {
+        templateUrl:'views/login.html',
+        controller: 'users-controller'
+    })
+    .otherwise({
+        redirectTo: '/home'
+    });
+}]);
 
 // USERS CONTROLLER
 OnlineLibrary.controller('users-controller', ['$scope', '$http', function($scope, $http){
