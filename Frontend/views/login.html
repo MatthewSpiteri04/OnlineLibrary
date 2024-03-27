@@ -1,0 +1,28 @@
+<div class="Login-Container" ng-controller="users-controller">
+    <div class="Login">
+        <h1>Login to Online Library</h1>
+        <form class="Login-Form" classng-submit="doesUserExist(loginForm)">
+            <h2>Email</h2>
+            <input
+            type="text"
+            placeholder="Email"
+            ng-model="loginForm.username"
+            /><br />
+            <h2>Password</h2>
+            <div class="Password">
+            <input
+                type="text"
+                placeholder="Password"
+                ng-model="loginForm.password"
+            />
+            <button id="eye"><i class="fa-solid fa-eye-slash"></i></button>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <div class="SignUp">
+            <h3>Don't have an account yet?</h3>
+            <a href="sign_up.html">Sign Up</a>
+        </div>
+    </div>
+</div>
+
