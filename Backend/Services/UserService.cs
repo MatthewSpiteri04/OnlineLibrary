@@ -30,9 +30,9 @@ namespace Backend.Services
             return roles;
         }
 
-        public bool doesUserExist(string username)
+        public bool doesUserExist(string login)
         {
-            query = @"SELECT CASE WHEN EXISTS (SELECT 1 FROM Users WHERE [Username] = '" + username + "')  THEN 1 ELSE 0 END;";
+            query = @"SELECT CASE WHEN EXISTS (SELECT 1 FROM Users WHERE [Username] = '" + login + "' OR [Email] = '" + login + "') THEN 1 ELSE 0 END;";
             SqlDataReader reader = executeQuery();
 
             int flag = -1;
@@ -54,8 +54,20 @@ namespace Backend.Services
 
         public User createUser(User user)
         {
-            query = @"INSERT INTO Users ([FirstName], [LastName], [Username], [Email], [Password], [RoleId]) VALUES ('" + user.FirstName + "', '" + user.LastName +"', '" + user.Username + "', '" + user.Email + "', '" + user.Password + "', " + user.RoleId + ");" +
-                     "SELECT * FROM Users WHERE Id = SCOPE_IDENTITY()";
+            query = query = @"DECLARE @Result AS INT = -1;
+
+                              IF EXISTS (SELECT 1 FROM Users WHERE [Username] = '" + user.Username + @"' OR [Email] = '" + user.Username + @"')
+                                  SET @Result = 1;
+                              ELSE IF EXISTS (SELECT 1 FROM Users WHERE [Username] = '" + user.Email + @"' OR [Email] = '" + user.Email + @"')
+                                  SET @Result = 1;
+                              ELSE
+                                  SET @Result = 0;
+
+                              INSERT INTO Users ([FirstName], [LastName], [Username], [Email], [Password], [RoleId]) 
+                              VALUES ('" + user.FirstName + @"', '" + user.LastName + @"', '" + user.Username + @"', '" + user.Email + @"', '" + user.Password + @"', " + user.RoleId + @");
+
+                              SELECT * FROM Users WHERE Id = SCOPE_IDENTITY()";
+
             SqlDataReader reader = executeQuery();
 
             User new_user = new User();
@@ -68,9 +80,9 @@ namespace Backend.Services
             return new_user;
         }
 
-        public User loginUser(Login loginData)
+        public User loginUser(LoginData loginData)
         { 
-            query = "SELECT * FROM Users WHERE [Username] = '" + loginData.Username + "' AND  [Password] = '" + loginData.Password + "';";
+            query = "SELECT * FROM Users WHERE ([Username] = '" + loginData.Login + "' AND  [Password] = '" + loginData.Password + "') OR ([Email] = '" + loginData.Login + "' AND  [Password] = '" + loginData.Password + "');";
 
             SqlDataReader reader = executeQuery();
 

@@ -1,4 +1,5 @@
-﻿using Backend.Models;
+﻿using System.Diagnostics;
+using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,21 +17,18 @@ namespace Backend.Controllers
         }
 
         [HttpGet]
-        [Route("api/User/Exists/{username}")]
-        public bool UsernameCheck(string username)
+        [Route("api/User/Exists/{login}")]
+        public bool UsernameCheck(string login)
         {
-            return _userService.doesUserExist(username);
+            return _userService.doesUserExist(login);
         }
 
-        [HttpGet]
-        [Route("api/User/Login/{username}/{password}")]
-        public User Login(string username, string password)
+        [HttpPost]
+        [Route("api/User/Login")]
+        public User Login([FromBody]LoginData loginInfo)
         {
-            Login login = new Login();
-            login.Username = username;
-            login.Password = password;
-
-            return _userService.loginUser(login);
+            Debug.WriteLine(loginInfo);
+            return _userService.loginUser(loginInfo);
         }
 
 

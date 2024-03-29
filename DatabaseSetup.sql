@@ -22,7 +22,7 @@ CREATE TABLE Users(
 	FirstName NVARCHAR(50),
 	LastName NVARCHAR(50),
 	Username NVARCHAR(100) UNIQUE,
-	Email NVARCHAR(128),
+	Email NVARCHAR(128) UNIQUE,
 	[Password] NVARCHAR(100),
 	RoleId INT
 	FOREIGN KEY (RoleId) REFERENCES Roles(Id)
@@ -93,3 +93,7 @@ CREATE TABLE ContributorToDocument (
 INSERT INTO Roles VALUES ('Public', 0, 0), ('Student', 1, 0), ('Librarian', 1, 1);
 
 INSERT INTO AttributeTypes VALUES ('Number'), ('Text'), ('True/False'), ('Date');
+
+INSERT INTO Users VALUES ('Matthew', 'Spiteri', 'Spim04', 'matthewspiteri@gmail.com', 'matt04', 1);
+INSERT INTO Users VALUES ('Gorg', 'Borg', 'Gborg', 'gorgborg@gmail.com', 'gb05', 2);
+INSERT INTO Users VALUES ('Chris', 'Calleja', 'Cc04', 'chriscalleja@gmail.com', 'chris04', 3);

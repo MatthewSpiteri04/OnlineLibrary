@@ -24,8 +24,7 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', function($scope
 
     $scope.doesUserExist = function(loginForm) {
         $scope.userFound = false;
-
-        $http.get('https://localhost:44311/api/User/Exists/'+ loginForm.username)
+        $http.get('https://localhost:44311/api/User/Exists/'+ loginForm.login)
             .then(data => {
                 $scope.login(data, loginForm);
             })
@@ -33,10 +32,9 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', function($scope
 
     $scope.login = function(userFound, loginForm) {
         if (userFound) {
-            $http.get('https://localhost:44311/api/User/Login/' + loginForm.username + '/' + loginForm.password)
-            .then(data => {
-                $scope.currentUser = data;
-                console.log($scope.currentUser)
+            $http.post('https://localhost:44311/api/User/Login', {login: loginForm.login, password: loginForm.password})
+            .then(response => {
+                $scope.currentUser = response.data;
             })
         };
     };
