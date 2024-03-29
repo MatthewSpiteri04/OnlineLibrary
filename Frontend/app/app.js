@@ -25,8 +25,8 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', function($scope
     $scope.doesUserExist = function(loginForm) {
         $scope.userFound = false;
         $http.get('https://localhost:44311/api/User/Exists/'+ loginForm.login)
-            .then(data => {
-                $scope.login(data, loginForm);
+            .then(response => {
+                $scope.login(response.data, loginForm);
             })
     };
 
@@ -34,8 +34,46 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', function($scope
         if (userFound) {
             $http.post('https://localhost:44311/api/User/Login', {login: loginForm.login, password: loginForm.password})
             .then(response => {
-                $scope.currentUser = response.data;
-            })
+                if (response.status == 200) {
+                    $scope.currentUser = response.data;
+                }
+                else {
+                    console.log('NOT FOUND');
+                }
+                
+            });
+        }
+        else {
+            console.log('NOT FOUND');
         };
+    };
+
+    $scope.signUpUser = function(signUpForm) {
+        request = {
+            firstName: signUpForm.firstName,
+            lastName: signUpForm.lastName,
+            email: signUpForm.email,
+            username: signUpForm.username,
+            password: signUpForm.password,
+            passwordConfirmation: signUpForm.passwordConfirmation
+        }
+        console.log(request);
+
+        if (request.password == request.passwordConfirmation) {
+            $http.post('https://localhost:44311/api/User/Add', request)
+            .then(response => {
+                if (response.status == 200) {
+                    $scope.currentUser = response.data;
+                }
+                else {
+                    console.log('FAILED TO CREATE USER');
+                }
+            });
+        }
+        else {
+            console.log("PASSWORDS DON'T MATCH");
+        }
+
+        
     };
 }]);
