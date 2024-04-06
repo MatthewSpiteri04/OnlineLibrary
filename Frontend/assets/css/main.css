@@ -1,119 +1,3 @@
-.Login-Container {
-    display: flex;
-    justify-content: center;
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 1%;
-    border: 5px;
-    border-color: #BA0C2F;
-    border-style: solid;
-    border-radius: 10px;
-
-    padding-left: 3%;
-    padding-right: 3%;
-    
-
-}
-
-.Login-Form{
-    margin-bottom: 0;
-}
-
-.Login {
-
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    font-family: "PT Sans";
-}
-
-.Login > h1 {
-    margin-bottom: 5px;
-    font-weight: bolder;
-}
-
-
-.Login-Form > h2{
-    margin-bottom: 5px;
-}
-
-.Login-form>input {
-    font-weight: lighter;
-    font-family: "Lato", "Calibri";
-    padding: 3px;
-    width: 100%;
-}
-
-
-
-.Password{
-    width: 100%;
-}
-
-.Password > input {
-    width: 100%;
-    padding: 3px;
-    margin-bottom: 25px;
-}
-
-.Password > button{
-    float: right;
-    margin-right: 5px;
-    margin-top: -45px;
-    position: relative;
-    background: none;
-    border: none;
-
-}
-#eye:hover{
-    cursor: pointer;
-
-}
-
-.Login-Form >  button {
-    display: flex;
-    margin-left: auto;
-    margin-right: auto;
-    justify-content: center;
-    background-color: #BA0C2F;
-    color: white;
-    padding: 10px;
-    border: none;
-    width: 100px;
-    border-radius: 7px;
-    font-size: 1.17em;
-    font-weight: bolder;
-    
-   
-}
-
-.Login-Form >  button:hover{
-    cursor: pointer;
-}
-
-.SignUp {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    
-}
-
-.SignUp > h3 {
-    margin-right: 15px;
-}
-
-
-.SignUp > a{
-    text-decoration: none;
-    color: #BA0C2F;
-    font-weight: bolder;
-    font-size: 1.17em ;  /*Online Library text */
-    
-   
-
-}
-
 body,
 html {
     margin: 0;
@@ -164,3 +48,144 @@ html {
     vertical-align: middle; /* Vertically align image middle */
 
 }
+
+.Login-Container,.Sign-Up-Container {
+    display: flex;
+    justify-content: center;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1%;
+    border: 5px;
+    border-color: #BA0C2F;
+    border-style: solid;
+    border-radius: 10px;
+
+    padding-left: 3%;
+    padding-right: 3%;
+    
+
+}
+
+.Login-Form, .Sign-Up{
+    margin-bottom: 0;
+}
+
+.Login, .Sign-Up {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: "PT Sans";
+    padding-right: 5px;
+}
+
+.Login > h1, .Sign-Up > h1 {
+    margin-bottom: 5px;
+    font-weight: bolder;
+}
+
+
+.Login-Form > h2, .Sign-Up-Form > h2{
+    margin-bottom: 5px;
+}
+
+.Login-form>input, .Sign-Up-Form > input {
+    font-weight: lighter;
+    font-family: "Lato", "Calibri";
+    padding: 3px;
+    width: 100%;
+}
+
+
+
+.Password, .Password-Confirmation{
+    width: 83%;
+}
+
+.Password > input, .Password-Confirmation > input {
+    width: 100%;
+    padding: 3px;
+    margin-bottom: 25px;
+}
+
+.Password > button, .Password-Confirmation > button{
+    float: right;
+    margin-right: 5px;
+    margin-top: -45px;
+    position: relative;
+    background: none;
+    border: none;
+
+}
+#eye:hover{
+    cursor: pointer;
+
+}
+
+.Login-Form >  button, .Sign-Up > button {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5%;
+    justify-content: center;
+    background-color: #BA0C2F;
+    color: white;
+    padding: 10px;
+    border: none;
+    width: 100px;
+    border-radius: 7px;
+    font-size: 1.17em;
+    font-weight: bolder;
+    
+   
+}
+
+.Login-Form >  button:hover, .Sign-Up > button:hover{
+    cursor: pointer;
+}
+
+.SignUp {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+}
+
+.SignUp > h3 {
+    margin-right: 15px;
+}
+
+
+.SignUp > a{
+    text-decoration: none;
+    color: #BA0C2F;
+    font-weight: bolder;
+    font-size: 1.17em ;  /*Online Library text */
+    
+   
+
+}
+
+.Sign-Up-Form{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 5%;
+    align-items: flex-start;
+    
+
+    
+}
+
+.Left-Column {
+    margin-right: 50px; /* Adjust as needed */
+    margin-left: 25px;
+  }
+  
+  
+  
+
+
+
