@@ -17,6 +17,7 @@ html {
     
     display: flex;
     padding: 10px;
+    margin-left: 1.8%;
     
 }
 
@@ -55,7 +56,7 @@ html {
     width: fit-content;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 1%;
+    margin-top: 7%;
     border: 5px;
     border-color: #BA0C2F;
     border-style: solid;
@@ -98,19 +99,21 @@ html {
     width: 100%;
 }
 
-
+.Password-login{
+    width: 100%;
+}
 
 .Password, .Password-Confirmation{
     width: 83%;
 }
 
-.Password > input, .Password-Confirmation > input {
+.Password-login > input, .Password > input, .Password-Confirmation > input {
     width: 100%;
     padding: 3px;
     margin-bottom: 25px;
 }
 
-.Password > button, .Password-Confirmation > button{
+.Password-login > button, .Password > button, .Password-Confirmation > button{
     float: right;
     margin-right: 5px;
     margin-top: -45px;
@@ -130,6 +133,7 @@ html {
     margin-right: auto;
     margin-bottom: 5%;
     justify-content: center;
+    
     background-color: #BA0C2F;
     color: white;
     padding: 10px;
@@ -181,11 +185,56 @@ html {
 
 .Left-Column {
     margin-right: 50px; /* Adjust as needed */
-    margin-left: 25px;
+    margin-left: 30px;
   }
   
   
-  
+.Sidebar-Container{
+    
+    display: flex;
+    flex-direction: column;
+    width: fit-content ;
+    position: absolute;
+    height: 100%;
+    
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+}
+
+.Sidebar{
+    margin-top: 10px;
+    padding: 20px;
+    font-family: 'PT Sans';
+   
+}
 
 
+.Sidebar a{
+    text-decoration: none;
+    color: #BA0C2F;
+}
 
+.link{
+    display: flex;
+    flex-direction: column;
+    align-items: center ;
+    margin-bottom: 50px;
+    
+    
+}
+
+.link-lib{
+    display: flex;
+    flex-direction: column;
+    align-items: center ;
+    margin-bottom: 20px;
+    
+    
+}
+
+
+.home{
+    display: flex;
+    justify-content: center;
+    
+}
