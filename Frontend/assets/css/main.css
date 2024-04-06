@@ -98,19 +98,21 @@ html {
     width: 100%;
 }
 
-
+.Password-login{
+    width: 100%;
+}
 
 .Password, .Password-Confirmation{
     width: 83%;
 }
 
-.Password > input, .Password-Confirmation > input {
+.Password-login > input, .Password > input, .Password-Confirmation > input {
     width: 100%;
     padding: 3px;
     margin-bottom: 25px;
 }
 
-.Password > button, .Password-Confirmation > button{
+.Password-login > button, .Password > button, .Password-Confirmation > button{
     float: right;
     margin-right: 5px;
     margin-top: -45px;
