@@ -10,10 +10,10 @@ namespace Backend.Controllers
         UserService _userService = new UserService();
 
         [HttpGet]
-        [Route("api/User/Roles")]
-        public IEnumerable<string> GetRoles()
+        [Route("api/User/Roles/{id}")]
+        public Permissions GetRoles(int id)
         {
-            return _userService.getRoles();
+            return _userService.getRoles(id);
         }
 
         [HttpGet]

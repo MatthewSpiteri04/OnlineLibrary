@@ -3,7 +3,8 @@ var OnlineLibrary = angular.module('OnlineLibrary', ['ngRoute']);
 OnlineLibrary.config(['$routeProvider', function($routeProvider) {
     $routeProvider
     .when('/home', {
-        templateUrl:'views/home.html'
+        templateUrl:'views/home.html',
+        controller: 'users-controller'
     })
     .when('/login', {
         templateUrl:'views/login.html',
@@ -18,9 +19,29 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
     });
 }]);
 
+OnlineLibrary.service('userService', function($rootScope) {
+    var user = {};
+
+    this.test = function() {
+        return user;
+    };
+
+    this.setMyVariable = function(newValue) {
+        user = newValue;
+        $rootScope.$broadcast('dataChanged', newValue);
+    };
+  });
+
 // USERS CONTROLLER
-OnlineLibrary.controller('users-controller', ['$scope', '$http', function($scope, $http){
+OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
     $scope.currentUser = {};
+
+    $scope.getRoles = function(id) {
+        $http.get('https://localhost:44311/api/User/Roles/' + id)
+            .then(response => {
+                $scope.currentUser.Roles = response.data;
+            })
+    }
 
     $scope.doesUserExist = function(loginForm) {
         $scope.userFound = false;
@@ -36,6 +57,10 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', function($scope
             .then(response => {
                 if (response.status == 200) {
                     $scope.currentUser = response.data;
+                    $scope.getRoles(response.data.id);
+                    console.log($scope.currentUser);
+                    userService.setMyVariable($scope.currentUser);
+                    window.location.href = "#!/home";
                 }
                 else {
                     console.log('NOT FOUND');
@@ -57,13 +82,14 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', function($scope
             password: signUpForm.password,
             passwordConfirmation: signUpForm.passwordConfirmation
         }
-        console.log(request);
 
         if (request.password == request.passwordConfirmation) {
             $http.post('https://localhost:44311/api/User/Add', request)
             .then(response => {
                 if (response.status == 200) {
                     $scope.currentUser = response.data;
+                    $scope.getRoles(response.data.id);
+                    console.log($scope.currentUser);
                 }
                 else {
                     console.log('FAILED TO CREATE USER');
@@ -73,7 +99,13 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', function($scope
         else {
             console.log("PASSWORDS DON'T MATCH");
         }
-
-        
     };
+}]);
+
+OnlineLibrary.controller('sidebar-controller', ['$scope', 'userService', function($scope, userService){
+    $scope.user = userService.test();
+
+    $scope.$on('dataChanged', function(event, data) {
+        $scope.user = data;
+    });
 }]);

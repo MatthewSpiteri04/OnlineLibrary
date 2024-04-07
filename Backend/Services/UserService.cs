@@ -14,20 +14,20 @@ namespace Backend.Services
 
         }
 
-        public IEnumerable<string> getRoles()
+        public Permissions getRoles(int id)
         {
-            List<string> roles = new List<string>();
+            Permissions user_permissions = new Permissions();
 
-            query = "SELECT [Description] FROM Roles";
+            query = "SELECT * FROM Roles WHERE [Id] = " + id;
 
             SqlDataReader reader = executeQuery();
 
             while (reader.Read())
             {
-                roles.Add(reader.GetString(0));
+                user_permissions = new Permissions() { Id = reader.GetInt32(0), Description = reader.GetString(1), AcademicUser = reader.GetBoolean(2), ManageCategories = reader.GetBoolean(3)};
             }
 
-            return roles;
+            return user_permissions;
         }
 
         public bool doesUserExist(string login)
