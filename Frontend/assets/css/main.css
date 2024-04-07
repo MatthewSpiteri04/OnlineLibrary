@@ -1,10 +1,102 @@
-.Login-Container {
+body,
+html {
+    margin: 0;
+}
+
+.header {
+    background: #BA0C2F;
+    color: white;
+    font-family: 'PT Sans';
+    display: flex;
+    width: 100%;
+    top: 0;
+    position: fixed;
+    z-index: 1;
+    
+    
+}
+
+
+
+.header-element {
+    
+    
+    padding: 10px;
+    margin-left: 2.2%;
+    
+}
+
+/*Online Library text */
+.header-element > a{
+    font-weight: 600;
+    font-size: clamp(30px, 30px, 45px);
+    align-self: center;
+   
+
+    text-decoration: none;
+    
+    color: white;
+}
+
+
+
+/*Login text > to select direct child elements*/
+.header > a {
+    text-decoration: none;
+    color: white;
+    align-self: center;
+    margin-left: 75%;
+    font-size: 20px;
+}
+
+
+
+.um-logo {
+    width: 80px;
+    height: 80px;
+    align-self: center;
+    margin-right: 15px;
+    vertical-align: middle; /* Vertically align image middle */
+
+}
+
+
+@media (max-width: 1366px){
+
+    
+.header-element {
+    
+    
+    padding: 10px;
+    margin-left: 1.8%;
+}
+    
+    .header > a {
+        
+        margin-left: 65%;
+        font-size: 18px;
+        
+    }
+
+    .um-logo {
+        width: 65px;
+        height: 65px;
+        margin-left: 12px;
+        
+    
+    }
+}
+
+
+
+.Login-Container,.Sign-Up-Container {
     display: flex;
     justify-content: center;
+    align-self: center;
     width: fit-content;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 1%;
+    margin-top: 8%;
     border: 5px;
     border-color: #BA0C2F;
     border-style: solid;
@@ -12,52 +104,72 @@
 
     padding-left: 3%;
     padding-right: 3%;
+    font-size: large;
     
 
 }
+.Login-Container{
+    font-size: x-large;
+}
 
-.Login-Form{
+
+
+@media (max-width: 1366px){
+.Sign-Up-Container{
+    font-size:small;
+}
+.Login-Container{
+    font-size: medium;
+    margin-top: 10%;
+}
+}
+
+.Login-Form, .Sign-Up{
     margin-bottom: 0;
 }
 
-.Login {
+.Login, .Sign-Up {
 
     display: flex;
     justify-content: center;
+    align-items: center;
     flex-direction: column;
     font-family: "PT Sans";
+    padding-right: 5px;
 }
 
-.Login > h1 {
+.Login > h1, .Sign-Up > h1 {
     margin-bottom: 5px;
     font-weight: bolder;
 }
 
 
-.Login-Form > h2{
+.Login-Form > h2, .Sign-Up-Form > h2{
     margin-bottom: 5px;
 }
 
-.Login-form>input {
+.Login-form>input, .Sign-Up-Form > input {
     font-weight: lighter;
     font-family: "Lato", "Calibri";
     padding: 3px;
     width: 100%;
 }
 
-
-
-.Password{
+.Password-login{
     width: 100%;
 }
 
-.Password > input {
+.Password, .Password-Confirmation{
+    width: 83%;
+}
+
+.Password-login > input, .Password > input, .Password-Confirmation > input {
     width: 100%;
     padding: 3px;
     margin-bottom: 25px;
 }
 
-.Password > button{
+.Password-login > button, .Password > button, .Password-Confirmation > button{
     float: right;
     margin-right: 5px;
     margin-top: -45px;
@@ -71,16 +183,18 @@
 
 }
 
-.Login-Form >  button {
+.Login-Form >  button, .Sign-Up > button {
     display: flex;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 5%;
     justify-content: center;
+    
     background-color: #BA0C2F;
     color: white;
     padding: 10px;
     border: none;
-    width: 100px;
+    width: fit-content;
     border-radius: 7px;
     font-size: 1.17em;
     font-weight: bolder;
@@ -88,7 +202,7 @@
    
 }
 
-.Login-Form >  button:hover{
+.Login-Form >  button:hover, .Sign-Up > button:hover{
     cursor: pointer;
 }
 
@@ -114,53 +228,115 @@
 
 }
 
-body,
-html {
-    margin: 0;
-}
-
-.header {
-    background: #BA0C2F;
-    color: white;
-    font-family: 'PT Sans';
+.Sign-Up-Form{
     display: flex;
-    padding: 10px 50px 10px 10px;
-}
-
-
-
-.header-element {
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 5%;
+    align-items: flex-start;
     
-    display: flex;
-    padding: 10px;
+
     
 }
 
-/*Online Library text */
-.header-element > a{
-    font-weight: 600;
-    font-size: 45px;
-    align-self: center;
+.Left-Column {
+    margin-right: 50px; /* Adjust as needed */
+    margin-left: 30px;
+  }
   
-    text-decoration: none;
+  
+.Sidebar-Container, .Sidebar-Container-lib{
     
-    color: white;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+  
+    width: fit-content ;
+    
+    top: 0;
+    height: 100%;
+    
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
 }
 
-/*Login text > to select direct child elements*/
-.header > a {
+.Sidebar{
+    margin-top: 120px;
+    padding: 20px;
+    font-family: 'PT Sans';
+   
+}
+
+
+.Sidebar a{
     text-decoration: none;
-    color: white;
-    align-self: center;
-    margin-left: auto;
-    font-size: 20px;
+    color: #BA0C2F;
 }
 
-.um-logo {
-    width: 80px;
-    height: 80px;
-    align-self: center;
-    margin-right: 15px;
-    vertical-align: middle; /* Vertically align image middle */
+.link{
+    display: flex;
+    flex-direction: column;
+    align-items: center ;
+    margin-bottom: 50px;
+    
+    
+}
 
+.link-lib{
+    display: flex;
+    flex-direction: column;
+    align-items: center ;
+    margin-bottom: 20px;
+    
+    
+}
+
+
+@media (max-width: 1366px){
+
+    .Sidebar-Container-lib{
+        padding-left: 1%;
+        padding-right: 1%;
+
+    }
+    .Sidebar{
+        margin-top: 80px;
+    }
+   
+.link{
+    margin-bottom: 17px;
+    
+}
+
+.link, .link-lib{
+    margin-bottom: 0;
+    
+}
+
+
+.link > i {
+    font-size: 3vw;
+    
+}
+.link-lib > i{
+    font-size: 2.8vw;
+
+}
+
+.link > h3 {
+    font-size: 15px
+}
+
+.link-lib > h3{
+    font-size: 12px;
+}
+
+
+}
+
+.home{
+    display: flex;
+    justify-content: center;
+    margin-top: 10%;
+    
 }
