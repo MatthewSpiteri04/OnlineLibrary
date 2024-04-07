@@ -183,7 +183,7 @@ html {
 
 }
 
-.Login-Form >  button, .Sign-Up > button {
+.Login-Form >  button, .row2 > button {
     display: flex;
     margin-left: auto;
     margin-right: auto;
@@ -202,7 +202,7 @@ html {
    
 }
 
-.Login-Form >  button:hover, .Sign-Up > button:hover{
+.Login-Form >  button:hover, .row2 > button:hover{
     cursor: pointer;
 }
 
@@ -230,7 +230,7 @@ html {
 
 .Sign-Up-Form{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     margin-top: 5%;
     align-items: flex-start;
@@ -239,10 +239,28 @@ html {
     
 }
 
+.row1{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 0;
+}
+
+
 .Left-Column {
     margin-right: 50px; /* Adjust as needed */
     margin-left: 30px;
   }
+
+.row2{
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15px;
+    justify-content: center;
+    align-items: center;
+}
   
   
 .Sidebar-Container, .Sidebar-Container-lib{
