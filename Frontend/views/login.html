@@ -7,8 +7,16 @@
       <br />
       <h2>Password</h2>
       <div class="Password-login">
-        <input type="password" ng-model="loginForm.password" />
-        <button id="eye"><i class="fa-solid fa-eye-slash"></i></button>
+        <input
+          type="{{ typePassword ? 'text' : 'password'}}"
+          ng-model="loginForm.password"
+        />
+        <button id="eye" ng-click="togglePassword()">
+          <i
+            class="fa-solid"
+            ng-class="{ 'fa-eye': typePassword, 'fa-eye-slash': !typePassword }"
+          ></i>
+        </button>
       </div>
       <button type="submit">Login</button>
     </form>

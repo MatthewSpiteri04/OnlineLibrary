@@ -100,6 +100,8 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', 
             console.log("PASSWORDS DON'T MATCH");
         }
     };
+
+    $scope.togglePassword = function () { $scope.typePassword = !$scope.typePassword}
 }]);
 
 OnlineLibrary.controller('sidebar-controller', ['$scope', 'userService', function($scope, userService){
