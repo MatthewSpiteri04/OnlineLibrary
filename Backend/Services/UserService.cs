@@ -18,7 +18,10 @@ namespace Backend.Services
         {
             Permissions user_permissions = new Permissions();
 
-            query = "SELECT * FROM Roles WHERE [Id] = " + id;
+            query = @"SELECT R.* FROM Roles R
+                      INNER JOIN Users U
+                      ON R.Id = U.RoleId
+                      WHERE U.Id = " + id;
 
             SqlDataReader reader = executeQuery();
 
