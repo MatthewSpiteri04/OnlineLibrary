@@ -14,6 +14,10 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
         templateUrl:'views/sign-up.html',
         controller: 'users-controller'
     })
+    .when('/help', {
+        templateUrl:'views/help.html',
+        controller: 'users-controller'
+    })
     .otherwise({
         redirectTo: '/home'
     });
