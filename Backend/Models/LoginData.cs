@@ -1,8 +1,8 @@
 ﻿namespace Backend.Models
 {
-    public class Login
+    public class LoginData
     {
-        public string? Username { get; set; }
+        public string? Login { get; set; }
         public string? Password { get; set; }
     }
 }
