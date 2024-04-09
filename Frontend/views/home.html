@@ -1,20 +1,32 @@
 <div ng-include="'assets/elements/sidebar.html'"></div>
 
 <div class="home">
-    <h1>What are you looking for?</h1>
+  <h1>What are you looking for?</h1>
+  <div class="Search-bar">
     <div class="InputContainer">
-        <input type="text" name="text" class="input" id="input" placeholder="Search">
-        <i class="fa-solid fa-magnifying-glass magnifying-glass-icon"></i>
+      <input
+        type="text"
+        name="text"
+        class="input"
+        id="input"
+        placeholder="Search"
+      />
+      <i class="fa-solid fa-magnifying-glass magnifying-glass-icon"></i>
     </div>
-    <a style="color: #BA0C2F; font-family: Lato;" href="">filter</a>
-
-    <div class="grid-container">
-        <div class="grid-item"><i class="fa-solid fa-book-open fa-6x"></i> Box 1</div>
-        <div class="grid-item">Box 2</div>
-        <div class="grid-item">Box 3</div>
-        <div class="grid-item">Box 4</div>
-        <div class="grid-item">Box 5</div>
-        <div class="grid-item">Box 6</div>
-
+    <a style="color: #ba0c2f; font-family: Lato" href="">filter</a>
+  </div>
+  <div class="grid-container">
+    <div class="grid-item">
+      <i class="fa-solid fa-book-open fa-6x"></i> Box 1
     </div>
+    <div class="grid-item"><i class="fa-solid fa-inbox fa-6x"></i>Box 2</div>
+    <div class="grid-item">
+      <i class="fa-solid fa-newspaper fa-6x"></i>Box 3
+    </div>
+    <div class="grid-item"><i class="fa-solid fa-book fa-6x"></i>Box 4</div>
+    <div class="grid-item"><i class="fa-solid fa-file fa-6x"></i>Box 5</div>
+    <div class="grid-item">
+      <i class="fa-solid fa-headphones fa-6x"></i> Box 6
+    </div>
+  </div>
 </div>

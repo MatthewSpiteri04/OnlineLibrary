@@ -407,6 +407,7 @@ html {
 }
 
 .grid-container {
+    
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 40px;
@@ -447,7 +448,12 @@ html {
     flex-direction: column;
     margin-top: 100px;
 }
-
+.Search-bar{
+    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
 .InputContainer {
     height: 50px;
     display: flex;
@@ -458,8 +464,9 @@ html {
     border-color: #BA0C2F;
     overflow: hidden;
     padding-left: 15px;
+    margin-right: 15px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.075);
-    width: 60%;
+    width: 830px;
   }
   
   .input {
