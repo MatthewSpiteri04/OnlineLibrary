@@ -58,7 +58,6 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', 
                 if (response.status == 200) {
                     $scope.currentUser = response.data;
                     $scope.getRoles(response.data.id);
-                    console.log($scope.currentUser);
                     userService.setMyVariable($scope.currentUser);
                     window.location.href = "#!/home";
                 }

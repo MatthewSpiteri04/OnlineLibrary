@@ -406,6 +406,40 @@ html {
     font-family: "Lato";
 }
 
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 40px;
+    margin-top: 50px; 
+    grid-column-gap: 75px;
+}
+
+.grid-item {
+    font-family: "Lato";
+    background-color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 20px;
+    border: 4px solid #BA0C2F;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 200px;
+    width: 200px;
+    color: #BA0C2F;
+}
+
+.grid-item > i {
+    align-self: center;
+    margin-bottom: 20%;
+
+}
+
+.grid-item p {
+    margin: 0; /* Remove default margin */
+}
+
 .home {
     align-items: center;
     display: flex;
@@ -415,7 +449,7 @@ html {
 }
 
 .InputContainer {
-    height: 40px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -425,7 +459,7 @@ html {
     overflow: hidden;
     padding-left: 15px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.075);
-    width: 50%;
+    width: 60%;
   }
   
   .input {
@@ -433,7 +467,7 @@ html {
     height: 100%;
     border: none;
     outline: none;
-    font-size: 0.9em;
+    font-size: 18px;
     font-family: "Lato";
   }
 
