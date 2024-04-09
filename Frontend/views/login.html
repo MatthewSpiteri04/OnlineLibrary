@@ -2,13 +2,20 @@
   <div class="Login">
     <h1>Login to Online Library</h1>
     <form class="Login-Form" ng-submit="doesUserExist(loginForm)">
-      <h2>Email adress or Username</h2>
+      <h2>Email address or Username</h2>
       <input type="text" ng-model="loginForm.login" />
       <br />
       <h2>Password</h2>
       <div class="Password-login">
-        <input type="password" ng-model="loginForm.password" />
-        <button id="eye"><i class="fa-solid fa-eye-slash"></i></button>
+        <input
+          type="{{ typePassword ? 'text' : 'password'}}"
+          ng-model="loginForm.password"
+        />
+        <div class="eye-button" ng-click="togglePassword()">
+          <i
+            class="{{typePassword ? 'fa-solid fa-eye ' : 'fa-solid fa-eye-slash'}}"
+          ></i>
+        </div>
       </div>
       <button type="submit">Login</button>
     </form>
