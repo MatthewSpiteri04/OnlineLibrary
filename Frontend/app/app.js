@@ -90,6 +90,7 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', 
                     $scope.currentUser = response.data;
                     $scope.getRoles(response.data.id);
                     console.log($scope.currentUser);
+                    window.location.href = "#!/home";
                 }
                 else {
                     console.log('FAILED TO CREATE USER');
@@ -100,6 +101,19 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', 
             console.log("PASSWORDS DON'T MATCH");
         }
     };
+
+   
+    $scope.togglePassword = function() {
+        $scope.typePassword = !$scope.typePassword;
+        
+      };
+
+    $scope.toggleConfirmPassword = function() {
+        $scope.typeConfirmPassword = !$scope.typeConfirmPassword;
+       
+      };
+
+  
 }]);
 
 OnlineLibrary.controller('sidebar-controller', ['$scope', 'userService', function($scope, userService){

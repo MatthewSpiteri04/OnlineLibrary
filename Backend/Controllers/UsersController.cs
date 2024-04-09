@@ -25,7 +25,7 @@ namespace Backend.Controllers
 
         [HttpPost]
         [Route("api/User/Login")]
-        public User Login([FromBody]LoginData loginInfo)
+        public User Login([FromBody] LoginData loginInfo)
         {
             Debug.WriteLine(loginInfo);
             return _userService.loginUser(loginInfo);

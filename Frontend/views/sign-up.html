@@ -2,41 +2,60 @@
   <div class="Sign-Up">
     <h1>Sign Up to Online Library</h1>
     <div class="Sign-Up-Form">
-        <div class="Left-Column">
       <form ng-submit="signUpUser(signUpForm)">
-        <h2>First Name</h2>
-        <input type="text" ng-model="signUpForm.firstName" />
-        <br />
+        <div class="row1">
+          <div class="Left-Column">
+            <h2>First Name</h2>
+            <input type="text" ng-model="signUpForm.firstName" />
+            <br />
 
-        <h2>Email</h2>
-        <input type="text" ng-model="signUpForm.email" />
-        <br />
+            <h2>Email</h2>
+            <input type="text" ng-model="signUpForm.email" />
+            <br />
 
-        <h2>Password</h2>
-        <div class="Password">
-          <input type="text" ng-model="signUpForm.password" />
-          <button id="eye"><i class="fa-solid fa-eye-slash"></i></button>
+            <h2>Password</h2>
+            <div class="Password">
+              <input
+                type="{{ typePassword ? 'text' : 'password'}}"
+                ng-model="signUpForm.password"
+              />
+              <div class="eye-button-pass" ng-click="togglePassword()">
+                <i
+                  class="{{typePassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'}}"
+                ></i>
+              </div>
+            </div>
+          </div>
+          <div class="Right-Column">
+            <h2>Last Name</h2>
+            <input type="text" ng-model="signUpForm.lastName" />
+            <br />
+
+            <h2>Username</h2>
+            <input type="text" ng-model="signUpForm.username" />
+            <br />
+
+            <h2>Confirm Password</h2>
+            <div class="Password-Confirmation">
+              <input
+                type="{{ typeConfirmPassword ? 'text' : 'password'}}"
+                ng-model="signUpForm.passwordConfirmation"
+              />
+              <div
+                class="eye-button-confirm"
+                ng-click="toggleConfirmPassword()"
+              >
+                <i
+                  class="{{typeConfirmPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'}}"
+                ></i>
+              </div>
+            </div>
+          </div>
         </div>
-       
-    </div>
-    <div class="Right-Column">
-        <h2>Last Name</h2>
-        <input type="text" ng-model="signUpForm.lastName" />
-        <br />
-
-        <h2>Username</h2>
-        <input type="text" ng-model="signUpForm.username" />
-        <br />
-
-        <h2>Confirm Password</h2>
-        <div class="Password-Confirmation">
-          <input type="text" ng-model="signUpForm.passwordConfirmation" />
-          <button id="eye"><i class="fa-solid fa-eye-slash"></i></button>
+        <div class="row2">
+          <button type="submit">Sign Up</button>
         </div>
-    </div>
-        
       </form>
     </div>
-    <button type="submit">Sign Up</button>
   </div>
 </div>
