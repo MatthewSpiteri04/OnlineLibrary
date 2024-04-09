@@ -15,8 +15,15 @@
 
             <h2>Password</h2>
             <div class="Password">
-              <input type="password" ng-model="signUpForm.password" />
-              <button id="eye"><i class="fa-solid fa-eye-slash"></i></button>
+              <input
+                type="{{ typePassword ? 'text' : 'password'}}"
+                ng-model="signUpForm.password"
+              />
+              <div class="eye-button-pass" ng-click="togglePassword()">
+                <i
+                  class="{{typePassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'}}"
+                ></i>
+              </div>
             </div>
           </div>
           <div class="Right-Column">
@@ -31,17 +38,22 @@
             <h2>Confirm Password</h2>
             <div class="Password-Confirmation">
               <input
-                type="password"
+                type="{{ typeConfirmPassword ? 'text' : 'password'}}"
                 ng-model="signUpForm.passwordConfirmation"
               />
-              <button id="eye"><i class="fa-solid fa-eye-slash"></i></button>
+              <div
+                class="eye-button-confirm"
+                ng-click="toggleConfirmPassword()"
+              >
+                <i
+                  class="{{typeConfirmPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'}}"
+                ></i>
+              </div>
             </div>
           </div>
         </div>
         <div class="row2">
-          <a href="!/home.html">
-            <button type="submit">Sign Up</button>
-          </a>
+          <button type="submit">Sign Up</button>
         </div>
       </form>
     </div>

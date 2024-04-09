@@ -61,34 +61,60 @@ html {
 }
 
 
-@media (max-width: 1366px){
+
+
+@media (max-width: 1683px){
 
     
-.header-element {
-    
-    
-    padding: 10px;
-    margin-left: 1.8%;
-}
-    
-    .header > a {
+    .header-element {
         
-        margin-left: 65%;
-        font-size: 18px;
         
+        padding: 10px;
+        margin-left: 1.8%;
+    }
+        
+        .header > a {
+            
+            margin-left: 72%;
+            font-size: 18px;
+            
+        }
+    
+        .um-logo {
+            width: 65px;
+            height: 65px;
+            margin-left: 12px;
+            
+        
+        }
     }
 
-    .um-logo {
-        width: 65px;
-        height: 65px;
-        margin-left: 12px;
-        
+    @media (max-width: 1466px){
+
     
-    }
-}
+            
+            .header > a {
+                
+                margin-left: 65%;
+               
+                
+            }
+        
+        }
 
+        
+    @media (max-width: 1124px){
 
-
+    
+            .header > a {
+                
+                margin-left: 50%;
+               
+                
+            }
+        
+          
+        }
 .Login-Container,.Sign-Up-Container {
     display: flex;
     justify-content: center;
@@ -114,9 +140,10 @@ html {
 
 
 
-@media (max-width: 1366px){
+@media (max-width: 1683px){
 .Sign-Up-Container{
     font-size:small;
+    margin-top: 7.5%;
 }
 .Login-Container{
     font-size: medium;
@@ -153,6 +180,7 @@ html {
     font-family: "Lato", "Calibri";
     padding: 3px;
     width: 100%;
+    height: 35px;
 }
 
 .Password-login{
@@ -163,22 +191,45 @@ html {
     width: 83%;
 }
 
-.Password-login > input, .Password > input, .Password-Confirmation > input {
+.Password-login > input{
+    width: 100%;
+    height: 35px;
+    padding: 3px;
+    margin-bottom: 25px;
+}
+
+.Password > input, .Password-Confirmation > input {
     width: 100%;
     padding: 3px;
     margin-bottom: 25px;
 }
 
-.Password-login > button, .Password > button, .Password-Confirmation > button{
+
+
+.eye-button{
+    float: right;
+    margin-right: 15px;
+    margin-top: -55px;
+    position: relative;
+    background: none;
+    border: none;
+    
+
+}
+
+.eye-button-pass, .eye-button-confirm{
+   
     float: right;
     margin-right: 5px;
     margin-top: -45px;
     position: relative;
     background: none;
     border: none;
+    width: 30px; 
 
 }
-#eye:hover{
+
+.eye-button:hover, .eye-button-pass:hover, .eye-button-confirm:hover{
     cursor: pointer;
 
 }
