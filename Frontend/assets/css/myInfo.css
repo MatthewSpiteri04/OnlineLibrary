@@ -1,0 +1,42 @@
+/* My Info Page styles */
+.My-Info-Page {
+    margin-top: 100px; /* Adjust as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.My-Info-Page h1 {
+    font-family: 'PT Sans';
+    color: #BA0C2F;
+}
+
+.My-Info-Container {
+    margin-top: 30px; /* Adjust as needed */
+}
+
+.My-Info {
+    border: 2px solid #BA0C2F;
+    border-radius: 10px;
+    padding: 20px;
+    width: 400px; /* Adjust as needed */
+}
+
+/* My Info content styles */
+#myInfo {
+    font-family: 'PT Sans';
+}
+
+#myInfo p {
+    margin: 0;
+}
+
+#myInfo span {
+    font-weight: bold;
+    color: #BA0C2F;
+}
+
+#myInfo i {
+    margin-right: 10px;
+}
