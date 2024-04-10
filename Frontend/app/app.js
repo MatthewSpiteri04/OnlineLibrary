@@ -14,6 +14,10 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
         templateUrl:'views/sign-up.html',
         controller: 'users-controller'
     })
+    .when('/help', {
+        templateUrl:'views/help.html',
+        controller: 'users-controller'
+    })
     .otherwise({
         redirectTo: '/home'
     });
@@ -116,8 +120,8 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', 
   
 }]);
 
-OnlineLibrary.controller('sidebar-controller', ['$scope', 'userService', function($scope, userService){
-    $scope.user = userService.test();
+OnlineLibrary.controller('elements-controller', ['$scope', 'userService', function($scope, userService){
+    $scope.user = null;
 
     $scope.$on('dataChanged', function(event, data) {
         $scope.user = data;
