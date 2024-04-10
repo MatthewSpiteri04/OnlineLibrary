@@ -1,5 +1,6 @@
-<div ng-include="'assets/elements/sidebar.html'"></div>
+<link rel="stylesheet" href="assets/css/home.css" type="text/css"/>
 
+<div ng-include="'assets/elements/sidebar.html'"></div>
 <div class="home">
   <h1>What are you looking for?</h1>
   <div class="Search-bar">
@@ -17,6 +18,9 @@
       Filter
       <i style="padding-left: 3px; padding-bottom: 5px; font-size: 12px;" class="{{filterOn ? 'fa-solid fa-caret-up' :' fa-solid fa-caret-down'}}"></i>
     </div>
+  </div>
+  <div ng-if="filterOn" class="filter-container">
+      <h4>Advanced Filter</h4>
   </div>
   <div class="grid-container">
     <div class="grid-item"><i class="fa-solid fa-book-open fa-6x"></i>Books</div>
