@@ -4,7 +4,7 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
     $routeProvider
     .when('/home', {
         templateUrl:'views/home.html',
-        controller: 'users-controller'
+        controller: 'home-controller'
     })
     .when('/login', {
         templateUrl:'views/login.html',
@@ -24,9 +24,9 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
 }]);
 
 OnlineLibrary.service('userService', function($rootScope) {
-    var user = {};
+    var user = null;
 
-    this.test = function() {
+    this.getCurrentUser = function() {
         return user;
     };
 
@@ -35,6 +35,18 @@ OnlineLibrary.service('userService', function($rootScope) {
         $rootScope.$broadcast('dataChanged', newValue);
     };
   });
+
+
+  OnlineLibrary.controller('home-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
+    $scope.user = null;
+    $scope.filterOn = false
+
+    $scope.$on('dataChanged', function(event, data) {
+        $scope.user = data;
+    });
+
+
+  }]);
 
 // USERS CONTROLLER
 OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
@@ -62,7 +74,6 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', 
                 if (response.status == 200) {
                     $scope.currentUser = response.data;
                     $scope.getRoles(response.data.id);
-                    console.log($scope.currentUser);
                     userService.setMyVariable($scope.currentUser);
                     window.location.href = "#!/home";
                 }
@@ -121,9 +132,10 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', 
 }]);
 
 OnlineLibrary.controller('elements-controller', ['$scope', 'userService', function($scope, userService){
-    $scope.user = null;
+    $scope.user = userService.getCurrentUser();
 
     $scope.$on('dataChanged', function(event, data) {
         $scope.user = data;
+        console.log($scope.user);
     });
 }]);
