@@ -47,9 +47,12 @@ html {
     align-self: center;
     margin-left: 75%;
     font-size: 20px;
+    transition: color 0.3s ease;
 }
 
-
+.header > a:hover {
+    color: lightgrey;
+}
 
 .um-logo {
     width: 80px;
@@ -57,7 +60,6 @@ html {
     align-self: center;
     margin-right: 15px;
     vertical-align: middle; /* Vertically align image middle */
-
 }
 
 
