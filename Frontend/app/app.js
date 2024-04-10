@@ -18,6 +18,10 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
         templateUrl:'views/help.html',
         controller: 'users-controller'
     })
+    .when('/my-info', {
+        templateUrl:'views/my-info.html',
+        controller: 'myInfo-controller'
+    })
     .otherwise({
         redirectTo: '/home'
     });
@@ -43,6 +47,17 @@ OnlineLibrary.service('userService', function($rootScope) {
 
     $scope.$on('dataChanged', function(event, data) {
         $scope.user = data;
+    });
+
+
+  }]);
+
+  OnlineLibrary.controller('myInfo-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
+    $scope.user = userService.getCurrentUser();
+
+    $scope.$on('dataChanged', function(event, data) {
+        $scope.user = data;
+        console.log($scope.user);
     });
 
 
