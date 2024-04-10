@@ -4,7 +4,7 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
     $routeProvider
     .when('/home', {
         templateUrl:'views/home.html',
-        controller: 'users-controller'
+        controller: 'home-controller'
     })
     .when('/login', {
         templateUrl:'views/login.html',
@@ -14,15 +14,19 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
         templateUrl:'views/sign-up.html',
         controller: 'users-controller'
     })
+    .when('/help', {
+        templateUrl:'views/help.html',
+        controller: 'users-controller'
+    })
     .otherwise({
         redirectTo: '/home'
     });
 }]);
 
 OnlineLibrary.service('userService', function($rootScope) {
-    var user = {};
+    var user = null;
 
-    this.test = function() {
+    this.getCurrentUser = function() {
         return user;
     };
 
@@ -31,6 +35,18 @@ OnlineLibrary.service('userService', function($rootScope) {
         $rootScope.$broadcast('dataChanged', newValue);
     };
   });
+
+
+  OnlineLibrary.controller('home-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
+    $scope.user = null;
+    $scope.filterOn = false
+
+    $scope.$on('dataChanged', function(event, data) {
+        $scope.user = data;
+    });
+
+
+  }]);
 
 // USERS CONTROLLER
 OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
@@ -115,10 +131,11 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', 
   
 }]);
 
-OnlineLibrary.controller('sidebar-controller', ['$scope', 'userService', function($scope, userService){
-    $scope.user = userService.test();
+OnlineLibrary.controller('elements-controller', ['$scope', 'userService', function($scope, userService){
+    $scope.user = userService.getCurrentUser();
 
     $scope.$on('dataChanged', function(event, data) {
         $scope.user = data;
+        console.log($scope.user);
     });
 }]);

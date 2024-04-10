@@ -13,20 +13,17 @@
       />
       <i class="fa-solid fa-magnifying-glass magnifying-glass-icon"></i>
     </div>
-    <a style="color: #ba0c2f; font-family: Lato" href="">filter</a>
+    <div class="filter-button" ng-click="filterOn = !filterOn">
+      Filter
+      <i style="padding-left: 3px; padding-bottom: 5px; font-size: 12px;" class="{{filterOn ? 'fa-solid fa-caret-up' :' fa-solid fa-caret-down'}}"></i>
+    </div>
   </div>
   <div class="grid-container">
-    <div class="grid-item">
-      <i class="fa-solid fa-book-open fa-6x"></i> Box 1
-    </div>
-    <div class="grid-item"><i class="fa-solid fa-inbox fa-6x"></i>Box 2</div>
-    <div class="grid-item">
-      <i class="fa-solid fa-newspaper fa-6x"></i>Box 3
-    </div>
-    <div class="grid-item"><i class="fa-solid fa-book fa-6x"></i>Box 4</div>
-    <div class="grid-item"><i class="fa-solid fa-file fa-6x"></i>Box 5</div>
-    <div class="grid-item">
-      <i class="fa-solid fa-headphones fa-6x"></i> Box 6
-    </div>
+    <div class="grid-item"><i class="fa-solid fa-book-open fa-6x"></i>Books</div>
+    <div class="grid-item"><i class="fa-solid fa-inbox fa-6x"></i>FYPs</div>
+    <div class="grid-item"><i class="fa-solid fa-newspaper fa-6x"></i>Articles</div>
+    <div class="grid-item"><i class="fa-solid fa-book fa-6x"></i>Journals</div>
+    <div class="grid-item"><i class="fa-solid fa-file fa-6x"></i>Theses</div>
+    <div class="grid-item"><i class="fa-solid fa-file-audio fa-6x"></i>Audio Books</div>
   </div>
 </div>
