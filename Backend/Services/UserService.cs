@@ -14,20 +14,24 @@ namespace Backend.Services
 
         }
 
-        public Permissions getRoles(int id)
+        public  List<string> getRolePrivileges(int id)
         {
-            Permissions user_permissions = new Permissions();
+            List<string> user_permissions = new List<string>();
 
-            query = @"SELECT R.* FROM Roles R
-                      INNER JOIN Users U
-                      ON R.Id = U.RoleId
+            query = @"SELECT P.Description FROM Users U
+                      LEFT JOIN  Roles R
+                      ON U.RoleId = R.Id
+                      LEFT JOIN RolesToPrivileges RP
+                      ON R.Id = RP.RoleId
+                      LEFT JOIN Privileges P
+                      ON P.Id = RP.PrivilegeId
                       WHERE U.Id = " + id;
 
             SqlDataReader reader = executeQuery();
 
             while (reader.Read())
             {
-                user_permissions = new Permissions() { Id = reader.GetInt32(0), Description = reader.GetString(1), AcademicUser = reader.GetBoolean(2), ManageCategories = reader.GetBoolean(3)};
+                user_permissions.Add(reader.GetString(0));
             }
 
             return user_permissions;

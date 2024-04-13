@@ -1,6 +1,7 @@
+<link rel="stylesheet" href="assets/css/sidebar.css" type="text/css" />
 <div ng-controller="elements-controller" class="Sidebar-Container-lib">
   <div class="Sidebar">
-    <div class="My-Info">
+    <div class="My-Info-Icon">
       <a href="#!/my-info">
         <div class="link-lib">
           <i class="fa-solid fa-circle-user fa-3x"></i>
@@ -18,7 +19,7 @@
       </a>
     </div>
 
-    <div ng-if="user.Roles.academicUser" class="Uploads">
+    <div ng-if="user.Roles.includes('Academic User')" class="Uploads">
       <a href="#!/uploads">
         <div class="link-lib">
           <i class="fa-solid fa-file-arrow-up fa-3x"></i>
@@ -27,7 +28,7 @@
       </a>
     </div>
 
-    <div ng-if="user.Roles.manageCategories" class="Category">
+    <div ng-if="user.Roles.includes('Manage Categories')" class="Category">
       <a href="#!/category">
         <div class="link-lib">
           <i class="fa-solid fa-folder fa-3x"></i>

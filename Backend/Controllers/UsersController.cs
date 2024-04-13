@@ -11,9 +11,9 @@ namespace Backend.Controllers
 
         [HttpGet]
         [Route("api/User/Roles/{id}")]
-        public Permissions GetRoles(int id)
+        public List<string> GetRolePrivileges(int id)
         {
-            return _userService.getRoles(id);
+            return _userService.getRolePrivileges(id);
         }
 
         [HttpGet]

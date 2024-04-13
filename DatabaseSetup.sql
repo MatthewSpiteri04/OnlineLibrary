@@ -12,9 +12,7 @@ USE [OnlineLibrary];
 
 CREATE TABLE Roles(
 	Id INT IDENTITY(1, 1) PRIMARY KEY,
-	[Description] NVARCHAR(30),
-	AcademicUser BIT,
-	ManageCategories BIT 
+	[Description] NVARCHAR(30)
 );
 
 CREATE TABLE Users(
@@ -90,7 +88,22 @@ CREATE TABLE ContributorToDocument (
 	FOREIGN KEY (ContributorId) REFERENCES Contributors(Id)
 );
 
-INSERT INTO Roles VALUES ('Public', 0, 0), ('Student', 1, 0), ('Librarian', 1, 1);
+CREATE TABLE Privileges (
+	Id INT IDENTITY(1,1) PRIMARY KEY,
+	[Description] NVARCHAR(30),
+)
+
+CREATE TABLE RolesToPrivileges (
+	Id INT IDENTITY(1,1) PRIMARY KEY,
+	RoleId INT,
+	PrivilegeId INT
+	FOREIGN KEY (RoleId) REFERENCES Roles(Id),
+	FOREIGN KEY (PrivilegeId) REFERENCES Privileges(Id)
+)
+
+INSERT INTO Roles VALUES ('Public'), ('AcademicUser'), ('Librarian');
+INSERT INTO Privileges VALUES ('Manage Categories'), ('Academic User');
+INSERT INTO RolesToPrivileges VALUES (2, 2), (3, 2), (3, 1);
 
 INSERT INTO AttributeTypes VALUES ('Number'), ('Text'), ('True/False'), ('Date');
 
