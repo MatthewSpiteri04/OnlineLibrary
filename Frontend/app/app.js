@@ -18,6 +18,10 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
         templateUrl:'views/help.html',
         controller: 'users-controller'
     })
+    .when('/upload', {
+        templateUrl:'views/upload.html',
+        controller: 'upload-controller'
+    })
     .when('/my-info', {
         templateUrl:'views/my-info.html',
         controller: 'myInfo-controller'
@@ -39,6 +43,24 @@ OnlineLibrary.service('userService', function($rootScope) {
         $rootScope.$broadcast('dataChanged', newValue);
     };
   });
+
+  OnlineLibrary.controller('upload-controller', ['$scope', '$http', function(){
+    $scope.uploadFile = function() {
+        var fileData = new FormData();
+        fileData.append('file', $scope.file);
+        console.log(fileData);
+        $http.post('https://localhost:44311/api/Upload/File', fileData, {
+            transformRequest: angular.identity,
+            headers: { 'Content-Type': undefined }
+        }).then(function(response) {
+            // Handle success
+            console.log('Upload successful:', response.data);
+        }, function(error) {
+            // Handle error
+            console.error('Error uploading file:', error);
+        });
+    }
+  }]);
 
 
   OnlineLibrary.controller('home-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){

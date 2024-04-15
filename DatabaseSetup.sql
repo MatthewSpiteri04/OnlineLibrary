@@ -99,7 +99,7 @@ CREATE TABLE RolesToPrivileges (
 	PrivilegeId INT
 	FOREIGN KEY (RoleId) REFERENCES Roles(Id),
 	FOREIGN KEY (PrivilegeId) REFERENCES Privileges(Id)
-)
+);
 
 INSERT INTO Roles VALUES ('Public'), ('AcademicUser'), ('Librarian');
 INSERT INTO Privileges VALUES ('Manage Categories'), ('Academic User');
