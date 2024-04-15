@@ -7,35 +7,37 @@ namespace Backend.Controllers
 {
     public class UploadsController : ControllerBase
     {
+        UploadService _uploadService = new UploadService();
+
         [HttpPost]
         [Route("api/Upload/File")]
-        public async Task<IActionResult> UploadPdf()
-        {
-            var file = Request.Form.Files[0]; // Assuming only one file is uploaded
-
-            if (file != null && file.Length > 0)
+        public async Task<IActionResult> UploadPdf([FromForm] UploadRequest request)
+        {            
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+            if (!Directory.Exists(uploadPath))
             {
-                // Specify the directory where you want to save the uploaded PDFs
-                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
-
-                // If the directory doesn't exist, create it
-                if (!Directory.Exists(uploadPath))
-                {
-                    Directory.CreateDirectory(uploadPath);
-                }
-
-                // Generate a unique file name for the uploaded PDF
-                var fileName = Path.Combine(uploadPath, Path.GetRandomFileName());
-
-                using (var fileStream = new FileStream(fileName, FileMode.Create))
-                {
-                    await file.CopyToAsync(fileStream);
-                }
-
-                return Ok("PDF uploaded successfully.");
+                Directory.CreateDirectory(uploadPath);
+            }
+            var fileName = Path.Combine(uploadPath, request.Title + "_" + request.UserId + ".pdf");
+            using (var fileStream = new FileStream(fileName, FileMode.Create))
+            {
+                await request.File.CopyToAsync(fileStream);
             }
 
-            return BadRequest("No file uploaded.");
+            UploadDatabaseRequest database_request = new UploadDatabaseRequest() 
+            { 
+                CategoryId = 1,
+                Title = request.Title,
+                Language = request.Language,
+                UploadDate = DateTime.Now,
+                PublicAccess = request.PublicAccess,
+                DocumentLocation = fileName
+            };
+
+            _uploadService.SaveUploadedFile(database_request);
+
+            return Ok("PDF uploaded successfully.");
         }
+
     }
 }

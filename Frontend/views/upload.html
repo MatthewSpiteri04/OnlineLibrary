@@ -1,6 +1,9 @@
-<div ng-controller="upload-controller">
-    <form method="post" enctype="multipart/form-data" ng-submit="uploadFile()">
-        <input type="file" name="file" ng-model="file" />
+<div style="margin-top: 770px;" ng-controller="upload-controller">
+    <form method="post" enctype="multipart/form-data">
+        <input type="text" name="title"><br>
+        <input type="text" name="language"><br>
+        <input type="checkbox" ng-click="publicAccess = !publicAccess" name="publicAccess"><br>
+        <input type="file" name="file"><br>
         <button type="submit">Upload PDF</button>
     </form>
 </div>

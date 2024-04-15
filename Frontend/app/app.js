@@ -44,22 +44,27 @@ OnlineLibrary.service('userService', function($rootScope) {
     };
   });
 
-  OnlineLibrary.controller('upload-controller', ['$scope', '$http', function(){
-    $scope.uploadFile = function() {
-        var fileData = new FormData();
-        fileData.append('file', $scope.file);
-        console.log(fileData);
-        $http.post('https://localhost:44311/api/Upload/File', fileData, {
-            transformRequest: angular.identity,
-            headers: { 'Content-Type': undefined }
-        }).then(function(response) {
-            // Handle success
-            console.log('Upload successful:', response.data);
-        }, function(error) {
-            // Handle error
-            console.error('Error uploading file:', error);
+  OnlineLibrary.controller('upload-controller', ['$scope', '$http', function($scope, $http){
+
+    $scope.publicAccess = false;
+
+    const form = document.querySelector('form');
+    if (!form) return;
+    form.addEventListener('submit', handleSubmit);
+
+    function handleSubmit(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.currentTarget);
+        formData.set("publicAccess", $scope.publicAccess);
+        console.log(formData.get('publicAccess'));
+        fetch('https://localhost:44311/api/Upload/File', {
+            method: 'POST',
+            body: formData
         });
+
     }
+
   }]);
 
 

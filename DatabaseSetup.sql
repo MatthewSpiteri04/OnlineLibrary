@@ -38,7 +38,6 @@ CREATE TABLE Documents(
 	[Language] NVARCHAR(30),
 	UploadDate DATETIME,
 	PublicAccess BIT,
-	ImageLocation NVARCHAR(MAX),
 	DocumentLocation NVARCHAR(MAX),
 	FOREIGN KEY (TypeId) REFERENCES DocumentTypes(Id)
 );
@@ -91,7 +90,7 @@ CREATE TABLE ContributorToDocument (
 CREATE TABLE Privileges (
 	Id INT IDENTITY(1,1) PRIMARY KEY,
 	[Description] NVARCHAR(30),
-)
+);
 
 CREATE TABLE RolesToPrivileges (
 	Id INT IDENTITY(1,1) PRIMARY KEY,
