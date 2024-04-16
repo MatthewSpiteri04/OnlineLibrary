@@ -1,0 +1,25 @@
+<div class="Categories">
+  <h1>Category Manager</h1>
+  <div class="Category-Form">
+    <form action="">
+      <h2>Enter Category Name</h2>
+      <input type="text" />
+
+      <button ng-click="addInputField()">Add Attribute</button>
+
+      <!-- Dynamically added input fields will be displayed here -->
+      <div ng-repeat="inputField in inputFields">
+        <h2>Enter Attribute Name</h2>
+        <input type="text" ng-model="inputField.attributeName" />
+        <h2>Select Attribute Type</h2>
+        <select ng-model="inputField.selectedTypeName">
+          <option value="" disabled selected>Select Type Name</option>
+          <option ng-repeat="typeName in typeNames" value="{{typeName}}">
+            {{typeName}}
+          </option>
+        </select>
+        <button ng-click="removeInputField($index)">Remove</button>
+      </div>
+    </form>
+  </div>
+</div>

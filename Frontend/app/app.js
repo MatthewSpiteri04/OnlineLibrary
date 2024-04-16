@@ -22,6 +22,10 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
         templateUrl:'views/my-info.html',
         controller: 'myInfo-controller'
     })
+    .when('/category', {
+        templateUrl:'views/category.html',
+        controller: 'categories-controller'
+    })
     .otherwise({
         redirectTo: '/home'
     });
@@ -40,6 +44,7 @@ OnlineLibrary.service('userService', function($rootScope) {
     };
   });
 
+ 
 
   OnlineLibrary.controller('home-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
     $scope.user = null;
@@ -73,6 +78,8 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', 
                 $scope.currentUser.Roles = response.data;
             })
     }
+
+   
 
     $scope.doesUserExist = function(loginForm) {
         $scope.userFound = false;
@@ -154,3 +161,35 @@ OnlineLibrary.controller('elements-controller', ['$scope', 'userService', functi
         console.log($scope.user);
     });
 }]);
+
+
+OnlineLibrary.service('categoryService', function($http) {
+    this.getAttributeTypes = function() {
+        return $http.get('https://localhost:44311/api/Categories/AttributeTypes');
+    };
+});
+
+OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryService', function($scope, $http, categoryService){
+    categoryService.getAttributeTypes()
+        .then(response => {
+            $scope.typeNames = response.data;
+            console.log($scope.typeNames);
+        })
+
+        
+        $scope.addInputField = function() {
+            $scope.inputFields.push({ 
+                attributeName: '', 
+                selectedTypeName: '' 
+            });
+        };
+
+        $scope.removeInputField = function(index) {
+            $scope.inputFields.splice(index, 1);
+        
+        };
+        
+        // Initialize array to store dynamically added input fields
+        $scope.inputFields = [];
+}]);
+
