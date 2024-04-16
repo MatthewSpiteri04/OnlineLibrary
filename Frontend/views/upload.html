@@ -1,7 +1,21 @@
 <div style="margin-top: 770px;" ng-controller="upload-controller">
     <form method="post" enctype="multipart/form-data">
         <input type="text" name="title"><br>
-        <input type="text" name="language"><br>
+
+        <select name="languageId">
+            <option value="" disabled selected>Select Language</option>
+            <option ng-repeat="language in languages" value="{{language.id}}">
+              {{language.language}}
+            </option>
+          </select>
+
+        <select name="categoryId">
+            <option value="" disabled selected>Select Category</option>
+            <option ng-repeat="category in categories" value="{{category.id}}">
+              {{category.type}}
+            </option>
+          </select>
+
         <input type="checkbox" ng-click="publicAccess = !publicAccess" name="publicAccess"><br>
         <input type="file" name="file"><br>
         <button type="submit">Upload PDF</button>

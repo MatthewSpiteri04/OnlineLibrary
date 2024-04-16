@@ -26,20 +26,26 @@ CREATE TABLE Users(
 	FOREIGN KEY (RoleId) REFERENCES Roles(Id)
 );
 
-CREATE TABLE DocumentTypes(
+CREATE TABLE Categories(
 	Id INT IDENTITY(1,1) PRIMARY KEY,
-	[Type] VARCHAR(50)
+	[Name] VARCHAR(50)
+);
+
+CREATE TABLE Languages (
+	Id INT IDENTITY(1,1) PRIMARY KEY,
+	[Language] NVARCHAR(30)
 );
 
 CREATE TABLE Documents(
 	Id INT IDENTITY(1,1) PRIMARY KEY,
-	TypeId INT,
+	CategoryId INT,
 	Title NVARCHAR(100),
-	[Language] NVARCHAR(30),
+	LanguageId INT,
 	UploadDate DATETIME,
 	PublicAccess BIT,
 	DocumentLocation NVARCHAR(MAX),
-	FOREIGN KEY (TypeId) REFERENCES DocumentTypes(Id)
+	FOREIGN KEY (CategoryId) REFERENCES Categories(Id),
+	FOREIGN KEY (LanguageId) REFERENCES Languages(Id)
 );
 
 CREATE TABLE Favorites (
@@ -104,8 +110,11 @@ INSERT INTO Roles VALUES ('Public'), ('AcademicUser'), ('Librarian');
 INSERT INTO Privileges VALUES ('Manage Categories'), ('Academic User');
 INSERT INTO RolesToPrivileges VALUES (2, 2), (3, 2), (3, 1);
 
+INSERT INTO Languages VALUES ('English'), ('Italiano'), ('Español'), ('Français'), ('Deutsch'), ('Português');
 INSERT INTO AttributeTypes VALUES ('Number'), ('Text'), ('True/False'), ('Date');
 
 INSERT INTO Users VALUES ('Matthew', 'Spiteri', 'Spim04', 'matthewspiteri@gmail.com', 'matt04', 1);
 INSERT INTO Users VALUES ('Gorg', 'Borg', 'Gborg', 'gorgborg@gmail.com', 'gb05', 2);
 INSERT INTO Users VALUES ('Chris', 'Calleja', 'Cc04', 'chriscalleja@gmail.com', 'chris04', 3);
+
+INSERT INTO Categories VALUES ('Books');

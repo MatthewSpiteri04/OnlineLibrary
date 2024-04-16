@@ -26,9 +26,9 @@ namespace Backend.Controllers
 
             UploadDatabaseRequest database_request = new UploadDatabaseRequest() 
             { 
-                CategoryId = 1,
+                CategoryId = request.CategoryId,
                 Title = request.Title,
-                Language = request.Language,
+                LanguageId = request.LanguageId,
                 UploadDate = DateTime.Now,
                 PublicAccess = request.PublicAccess,
                 DocumentLocation = fileName

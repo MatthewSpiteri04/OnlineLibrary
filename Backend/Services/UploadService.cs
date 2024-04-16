@@ -26,7 +26,7 @@ namespace Backend.Services
                 var = 0;
             }
 
-            query = @"INSERT INTO Documents VALUES (" + request.CategoryId + @", '" + request.Title + @"', '" + request.Language + @"', GETDATE(), " + var + @", '" + request.DocumentLocation + @"');";
+            query = @"INSERT INTO Documents VALUES (" + request.CategoryId + @", '" + request.Title + @"', '" + request.LanguageId + @"', GETDATE(), " + var + @", '" + request.DocumentLocation + @"');";
 
             SqlDataReader reader = executeQuery();
 

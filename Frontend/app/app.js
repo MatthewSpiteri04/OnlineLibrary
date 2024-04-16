@@ -31,9 +31,23 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
     });
 }]);
 
-OnlineLibrary.service('userService', function($rootScope) {
+OnlineLibrary.service('userService', function($rootScope, $http) {
     var user = null;
 
+    this.getLanguages = function(){
+        return $http.get('https://localhost:44311/api/Get/Languages')
+        .then(response => {
+            return data = response.data;
+        });
+    };
+
+    this.getCategories = function() {
+        return $http.get('https://localhost:44311/api/Get/Categories')
+        .then(response => {
+            return response.data;
+        });
+    };
+    
     this.getCurrentUser = function() {
         return user;
     };
@@ -44,7 +58,14 @@ OnlineLibrary.service('userService', function($rootScope) {
     };
   });
 
-  OnlineLibrary.controller('upload-controller', ['$scope', '$http', function($scope, $http){
+  OnlineLibrary.controller('upload-controller', ['$scope', '$http', 'userService',function($scope, $http, userService){
+    userService.getLanguages()
+    .then(data => { 
+        console.log(data);
+        $scope.languages = data});
+    userService.getCategories()
+    .then(data => {
+        $scope.categories = data});
 
     $scope.publicAccess = false;
 
@@ -57,7 +78,8 @@ OnlineLibrary.service('userService', function($rootScope) {
 
         const formData = new FormData(event.currentTarget);
         formData.set("publicAccess", $scope.publicAccess);
-        console.log(formData.get('publicAccess'));
+        console.log(formData.get('language'));
+        console.log(formData.get('category'));
         fetch('https://localhost:44311/api/Upload/File', {
             method: 'POST',
             body: formData
@@ -70,7 +92,14 @@ OnlineLibrary.service('userService', function($rootScope) {
 
   OnlineLibrary.controller('home-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
     $scope.user = null;
-    $scope.filterOn = false
+    $scope.filterOn = false;
+
+    userService.getLanguages()
+    .then(data => { 
+        $scope.languages = data});
+    userService.getCategories()
+    .then(data => {
+        $scope.categories = data});
 
     $scope.$on('dataChanged', function(event, data) {
         $scope.user = data;
