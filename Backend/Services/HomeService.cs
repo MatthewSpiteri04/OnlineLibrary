@@ -31,6 +31,7 @@ namespace Backend.Services
                     Type = reader.GetString(1)
                 });
             }
+            reader.Close();
 
             return list;
         }
@@ -51,6 +52,7 @@ namespace Backend.Services
                     Language = reader.GetString(1)
                 });
             }
+            reader.Close();
 
             return list;
         }

@@ -59,30 +59,34 @@ OnlineLibrary.service('userService', function($rootScope, $http) {
   });
 
   OnlineLibrary.controller('upload-controller', ['$scope', '$http', 'userService',function($scope, $http, userService){
+    $scope.user = userService.getCurrentUser();
+    $scope.publicAccess = false;
+
     userService.getLanguages()
     .then(data => { 
-        console.log(data);
         $scope.languages = data});
     userService.getCategories()
     .then(data => {
         $scope.categories = data});
-
-    $scope.publicAccess = false;
+    $scope.$on('dataChanged', function(event, data) {
+        $scope.user = data;
+    });
 
     const form = document.querySelector('form');
     if (!form) return;
     form.addEventListener('submit', handleSubmit);
 
     function handleSubmit(event) {
+        console.log('Here');
         event.preventDefault();
-
         const formData = new FormData(event.currentTarget);
         formData.set("publicAccess", $scope.publicAccess);
-        console.log(formData.get('language'));
-        console.log(formData.get('category'));
+        formData.set("userId", $scope.user.id);
         fetch('https://localhost:44311/api/Upload/File', {
             method: 'POST',
             body: formData
+        }).then(response =>{
+            console.log(response);
         });
 
     }
