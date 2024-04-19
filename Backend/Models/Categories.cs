@@ -1,8 +1,8 @@
 ﻿namespace Backend.Models
 {
-	public class AttributeTypes
+	public class Categories
 	{
 		public int Id { get; set; }
-		public string TypeName { get; set; }
+		public string Name { get; set; }
 	}
 }

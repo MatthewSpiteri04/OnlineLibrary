@@ -12,9 +12,23 @@ namespace Backend.Controllers
 		[HttpGet]
 		[Route("api/Categories/AttributeTypes")]
 
-		public List<string> GetAttributeTypes()
+		public List<AttributeTypes> GetAttributeTypes()
 		{
 			return _categoryService.getAttributeTypes();
+		}
+
+		[HttpPost]
+		[Route("api/Categories/AddCategory")]
+		public Categories CreateCategory([FromBody] Categories category)
+		{
+			return _categoryService.createCategory(category);
+		}
+
+		[HttpPost]
+		[Route("api/Attributes/AddAttributes")]
+		public Attributes CreateAttrbutes([FromBody] Attributes attribute)
+		{
+			return _categoryService.createAttributes(attribute);
 		}
 
 

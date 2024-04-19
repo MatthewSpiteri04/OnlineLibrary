@@ -170,26 +170,66 @@ OnlineLibrary.service('categoryService', function($http) {
 });
 
 OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryService', function($scope, $http, categoryService){
+    
+    $scope.attributeTypes = [];
+
+    
     categoryService.getAttributeTypes()
         .then(response => {
-            $scope.typeNames = response.data;
-            console.log($scope.typeNames);
+            
+            $scope.attributeTypes = response.data;
+            console.log($scope.attributeTypes);
         })
+        .catch(error => {
+            console.error('Failed to fetch attribute types:', error);
+        });
+    
+    $scope.inputFields = [];
 
-        
-        $scope.addInputField = function() {
-            $scope.inputFields.push({ 
-                attributeName: '', 
-                selectedTypeName: '' 
+    
+    $scope.addInputField = function() {
+        $scope.inputFields.push({ 
+            Name: '' 
+        });
+    };
+
+    $scope.removeInputField = function(index) {
+        $scope.inputFields.splice(index, 1);
+    };
+    
+   
+    $scope.createCategoryAndAttributes = function(categoryForm, inputFields) {
+        console.log("Category Form:", categoryForm);
+        console.log("Input Fields:", inputFields);
+        var categoryRequest = {
+            Name: categoryForm.Name
+        };
+
+        $http.post('https://localhost:44311/api/Categories/AddCategory', categoryRequest)
+    .then(function(response) {
+        if (response.status == 200) {
+            inputFields.forEach(function(inputField) {
+                var attributeRequest = {
+                    Name: inputField.Name, 
+                    TypeId :  inputField.TypeId
+                };
+
+                $http.post('https://localhost:44311/api/Attributes/AddAttributes', attributeRequest)
+                    .then(function(response) {
+                        if (response.status == 200) {
+                            console.log('Attribute created successfully');
+                        } else {
+                            console.log('Failed to create attribute');
+                        }
+                    });
             });
-        };
 
-        $scope.removeInputField = function(index) {
-            $scope.inputFields.splice(index, 1);
-        
-        };
-        
-        // Initialize array to store dynamically added input fields
-        $scope.inputFields = [];
+            window.location.href = "#!/home";
+        } else {
+            console.log('Failed to create category');
+        }
+    });
+
+    };
+
 }]);
-

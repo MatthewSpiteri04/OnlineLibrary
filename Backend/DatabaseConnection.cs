@@ -28,7 +28,7 @@ namespace Backend
         }
 
         //executing a query
-        protected SqlDataReader executeQuery()
+        protected SqlDataReader executeQuery(string query)
         {
             if (query == "")
             {
