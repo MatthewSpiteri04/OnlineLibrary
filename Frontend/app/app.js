@@ -201,34 +201,25 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
     $scope.createCategoryAndAttributes = function(categoryForm, inputFields) {
         console.log("Category Form:", categoryForm);
         console.log("Input Fields:", inputFields);
+
+       
+
         var categoryRequest = {
-            Name: categoryForm.Name
+            CategoryName: categoryForm.Name,
+            Attributes: inputFields
         };
+        console.log(categoryRequest);
 
         $http.post('https://localhost:44311/api/Categories/AddCategory', categoryRequest)
-    .then(function(response) {
-        if (response.status == 200) {
-            inputFields.forEach(function(inputField) {
-                var attributeRequest = {
-                    Name: inputField.Name, 
-                    TypeId :  inputField.TypeId
-                };
+            .then(function(response) {
+                if (response.status == 200) {
+                    
 
-                $http.post('https://localhost:44311/api/Attributes/AddAttributes', attributeRequest)
-                    .then(function(response) {
-                        if (response.status == 200) {
-                            console.log('Attribute created successfully');
-                        } else {
-                            console.log('Failed to create attribute');
-                        }
-                    });
-            });
+                
 
             window.location.href = "#!/home";
-        } else {
-            console.log('Failed to create category');
-        }
-    });
+        } 
+    }) .catch(error => {console.log(error)});
 
     };
 

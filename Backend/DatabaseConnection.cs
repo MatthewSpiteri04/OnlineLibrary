@@ -28,7 +28,7 @@ namespace Backend
         }
 
         //executing a query
-        protected SqlDataReader executeQuery(string query)
+        protected SqlDataReader executeQuery()
         {
             if (query == "")
             {
@@ -37,5 +37,16 @@ namespace Backend
             }
             else return new SqlCommand(query, conn).ExecuteReader();
         }
-    }
+
+    	protected void executeCommand()
+		{
+			if (query == "")
+			{
+				throw new Exception("No query has been provided");
+                
+			}
+
+			else new SqlCommand(query, conn).ExecuteNonQuery();
+		}
+	}
 }
