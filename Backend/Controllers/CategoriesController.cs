@@ -51,7 +51,7 @@ namespace Backend.Controllers
 			}
 			else if (!validUser)
 			{
-				response = BadRequest(new { message = "Unauthorised Access" });
+				response = Unauthorized(new { message = "User Cannot Manage Categories" });
 			}
 			else
 			{
