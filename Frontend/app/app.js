@@ -22,6 +22,10 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
         templateUrl:'views/my-info.html',
         controller: 'myInfo-controller'
     })
+    .when('/category', {
+        templateUrl:'views/category.html',
+        controller: 'categories-controller'
+    })
     .otherwise({
         redirectTo: '/home'
     });
@@ -40,6 +44,7 @@ OnlineLibrary.service('userService', function($rootScope) {
     };
   });
 
+ 
 
   OnlineLibrary.controller('home-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
     $scope.user = null;
@@ -73,6 +78,8 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', 
                 $scope.currentUser.Roles = response.data;
             })
     }
+
+   
 
     $scope.doesUserExist = function(loginForm) {
         $scope.userFound = false;
@@ -153,4 +160,67 @@ OnlineLibrary.controller('elements-controller', ['$scope', 'userService', functi
         $scope.user = data;
         console.log($scope.user);
     });
+}]);
+
+
+OnlineLibrary.service('categoryService', function($http) {
+    this.getAttributeTypes = function() {
+        return $http.get('https://localhost:44311/api/Categories/AttributeTypes');
+    };
+});
+
+OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryService', function($scope, $http, categoryService){
+    
+    $scope.attributeTypes = [];
+
+    
+    categoryService.getAttributeTypes()
+        .then(response => {
+            
+            $scope.attributeTypes = response.data;
+            console.log($scope.attributeTypes);
+        })
+        .catch(error => {
+            console.error('Failed to fetch attribute types:', error);
+        });
+    
+    $scope.inputFields = [];
+
+    
+    $scope.addInputField = function() {
+        $scope.inputFields.push({ 
+            Name: '' 
+        });
+    };
+
+    $scope.removeInputField = function(index) {
+        $scope.inputFields.splice(index, 1);
+    };
+    
+   
+    $scope.createCategoryAndAttributes = function(categoryForm, inputFields) {
+        console.log("Category Form:", categoryForm);
+        console.log("Input Fields:", inputFields);
+
+       
+
+        var categoryRequest = {
+            CategoryName: categoryForm.Name,
+            Attributes: inputFields
+        };
+        console.log(categoryRequest);
+
+        $http.post('https://localhost:44311/api/Categories/AddCategory', categoryRequest)
+            .then(function(response) {
+                if (response.status == 200) {
+                    
+
+                
+
+            window.location.href = "#!/home";
+        } 
+    }) .catch(error => {console.log(error)});
+
+    };
+
 }]);

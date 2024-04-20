@@ -429,3 +429,18 @@ html {
 .example button:hover {
     cursor: pointer;
 }
+
+.Categories > h1{
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+    font-family: 'PT Sans';
+    
+}
+
+.Category-Form{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-family: 'PT Sans';
+}
