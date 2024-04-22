@@ -30,6 +30,10 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
         templateUrl:'views/category.html',
         controller: 'categories-controller'
     })
+    .when('/category', {
+        templateUrl:'views/category.html',
+        controller: 'categories-controller'
+    })
     .otherwise({
         redirectTo: '/home'
     });

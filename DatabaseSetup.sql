@@ -27,6 +27,7 @@ CREATE TABLE Users(
 );
 
 CREATE TABLE Categories(
+CREATE TABLE Categories(
 	Id INT IDENTITY(1,1) PRIMARY KEY,
 	[Name] VARCHAR(50)
 );
@@ -125,3 +126,4 @@ INSERT INTO AttributeTypes VALUES ('Number'), ('Text'), ('True/False'), ('Date')
 INSERT INTO Users VALUES ('Matthew', 'Spiteri', 'Spim04', 'matthewspiteri@gmail.com', 'matt04', 1);
 INSERT INTO Users VALUES ('Gorg', 'Borg', 'Gborg', 'gorgborg@gmail.com', 'gb05', 2);
 INSERT INTO Users VALUES ('Chris', 'Calleja', 'Cc04', 'chriscalleja@gmail.com', 'chris04', 3);
+
