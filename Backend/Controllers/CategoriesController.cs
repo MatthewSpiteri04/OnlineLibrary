@@ -17,23 +17,40 @@ namespace Backend.Controllers
 			return _categoryService.getAttributeTypes();
 		}
 
+		[HttpGet]
+		[Route("api/Categories/GetAttributes")]
+
+		public List<Attributes> GetAttributes()
+		{
+			return _categoryService.getAttributes();
+		}
+
 		[HttpPost]
 		[Route("api/Categories/AddCategory")]
-		public IActionResult CreateCategory([FromBody] CategoryAttributes request)
-		{
+		public IActionResult CreateCategory([FromBody] CategoryAttributes request) { 
+			 if (request == null || request.Attributes == null)
+				{
+					// Handle the case where request or its Attributes property is null
+					return BadRequest("Request or Attributes are null");
+				}
+		
 			bool validAttributes = _categoryService.checkValidAttributes(request.Attributes);
 			bool validCategory = _categoryService.checkValidCategories(request.CategoryName);
 			bool validUser = _categoryService.checkValidUser(request.UserId);
 
 			IActionResult response;
-			if (validAttributes && validCategory && validUser)
+			if (validCategory)
 			{
 				int categoryId = _categoryService.createCategory(request.CategoryName);
 
 				List<int> attributeId = new List<int>();
+
 				foreach (var attribute in request.Attributes)
 				{
-					attributeId.Add(_categoryService.createAttributes(attribute));
+					if (!attribute.ListView)
+					{
+						attributeId.Add(_categoryService.createAttributes(attribute));
+					}
 
 				}
 
@@ -41,18 +58,12 @@ namespace Backend.Controllers
 				response = Ok(new { message = "Success!" });
 
 			}
-			else if (!validAttributes)
-			{
-				response = BadRequest(new {message = "Duplicate Attribute"});
-			}
+			
 			else if (!validCategory)
 			{
 				response = BadRequest(new { message = "Duplicate Category" });
 			}
-			else if (!validUser)
-			{
-				response = Unauthorized(new { message = "User Cannot Manage Categories" });
-			}
+			
 			else
 			{
 				response = BadRequest(new { message = "Unknown Error Occurred " });

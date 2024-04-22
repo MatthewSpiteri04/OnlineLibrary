@@ -30,12 +30,14 @@ namespace Backend
         //executing a query
         protected SqlDataReader executeQuery()
         {
-            if (query == "")
+			//conn.Open();
+			if (query == "")
             {
+
                 new Exception("No query has been provided");
                 return null;
             }
-            else return new SqlCommand(query, conn).ExecuteReader();
+			else return new SqlCommand(query, conn).ExecuteReader();
         }
 
     	protected void executeCommand()

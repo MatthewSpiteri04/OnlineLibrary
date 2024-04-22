@@ -167,12 +167,15 @@ OnlineLibrary.service('categoryService', function($http) {
     this.getAttributeTypes = function() {
         return $http.get('https://localhost:44311/api/Categories/AttributeTypes');
     };
-});
+    this.getAttributes = function(){
+        return $http.get('https://localhost:44311/api/Categories/GetAttributes');
+    };
+}); 
 
 OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryService', function($scope, $http, categoryService){
     
     $scope.attributeTypes = [];
-
+    $scope.attributes = [];
     
     categoryService.getAttributeTypes()
         .then(response => {
@@ -183,32 +186,59 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
         .catch(error => {
             console.error('Failed to fetch attribute types:', error);
         });
+
+        categoryService.getAttributes()
+        .then(response => {
+            
+            $scope.attributes = response.data;
+            console.log($scope.attributes);
+        })
+        .catch(error => {
+            console.error('Failed to fetch attributes:', error);
+        });
+
     
     $scope.inputFields = [];
 
+  
+    $scope.toggleView = function(inputField) {
+        // Toggle the listView property to switch between select and input views
+        inputField.listView = !inputField.listView;
     
-    $scope.addInputField = function() {
+        // Clear the inputField.Name when switching to the input view
+        if (!inputField.listView) {
+            inputField.Name = ''; // Clear the input field value
+        }
+    };
+    
+
+      $scope.addInputField = function() {
         $scope.inputFields.push({ 
-            Name: '' 
+            Name: '',
+            listView: true 
         });
     };
-
+    
     $scope.removeInputField = function(index) {
         $scope.inputFields.splice(index, 1);
     };
-    
+
+   
    
     $scope.createCategoryAndAttributes = function(categoryForm, inputFields) {
-        console.log("Category Form:", categoryForm);
-        console.log("Input Fields:", inputFields);
-
        
+
+      
+         
+  
 
         var categoryRequest = {
             CategoryName: categoryForm.Name,
-            Attributes: inputFields
+            Attributes: inputFields,
         };
-        console.log(categoryRequest);
+       
+         console.log(categoryRequest);
+        
 
         $http.post('https://localhost:44311/api/Categories/AddCategory', categoryRequest)
             .then(function(response) {

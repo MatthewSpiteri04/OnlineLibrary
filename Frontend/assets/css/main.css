@@ -235,7 +235,7 @@ html {
 
 }
 
-.Login-Form >  button, .row2 > button {
+.Login-Form >  button, .row2 > button{
     display: flex;
     margin-left: auto;
     margin-right: auto;
@@ -430,6 +430,20 @@ html {
     cursor: pointer;
 }
 
+.Category-Form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    width: 650px;
+    border-style: solid;
+    border-color: #BA0C2F;
+    border-radius: 7px;
+}
+
 .Categories > h1{
     display: flex;
     justify-content: center;
@@ -437,10 +451,150 @@ html {
     font-family: 'PT Sans';
     
 }
+.Category-Section{
+    display: flex;
+    flex-direction: row;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'PT Sans';
+    align-items: center;
+   
+    width: fit-content;
+  
+}
 
-.Category-Form{
+.Category-input {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+}
+
+.Add-Attribute{
+    margin-top: 80px;
+}
+.Add-Attribute button{
+   
+    background-color: #BA0C2F;
+    color: white;
+    padding: 5px;
+    border: none;
+    width: fit-content;
+    border-radius: 7px;
+    font-size:medium;
+    font-weight: bolder;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    float: right;
+}
+
+.Category-input > input{
+    width: 215px;
+    border-style: solid;
+    border-color: #BA0C2F;
+    border-radius: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.Category-input > button{
+    background-color: #BA0C2F;
+    color: white;
+    padding: 5px;
+    border: none;
+    width: fit-content;
+    border-radius: 7px;
+    font-size:medium;
+    font-weight: bolder;
+    margin-left: 10px;
+}
+
+#Submit{
+    display:flex;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    margin-top: 50px;
+    background-color: #BA0C2F;
+    color: white;
+    padding: 10px;
+    border: none;
+    width: fit-content;
+    border-radius: 7px;
+    font-size: 1.17em;
+    font-weight: bolder;
+    cursor: pointer;
+}
+
+
+
+.Attributes {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    align-items: center;
     font-family: 'PT Sans';
+}
+
+.Attribute-Input{
+    display: flex;
+    flex-direction: row;
+}
+
+.Attribute-Input > button{
+    background-color: #BA0C2F;
+    color: white;
+    padding: 5px;
+    border: none;
+    width: fit-content;
+    border-radius: 7px;
+    font-size:small;
+    font-weight: bolder;
+    margin-left: 5px;
+    margin-top: -2px;
+}
+
+
+
+
+
+
+  
+
+
+.Attributes > button{
+    margin-top: 70px;
+    background-color: #BA0C2F;
+    color: white;
+    padding: 5px;
+    border: none;
+    width: fit-content;
+    border-radius: 7px;
+    font-size:medium;
+    font-weight: bolder;
+
+}
+    
+   
+
+
+.Attribute-Name, .Attribute-Type{
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+
+.Attributes > input{
+    margin-left: 10px;
+    margin-right: 60px;
+   
+   
+}
+
+
+.List{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
