@@ -42,6 +42,7 @@ namespace Backend.Services
                 userIsAllowed = reader.GetInt32(0);
             }
             reader.Close();
+            conn.Close();
 
             if (userIsAllowed == 1)
             {
@@ -53,8 +54,9 @@ namespace Backend.Services
             }
         }
 
-        public void SaveUploadedFile(UploadDatabaseRequest request)
+        public int SaveUploadedFile(UploadDatabaseRequest request)
         {
+            int documentId = -1;
             int var = -1;
             if (request.PublicAccess == true)
             {
@@ -65,14 +67,54 @@ namespace Backend.Services
                 var = 0;
             }
 
-            query = @"INSERT INTO Documents VALUES (" + request.CategoryId + @", '" + request.Title + @"', '" + request.LanguageId + @"', GETDATE(), " + var + @", '" + request.DocumentLocation + @"');";
+            query = @"INSERT INTO Documents VALUES (" + request.CategoryId + @", '" + request.Title + @"', '" + request.LanguageId + @"', GETDATE(), " + var + @", '" + request.DocumentLocation + @"');
+                      SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
             SqlDataReader reader = executeQuery();
 
             while (reader.Read())
             {
+                documentId = reader.GetInt32(0); 
             }
             reader.Close();
+            conn.Close();
+            return documentId;
+        }
+
+        public void setDocumentAttribute(int documentId, List<AttributeUploadRequest> attributes)
+        {
+            foreach (AttributeUploadRequest attr in attributes)
+            {
+                query = @"INSERT INTO DocumentAttributes ([DocumentId], [AttributeId], [Value]) VALUES (" + documentId + @", " + attr.Id + @", '" + attr.Value + @"');";
+
+                executeCommand();
+            }
+        }
+
+        public List<AttributeRequest> getAttributes(int categoryId)
+        {
+            List<AttributeRequest > attributes = new List<AttributeRequest>();
+
+            query = @"SELECT A.* FROM Categories C
+                      INNER JOIN CategoryAttributes CA ON C.Id = CA.CategoryId
+                      INNER JOIN Attributes A ON A.Id = CA.AttributeId
+                      WHERE C.Id = " + categoryId;
+
+            SqlDataReader reader = executeQuery();
+
+            while (reader.Read())
+            {
+                attributes.Add(new AttributeRequest()
+                {
+                    Id = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    TypeId = reader.GetInt32(2)
+                });
+            }
+            reader.Close();
+            conn.Close();
+
+            return attributes;
         }
     }
 }

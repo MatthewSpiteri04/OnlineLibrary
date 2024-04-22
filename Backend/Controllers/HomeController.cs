@@ -23,7 +23,5 @@ namespace Backend.Controllers
         {
             return _homeService.getLanguages();
         }
-        
-
     }
 }

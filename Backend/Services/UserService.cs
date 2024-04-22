@@ -37,6 +37,7 @@ namespace Backend.Services
                 }
             }
             reader.Close();
+            conn.Close();
 
             return user_permissions;
         }
@@ -53,6 +54,7 @@ namespace Backend.Services
                flag = reader.GetInt32(0);
             }
             reader.Close();
+            conn.Close();
 
             if (flag == 1)
             {
@@ -107,6 +109,7 @@ namespace Backend.Services
                     new_user = new User() { Id = reader.GetInt32(0), FirstName = reader.GetString(1), LastName = reader.GetString(2), Username = reader.GetString(3), Email = reader.GetString(4), Password = reader.GetString(5), RoleId = reader.GetInt32(6) };
                 }
                 reader.Close();
+                conn.Close();
 
                 return new_user;
             }
@@ -129,6 +132,7 @@ namespace Backend.Services
                 user = new User() { Id = reader.GetInt32(0), FirstName = reader.GetString(1), LastName = reader.GetString(2), Username = reader.GetString(3), Email = reader.GetString(4), Password = reader.GetString(5), RoleId = reader.GetInt32(6) };
             }
             reader.Close();
+            conn.Close();
 
             if (user.Id <= 0)
             {

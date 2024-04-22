@@ -32,6 +32,7 @@ namespace Backend.Services
                 });
             }
             reader.Close();
+            conn.Close();
 
             return list;
         }
@@ -53,6 +54,7 @@ namespace Backend.Services
                 });
             }
             reader.Close();
+            conn.Close();
 
             return list;
         }

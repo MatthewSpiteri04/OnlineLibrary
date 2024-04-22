@@ -2,6 +2,7 @@
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Backend.Controllers
 {
@@ -13,6 +14,8 @@ namespace Backend.Controllers
         [Route("api/Upload/File")]
         public async Task<IActionResult> UploadPdf([FromForm] UploadRequest request)
         {
+            List<AttributeUploadRequest> attributes = JsonConvert.DeserializeObject<List<AttributeUploadRequest>>(request.AttributesListJSON);
+
             if (_uploadService.CanUserUpload(request.UserId))
             {
                 var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
@@ -36,14 +39,23 @@ namespace Backend.Controllers
                     DocumentLocation = fileName
                 };
 
-                _uploadService.SaveUploadedFile(database_request);
+                int documentId = _uploadService.SaveUploadedFile(database_request);
+
+                _uploadService.setDocumentAttribute(documentId, attributes);
 
                 return Ok("Success");
             }
             else
             {
-                return BadRequest("User does not have upload priviledges");
+                return Unauthorized("User does not have upload priviledges");
             }
+        }
+
+        [HttpGet]
+        [Route("api/Get/Attributes/{categoryId}")]
+        public List<AttributeRequest> GetAttributes(int categoryId)
+        {
+            return _uploadService.getAttributes(categoryId);
         }
 
     }

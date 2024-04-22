@@ -2,6 +2,7 @@
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 
 namespace Backend.Controllers
 {
@@ -21,12 +22,26 @@ namespace Backend.Controllers
 		[Route("api/Categories/AddCategory")]
 		public IActionResult CreateCategory([FromBody] CategoryAttributes request)
 		{
-			bool validAttributes = _categoryService.checkValidAttributes(request.Attributes);
+            IActionResult response;
+			bool validAttributeList = true;
+            HashSet<string> uniqueAttributesRequest = new HashSet<string>();
+            foreach (Attributes attrb in request.Attributes)
+            {
+                if (uniqueAttributesRequest.Contains(attrb.Name))
+                {
+                    validAttributeList = false;
+                }
+                else
+                {
+                    uniqueAttributesRequest.Add(attrb.Name);
+                }
+            }
+
+            bool validAttributes = _categoryService.checkValidAttributes(request.Attributes);
 			bool validCategory = _categoryService.checkValidCategories(request.CategoryName);
 			bool validUser = _categoryService.checkValidUser(request.UserId);
 
-			IActionResult response;
-			if (validAttributes && validCategory && validUser)
+			if (validAttributes && validCategory && validUser && validAttributeList)
 			{
 				int categoryId = _categoryService.createCategory(request.CategoryName);
 
@@ -34,14 +49,17 @@ namespace Backend.Controllers
 				foreach (var attribute in request.Attributes)
 				{
 					attributeId.Add(_categoryService.createAttributes(attribute));
-
 				}
 
-				 _categoryService.createCategoryAttributes(categoryId, attributeId);
+				_categoryService.createCategoryAttributes(categoryId, attributeId);
 				response = Ok(new { message = "Success!" });
 
 			}
-			else if (!validAttributes)
+            else if (!validAttributeList)
+            {
+                response = BadRequest(new { message = "Duplicate Attributes In List" });
+            }
+            else if (!validAttributes)
 			{
 				response = BadRequest(new {message = "Duplicate Attribute"});
 			}

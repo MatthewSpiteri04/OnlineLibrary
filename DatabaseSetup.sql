@@ -31,10 +31,30 @@ CREATE TABLE Categories(
 	[Name] VARCHAR(50)
 );
 
+CREATE TABLE AttributeTypes (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    [TypeName] NVARCHAR(50)
+);
+
+CREATE TABLE Attributes (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    [Name] NVARCHAR(50),
+	[TypeId] INT
+	FOREIGN KEY (TypeId) REFERENCES AttributeTypes(Id)
+);
+
+CREATE TABLE CategoryAttributes(
+	Id INT IDENTITY(1,1) PRIMARY KEY,
+	CategoryId INT,
+	AttributeId INT,
+	FOREIGN KEY (CategoryId) REFERENCES Categories(Id),
+	FOREIGN KEY (AttributeId) REFERENCES Attributes(Id)
+
+);
+
 CREATE TABLE Languages (
 	Id INT IDENTITY(1,1) PRIMARY KEY,
-	[Name] NVARCHAR(50),
-	
+	[Language] NVARCHAR(30)
 );
 
 CREATE TABLE Documents(
@@ -49,33 +69,21 @@ CREATE TABLE Documents(
 	FOREIGN KEY (LanguageId) REFERENCES Languages(Id)
 );
 
+CREATE TABLE DocumentAttributes (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+	DocumentID INT,
+    AttributeID INT,
+	[Value] NVARCHAR(MAX),
+	FOREIGN KEY (DocumentId) REFERENCES Documents(Id),
+	FOREIGN KEY (AttributeId) REFERENCES Attributes(Id)
+);
+
 CREATE TABLE Favorites (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     UserId INT,
     DocumentId INT
 	FOREIGN KEY (UserId) REFERENCES Users(Id),
 	FOREIGN KEY (DocumentId) REFERENCES Documents(Id)
-);
-
-CREATE TABLE AttributeTypes (
-    Id INT IDENTITY(1,1) PRIMARY KEY,
-    [TypeName] NVARCHAR(50)
-);
-
-CREATE TABLE Attributes (
-    Id INT IDENTITY(1,1) PRIMARY KEY,
-    [Name] NVARCHAR(50),
-	[TypeId] INT
-	FOREIGN KEY (TypeId) REFERENCES AttributeTypes(Id)
-);
-
-CREATE TABLE AttributeValues (
-    Id INT IDENTITY(1,1) PRIMARY KEY,
-	CategoryID INT,
-    AttributeID INT,
-	[Value] NVARCHAR(MAX),    
-	FOREIGN KEY (CategoryId) REFERENCES Categories(Id),
-	FOREIGN KEY (AttributeId) REFERENCES Attributes(Id)
 );
 
 CREATE TABLE Contributors (
@@ -117,5 +125,3 @@ INSERT INTO AttributeTypes VALUES ('Number'), ('Text'), ('True/False'), ('Date')
 INSERT INTO Users VALUES ('Matthew', 'Spiteri', 'Spim04', 'matthewspiteri@gmail.com', 'matt04', 1);
 INSERT INTO Users VALUES ('Gorg', 'Borg', 'Gborg', 'gorgborg@gmail.com', 'gb05', 2);
 INSERT INTO Users VALUES ('Chris', 'Calleja', 'Cc04', 'chriscalleja@gmail.com', 'chris04', 3);
-
-INSERT INTO Categories VALUES ('Books');
