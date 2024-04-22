@@ -33,7 +33,8 @@ CREATE TABLE Categories(
 
 CREATE TABLE Languages (
 	Id INT IDENTITY(1,1) PRIMARY KEY,
-	[Language] NVARCHAR(30)
+	[Name] NVARCHAR(50),
+	
 );
 
 CREATE TABLE Documents(
@@ -70,10 +71,10 @@ CREATE TABLE Attributes (
 
 CREATE TABLE AttributeValues (
     Id INT IDENTITY(1,1) PRIMARY KEY,
+	CategoryID INT,
     AttributeID INT,
-    [Value] NVARCHAR(MAX),
-    DocumentID INT,
-	FOREIGN KEY (DocumentId) REFERENCES Documents(Id),
+	[Value] NVARCHAR(MAX),    
+	FOREIGN KEY (CategoryId) REFERENCES Categories(Id),
 	FOREIGN KEY (AttributeId) REFERENCES Attributes(Id)
 );
 
