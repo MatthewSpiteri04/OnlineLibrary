@@ -316,8 +316,10 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
       $scope.addInputField = function() {
         $scope.inputFields.push({ 
             Name: '',
+            TypeId: 0,
             listView: true 
         });
+        console.log($scope.inputFields);
     };
     
     $scope.removeInputField = function(index) {
@@ -327,12 +329,18 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
    
    
     $scope.createCategoryAndAttributes = function(categoryForm, inputFields) {
+        inputFields.forEach(element => {
+        if(!element.listView){
+            element.id = 0;
+            }
+         })    
+        
         var categoryRequest = {
             CategoryName: categoryForm.Name,
             Attributes: inputFields,
             UserId: $scope.user.id
         };
-       
+        console.log($scope.attributeTypes);
          console.log(categoryRequest);
         
 

@@ -430,33 +430,41 @@ html {
     cursor: pointer;
 }
 
-.Category-Form{
+.Categories{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-left: auto;
+    margin-left: 180px;
     margin-right: auto;
-    margin-top: 0;
-    width: 650px;
+    margin-top: 120px;
+    width: 1000px;
+    padding-right: 60px;
     border-style: solid;
     border-color: #BA0C2F;
     border-radius: 7px;
+    font-family: 'Lato';
+    color: #BA0C2F;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.Categories button{
+    cursor: pointer;
+    
 }
 
 .Categories > h1{
     display: flex;
     justify-content: center;
-    margin-top: 100px;
-    font-family: 'PT Sans';
-    
+  
 }
+
 .Category-Section{
     display: flex;
     flex-direction: row;
     margin-left: auto;
     margin-right: auto;
-    font-family: 'PT Sans';
+   
     align-items: center;
    
     width: fit-content;
@@ -467,10 +475,12 @@ html {
     display: flex;
     flex-direction: column;
     margin-right: 20px;
+    font-size: 10px;
+    
 }
 
 .Add-Attribute{
-    margin-top: 80px;
+    margin-top: 50px;
 }
 .Add-Attribute button{
    
@@ -488,12 +498,15 @@ html {
 }
 
 .Category-input > input{
-    width: 215px;
-    border-style: solid;
-    border-color: #BA0C2F;
+    font-family: 'Lato';
+    margin-bottom: 15px;
+    padding: 10px;
     border-radius: 5px;
-    margin-left: auto;
-    margin-right: auto;
+    font-size: 16px;
+    width: 350px;
+    box-sizing: border-box;
+    border: 2px solid #BA0C2F;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
 .Category-input > button{
@@ -529,16 +542,19 @@ html {
 
 .Attributes {
     display: flex;
-    flex-direction: row;
+    
     justify-content: center;
     align-items: center;
-    font-family: 'PT Sans';
+   
 }
 
 .Attribute-Input{
     display: flex;
-    flex-direction: row;
+    
+   
 }
+
+
 
 .Attribute-Input > button{
     background-color: #BA0C2F;
@@ -550,15 +566,8 @@ html {
     font-size:small;
     font-weight: bolder;
     margin-left: 5px;
-    margin-top: -2px;
+    
 }
-
-
-
-
-
-
-  
 
 
 .Attributes > button{
@@ -575,14 +584,84 @@ html {
 }
     
    
+.List{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 
+}
 
 .Attribute-Name, .Attribute-Type{
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    margin-left: 25px;
+   
+    
 }
 
+.Attribute-Name{
+    font-size: 10px;
+}
+
+
+.Attribute-Input  select, .Attribute-Name > input, .TypeName > input{
+    font-family: 'Lato';
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 350px;
+    box-sizing: border-box;
+    border: 2px solid #BA0C2F;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.Type{
+    display: flex;
+    flex-direction: row;
+}
+
+.TypeName, .Attribute-Type{
+    display: flex;
+    flex-direction: column;
+}
+
+.Attribute-Type{
+    margin-left: 50px;
+    margin-top: -44px;
+}
+
+.Buttons{
+    display: flex;
+    flex-direction: row;
+    margin-top: 30px;
+    margin-left: 20px;
+
+}
+
+.View{
+    background-color: #BA0C2F;
+    color: white;
+    padding: 5px;
+    border: none;
+    width: fit-content;
+    border-radius: 7px;
+    font-size:medium;
+    font-weight: bolder;
+    cursor: pointer;
+}
+
+.Remove{
+    margin-left: 10px;
+    color: #BA0C2F;
+    cursor: pointer;
+    
+}
+
+.Remove:hover{
+    color: red;
+}
 
 .Attributes > input{
     margin-left: 10px;
@@ -592,9 +671,3 @@ html {
 }
 
 
-.List{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}

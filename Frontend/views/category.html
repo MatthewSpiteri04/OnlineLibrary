@@ -16,13 +16,12 @@
         </div>
       </div>
 
-      <!-- Dynamically added input fields will be displayed here -->
       <div class="Attributes" ng-repeat="inputField in inputFields">
-        <div class="Attribute-Name">
-          <h2>Enter Attribute Name</h2>
-          <div class="Attribute-Input">
+        <div class="Attribute-Input">
+          <div class="Attribute-Name">
+            <h2>Enter Attribute Name</h2>
             <div ng-show="inputField.listView">
-              <select ng-model="inputField.Name">
+              <select ng-model="inputField.Id">
                 <option value="" disabled selected>Select From List</option>
                 <option
                   ng-repeat="attribute in attributes"
@@ -32,32 +31,36 @@
                 </option>
               </select>
             </div>
-            <div class="List" ng-hide="inputField.listView">
-              <div class="Attribute-Name">
-                <input type="text" ng-model="inputField.Name" />
+
+            <div ng-hide="inputField.listView">
+              <div class="Type">
+                <div class="TypeName">
+                  <input type="text" ng-model="inputField.Name" />
+                </div>
+                <div class="Attribute-Type">
+                  <h2>Select Attribute Type</h2>
+                  <select ng-model="inputField.TypeId">
+                    <option value="" disabled selected>Select Type Name</option>
+                    <option
+                      ng-repeat="type in attributeTypes"
+                      value="{{ type }}"
+                    >
+                      {{ type }}
+                    </option>
+                  </select>
+                </div>
               </div>
-              <div class="Attribute-Type">
-                <h2>Select Attribute Type</h2>
-                <select ng-model="inputField.TypeId">
-                  <option value="" disabled selected>Select Type Name</option>
-                  <option
-                    ng-repeat="type in attributeTypes"
-                    value="{{ type.id }}"
-                  >
-                    {{ type.typeName }}
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div ng-click="toggleView(inputField)">
-              {{ inputField.listView ? 'Manual Input' : 'Show List' }}
             </div>
           </div>
         </div>
-
-        <button type="button" ng-click="removeInputField($index)">
-          Remove
-        </button>
+        <div class="Buttons">
+          <div class="View" ng-click="toggleView(inputField)">
+            {{ inputField.listView ? 'Manual Input' : 'Show List' }}
+          </div>
+          <div class="Remove" type="button" ng-click="removeInputField($index)">
+            <i class="fa-solid fa-trash fa-2x"></i>
+          </div>
+        </div>
       </div>
       <button id="Submit" type="submit">Submit</button>
     </form>

@@ -32,7 +32,6 @@ namespace Backend.Controllers
 		{
 			if (request == null || request.Attributes == null)
 			{
-				// Handle the case where request or its Attributes property is null
 				return BadRequest("Request or Attributes are null");
 			}
 
@@ -66,6 +65,10 @@ namespace Backend.Controllers
 					if (!attribute.ListView)
 					{
 						attributeId.Add(_categoryService.createAttributes(attribute));
+					}
+					else
+					{
+						attributeId.Add(attribute.Id);
 					}
 
 				}
