@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +8,7 @@ namespace Backend
 {
     public class DatabaseConnection
     {
-        private SqlConnection conn;
+        protected SqlConnection conn;
         protected string query;
 
         //setting up the connection
@@ -16,39 +16,40 @@ namespace Backend
         {
             conn = new SqlConnection("Data Source=localhost\\SQLEXPRESS;Initial Catalog=OnlineLibrary;Integrated Security=True;Encrypt=False;");
             query = "";
-
-            try
-            {
-                conn.Open();
-            }
-            catch (SqlException e)
-            {
-                Console.WriteLine(e);
-            }
         }
 
         //executing a query
         protected SqlDataReader executeQuery()
         {
-			//conn.Open();
-			if (query == "")
+            //conn.Open();
+            if (query == "")
             {
-
-                new Exception("No query has been provided");
-                return null;
+                throw new Exception("No query has been provided");
             }
-			else return new SqlCommand(query, conn).ExecuteReader();
+            else
+            {
+                conn.Open();
+                SqlDataReader reader = new SqlCommand(query, conn).ExecuteReader();
+                return reader;
+            }
         }
 
-    	protected void executeCommand()
-		{
-			if (query == "")
-			{
-				throw new Exception("No query has been provided");
-                
-			}
 
-			else new SqlCommand(query, conn).ExecuteNonQuery();
-		}
-	}
+
+        protected void executeCommand()
+        {
+            if (query == "")
+            {
+                throw new Exception("No query has been provided");
+
+            }
+
+            else
+            {
+                conn.Open();
+                new SqlCommand(query, conn).ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+    }
 }

@@ -18,9 +18,17 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
         templateUrl:'views/help.html',
         controller: 'users-controller'
     })
+    .when('/upload', {
+        templateUrl:'views/upload.html',
+        controller: 'upload-controller'
+    })
     .when('/my-info', {
         templateUrl:'views/my-info.html',
         controller: 'myInfo-controller'
+    })
+    .when('/category', {
+        templateUrl:'views/category.html',
+        controller: 'categories-controller'
     })
     .when('/category', {
         templateUrl:'views/category.html',
@@ -31,9 +39,9 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
     });
 }]);
 
-OnlineLibrary.service('userService', function($rootScope) {
+OnlineLibrary.service('userService', function($rootScope, $http) {
     var user = null;
-
+    
     this.getCurrentUser = function() {
         return user;
     };
@@ -44,11 +52,102 @@ OnlineLibrary.service('userService', function($rootScope) {
     };
   });
 
- 
+  OnlineLibrary.service('uploadService', function($rootScope, $http) {
+    this.getLanguages = function(){
+        return $http.get('https://localhost:44311/api/Get/Languages')
+        .then(response => {
+            return data = response.data;
+        });
+    };
 
-  OnlineLibrary.controller('home-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
+    this.getCategories = function() {
+        return $http.get('https://localhost:44311/api/Get/Categories')
+        .then(response => {
+            return response.data;
+        });
+    };
+
+    this.getAttributes = function(categoryId) {
+        return $http.get('https://localhost:44311/api/Get/Attributes/' + categoryId)
+        .then(response => {
+            return response.data;
+        });
+    };
+  });
+
+  OnlineLibrary.controller('upload-controller', ['$scope', 'userService', 'uploadService', function($scope, userService, uploadService){
+    $scope.user = userService.getCurrentUser();
+    $scope.publicAccess = false;
+    $scope.attributes = [];
+    $scope.categories = [];
+    
+    uploadService.getLanguages()
+    .then(data => { 
+        $scope.languages = data;
+    });
+    uploadService.getCategories()
+    .then(data => {
+        $scope.categories = data;
+    });
+    
+    $scope.$on('dataChanged', function(event, data) {
+        $scope.user = data;
+    });
+
+    $scope.loadAttributes = function(id){
+        uploadService.getAttributes(id)
+        .then(data => {
+            $scope.attributes = data;
+        });
+        $scope.categories.forEach(element => {
+            if(element.id == id){
+                $scope.categoryName = element.type;
+            }
+        });
+    };
+
+    const form = document.querySelector('form');
+    if (!form) return;
+    form.addEventListener('submit', handleSubmit);
+
+    function handleSubmit(event) {
+        var attributeList = [];
+        const formData = new FormData(event.currentTarget);
+
+        $scope.attributes.forEach(function(attr){
+            var temp = formData.get(attr.name);
+            attributeList.push({id: attr.id, value: temp});
+        });
+        event.preventDefault();
+        
+        
+        formData.set("publicAccess", $scope.publicAccess);
+        formData.set("userId", $scope.user.id);
+        formData.set("attributesListJSON", JSON.stringify(attributeList));
+        console.log(formData.get("attributesListJSON"));
+
+        fetch('https://localhost:44311/api/Upload/File', {
+            method: 'POST',
+            body: formData
+        }).then(response =>{
+            console.log(response);
+        });
+
+    }
+
+  }]);
+
+
+  OnlineLibrary.controller('home-controller', ['$scope', '$http', 'userService', 'uploadService', function($scope, $http, userService, uploadService){
     $scope.user = null;
-    $scope.filterOn = false
+    $scope.filterOn = false;
+
+    uploadService.getLanguages()
+    .then(data => { 
+        $scope.languages = data});
+    uploadService.getCategories()
+    .then(data => {
+        $scope.categories = data});
 
     $scope.$on('dataChanged', function(event, data) {
         $scope.user = data;
@@ -172,16 +271,18 @@ OnlineLibrary.service('categoryService', function($http) {
     };
 }); 
 
-OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryService', function($scope, $http, categoryService){
-    
+OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryService', 'userService', function($scope, $http, categoryService, userService){
+    $scope.user = userService.getCurrentUser();
+    $scope.$on('dataChanged', function(event, data) {
+        $scope.user = data;
+    });
+
     $scope.attributeTypes = [];
     $scope.attributes = [];
     
     categoryService.getAttributeTypes()
         .then(response => {
-            
             $scope.attributeTypes = response.data;
-            console.log($scope.attributeTypes);
         })
         .catch(error => {
             console.error('Failed to fetch attribute types:', error);
@@ -226,15 +327,10 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
    
    
     $scope.createCategoryAndAttributes = function(categoryForm, inputFields) {
-       
-
-      
-         
-  
-
         var categoryRequest = {
             CategoryName: categoryForm.Name,
             Attributes: inputFields,
+            UserId: $scope.user.id
         };
        
          console.log(categoryRequest);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.SqlClient;
 using Backend.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -23,8 +23,9 @@ namespace Backend.Services
 				AttributeTypes attributeType = new AttributeTypes() { Id = reader.GetInt32(0), TypeName = reader.GetString(1) };
 				attribute_types.Add(attributeType);
 			}
-
-			return attribute_types;
+			reader.Close();
+            conn.Close();
+            return attribute_types;
 		}
 
 		public List<Attributes> getAttributes()
@@ -80,7 +81,8 @@ namespace Backend.Services
 				catId = reader.GetInt32(0);
 			}
 			reader.Close();
-			return catId;
+            conn.Close();
+            return catId;
 
 		}
 
@@ -99,7 +101,8 @@ namespace Backend.Services
 				attrId = reader.GetInt32(0);
 			}
 			reader.Close();
-			return attrId;
+            conn.Close();
+            return attrId;
 
 		}
 
@@ -136,8 +139,9 @@ namespace Backend.Services
 					}
 				}
 				reader.Close();
-				
-			}
+                conn.Close();
+
+            }
 
 			if(valid  == 1)
 			{
@@ -154,28 +158,28 @@ namespace Backend.Services
 			int valid = 0;
 		
 			
-				query = @"
+			query = @"
 
-					IF EXISTS (SELECT 1 FROM Categories WHERE [Name] = '" + categories + @"')
-						SELECT 1;
+				IF EXISTS (SELECT 1 FROM Categories WHERE [Name] = '" + categories + @"')
+					SELECT 1;
     
-					ELSE
-						SELECT 0;";
+				ELSE
+					SELECT 0;";
 
-				SqlDataReader reader = executeQuery();
-				while (reader.Read())
+			SqlDataReader reader = executeQuery();
+			while (reader.Read())
+			{
+
+				if (reader.GetInt32(0) == 1)
 				{
-
-					if (reader.GetInt32(0) == 1)
-					{
-						valid = 1;
-					}
+					valid = 1;
 				}
-				reader.Close();
+			}
+			reader.Close();
+            conn.Close();
 
-			
 
-			if (valid == 1)
+            if (valid == 1)
 			{
 				return false;
 			}
@@ -212,10 +216,11 @@ namespace Backend.Services
 				}
 			}
 			reader.Close();
+            conn.Close();
 
 
 
-			if (valid == 1)
+            if (valid == 1)
 			{
 				return true;
 			}
