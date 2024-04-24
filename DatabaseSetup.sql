@@ -26,29 +26,9 @@ CREATE TABLE Users(
 	FOREIGN KEY (RoleId) REFERENCES Roles(Id)
 );
 
-CREATE TABLE DocumentTypes(
+CREATE TABLE Categories(
 	Id INT IDENTITY(1,1) PRIMARY KEY,
-	[Type] VARCHAR(50)
-);
-
-CREATE TABLE Documents(
-	Id INT IDENTITY(1,1) PRIMARY KEY,
-	TypeId INT,
-	Title NVARCHAR(100),
-	[Language] NVARCHAR(30),
-	UploadDate DATETIME,
-	PublicAccess BIT,
-	ImageLocation NVARCHAR(MAX),
-	DocumentLocation NVARCHAR(MAX),
-	FOREIGN KEY (TypeId) REFERENCES DocumentTypes(Id)
-);
-
-CREATE TABLE Favorites (
-    Id INT IDENTITY(1,1) PRIMARY KEY,
-    UserId INT,
-    DocumentId INT
-	FOREIGN KEY (UserId) REFERENCES Users(Id),
-	FOREIGN KEY (DocumentId) REFERENCES Documents(Id)
+	[Name] VARCHAR(50)
 );
 
 CREATE TABLE AttributeTypes (
@@ -63,13 +43,47 @@ CREATE TABLE Attributes (
 	FOREIGN KEY (TypeId) REFERENCES AttributeTypes(Id)
 );
 
-CREATE TABLE AttributeValues (
+CREATE TABLE CategoryAttributes(
+	Id INT IDENTITY(1,1) PRIMARY KEY,
+	CategoryId INT,
+	AttributeId INT,
+	FOREIGN KEY (CategoryId) REFERENCES Categories(Id),
+	FOREIGN KEY (AttributeId) REFERENCES Attributes(Id)
+
+);
+
+CREATE TABLE Languages (
+	Id INT IDENTITY(1,1) PRIMARY KEY,
+	[Language] NVARCHAR(30)
+);
+
+CREATE TABLE Documents(
+	Id INT IDENTITY(1,1) PRIMARY KEY,
+	CategoryId INT,
+	Title NVARCHAR(100),
+	LanguageId INT,
+	UploadDate DATETIME,
+	PublicAccess BIT,
+	DocumentLocation NVARCHAR(MAX),
+	FOREIGN KEY (CategoryId) REFERENCES Categories(Id),
+	FOREIGN KEY (LanguageId) REFERENCES Languages(Id)
+);
+
+CREATE TABLE DocumentAttributes (
     Id INT IDENTITY(1,1) PRIMARY KEY,
+	DocumentID INT,
     AttributeID INT,
-    [Value] NVARCHAR(MAX),
-    DocumentID INT,
+	[Value] NVARCHAR(MAX),
 	FOREIGN KEY (DocumentId) REFERENCES Documents(Id),
 	FOREIGN KEY (AttributeId) REFERENCES Attributes(Id)
+);
+
+CREATE TABLE Favourites (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    UserId INT,
+    DocumentId INT
+	FOREIGN KEY (UserId) REFERENCES Users(Id),
+	FOREIGN KEY (DocumentId) REFERENCES Documents(Id)
 );
 
 CREATE TABLE Contributors (
@@ -91,7 +105,7 @@ CREATE TABLE ContributorToDocument (
 CREATE TABLE Privileges (
 	Id INT IDENTITY(1,1) PRIMARY KEY,
 	[Description] NVARCHAR(30),
-)
+);
 
 CREATE TABLE RolesToPrivileges (
 	Id INT IDENTITY(1,1) PRIMARY KEY,
@@ -99,7 +113,7 @@ CREATE TABLE RolesToPrivileges (
 	PrivilegeId INT
 	FOREIGN KEY (RoleId) REFERENCES Roles(Id),
 	FOREIGN KEY (PrivilegeId) REFERENCES Privileges(Id)
-)
+);
 
 CREATE TABLE HelpDetails (
 	Id INT IDENTITY(1,1) PRIMARY KEY,
@@ -113,6 +127,7 @@ INSERT INTO Roles VALUES ('Public'), ('AcademicUser'), ('Librarian');
 INSERT INTO Privileges VALUES ('Manage Categories'), ('Academic User');
 INSERT INTO RolesToPrivileges VALUES (2, 2), (3, 2), (3, 1);
 
+INSERT INTO Languages VALUES ('English'), ('Italiano'), ('Español'), ('Français'), ('Deutsch'), ('Português');
 INSERT INTO AttributeTypes VALUES ('Number'), ('Text'), ('True/False'), ('Date');
 
 INSERT INTO Users VALUES ('Matthew', 'Spiteri', 'Spim04', 'matthewspiteri@gmail.com', 'matt04', 1);

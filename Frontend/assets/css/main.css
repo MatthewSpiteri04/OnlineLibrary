@@ -315,7 +315,6 @@ html {
 }
 
 
-
 .title{
     font-size: 35px;
     margin-left: auto;
@@ -326,4 +325,20 @@ html {
     justify-content: center;
     display: flex;
 
+}
+
+
+.Categories > h1{
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+    font-family: 'PT Sans';
+    
+}
+
+.Category-Form{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-family: 'PT Sans';
 }

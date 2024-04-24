@@ -1,4 +1,4 @@
-var OnlineLibrary = angular.module('OnlineLibrary', ['ngRoute']);
+var OnlineLibrary = angular.module('OnlineLibrary', ['ngRoute', 'ui.bootstrap', 'ngAnimate']);
 
 OnlineLibrary.config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -22,18 +22,30 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
         templateUrl:'views/helpAnswer.html',
         controller: 'helpAnswerController'
     })
+    .when('/upload', {
+        templateUrl:'views/upload.html',
+        controller: 'upload-controller'
+    })
     .when('/my-info', {
         templateUrl:'views/my-info.html',
         controller: 'myInfo-controller'
+    })
+    .when('/category', {
+        templateUrl:'views/category.html',
+        controller: 'categories-controller'
+    })
+    .when('/category', {
+        templateUrl:'views/category.html',
+        controller: 'categories-controller'
     })
     .otherwise({
         redirectTo: '/home'
     });
 }]);
 
-OnlineLibrary.service('userService', function($rootScope) {
+OnlineLibrary.service('userService', function($rootScope, $http) {
     var user = null;
-
+    
     this.getCurrentUser = function() {
         return user;
     };
@@ -44,14 +56,170 @@ OnlineLibrary.service('userService', function($rootScope) {
     };
   });
 
+OnlineLibrary.service('uploadService', function($rootScope, $http) {
+    this.getLanguages = function(){
+        return $http.get('https://localhost:44311/api/Get/Languages')
+        .then(response => {
+            return data = response.data;
+        });
+    };
 
-  OnlineLibrary.controller('home-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
-    $scope.user = null;
-    $scope.filterOn = false
+    this.getCategories = function() {
+        return $http.get('https://localhost:44311/api/Get/Categories')
+        .then(response => {
+            return response.data;
+        });
+    };
+
+    this.getAttributes = function(categoryId) {
+        return $http.get('https://localhost:44311/api/Get/Attributes/' + categoryId)
+        .then(response => {
+            return response.data;
+        });
+    };
+  });
+
+OnlineLibrary.service('homeService', function($http) {
+    this.getDocuments = function(request) {
+        return $http.post('https://localhost:44311/api/Get/Documents', request)
+        .then(response => {
+            return response.data;
+        });;
+    };
+});
+
+  OnlineLibrary.controller('upload-controller', ['$scope', 'userService', 'uploadService', function($scope, userService, uploadService){
+    $scope.user = userService.getCurrentUser();
+    $scope.publicAccess = false;
+    $scope.attributes = [];
+    $scope.categories = [];
+    
+    uploadService.getLanguages()
+    .then(data => { 
+        $scope.languages = data;
+    });
+    uploadService.getCategories()
+    .then(data => {
+        $scope.categories = data;
+    });
+    
+    $scope.$on('dataChanged', function(event, data) {
+        $scope.user = data;
+    });
+
+    $scope.loadAttributes = function(id){
+        uploadService.getAttributes(id)
+        .then(data => {
+            $scope.attributes = data;
+        });
+        $scope.categories.forEach(element => {
+            if(element.id == id){
+                $scope.categoryName = element.type;
+            }
+        });
+    };
+
+    const form = document.querySelector('form');
+    if (!form) return;
+    form.addEventListener('submit', handleSubmit);
+
+    function handleSubmit(event) {
+        var attributeList = [];
+        const formData = new FormData(event.currentTarget);
+
+        $scope.attributes.forEach(function(attr){
+            var temp = formData.get(attr.name);
+            attributeList.push({id: attr.id, value: temp});
+        });
+        event.preventDefault();
+        
+        
+        formData.set("publicAccess", $scope.publicAccess);
+        formData.set("userId", $scope.user.id);
+        formData.set("attributesListJSON", JSON.stringify(attributeList));
+        console.log(formData.get("attributesListJSON"));
+
+        fetch('https://localhost:44311/api/Upload/File', {
+            method: 'POST',
+            body: formData
+        }).then(response =>{
+            console.log(response);
+        });
+
+    }
+
+  }]);
+
+  OnlineLibrary.controller('popup-controller', ['$scope', '$uibModalInstance', 'title', 'message', function($scope, $uibModalInstance, title, message){
+    $scope.title = title;
+    $scope.message = message;
+    $scope.closePopup = function(){
+        $uibModalInstance.dismiss('close');
+    }
+  }]);
+
+  OnlineLibrary.controller('home-controller', ['$scope', '$http', '$uibModal', 'homeService', 'userService', 'uploadService', function($scope, $http, $uibModal,homeService, userService, uploadService){
+    $scope.user = userService.getCurrentUser();
+    $scope.filterOn = false;
+    $scope.documents = null;
+    $scope.searchString = null;
 
     $scope.$on('dataChanged', function(event, data) {
         $scope.user = data;
     });
+
+    $scope.toggleFavourite = function(document) {
+        if($scope.user == null || $scope.user == ''){
+            $uibModal.open({
+                templateUrl: 'assets/elements/popup.html',
+                controller: 'popup-controller',
+                resolve: {
+                    title: function(){
+                        return 'User Not Logged In';
+                    },
+                    message: function(){
+                        return 'This feature requires the user to be logged in.';
+                    }
+                }
+              }).result.then(function() {}, function(reason) {}); // Handling the modal return
+        } else {
+            var request = {
+                documentId: document.id,
+                userId: $scope.user.id,
+                isFavourite: document.isFavourite
+            };
+            $http.post('https://localhost:44311/api/Toggle/Favourite', request).then(function() {
+                $scope.searchForDocuments($scope.searchString);
+            });
+            
+        }
+    }
+
+    $scope.searchForDocuments = function(searchString){
+        var id = null;
+        if($scope.user != null){
+            var id = $scope.user.id;
+        }
+
+        var response = {
+            search: searchString,
+            userId: id
+        };
+
+        return homeService.getDocuments(response)
+        .then(data => {
+            $scope.documents = data;
+        })
+    };
+
+    uploadService.getLanguages()
+    .then(data => { 
+        $scope.languages = data});
+    uploadService.getCategories()
+    .then(data => {
+        $scope.categories = data});
+
+    
 
 
   }]);
@@ -100,8 +268,8 @@ OnlineLibrary.service('userService', function($rootScope) {
 
   }]);
 
-// USERS CONTROLLER
-OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
+  // USERS CONTROLLER
+  OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
     $scope.currentUser = {};
 
     $scope.getRoles = function(id) {
@@ -110,6 +278,8 @@ OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', 
                 $scope.currentUser.Roles = response.data;
             })
     }
+
+   
 
     $scope.doesUserExist = function(loginForm) {
         $scope.userFound = false;
@@ -190,4 +360,63 @@ OnlineLibrary.controller('elements-controller', ['$scope', 'userService', functi
         $scope.user = data;
         console.log($scope.user);
     });
+}]);
+
+
+OnlineLibrary.service('categoryService', function($http) {
+    this.getAttributeTypes = function() {
+        return $http.get('https://localhost:44311/api/Categories/AttributeTypes');
+    };
+});
+
+OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryService', 'userService', function($scope, $http, categoryService, userService){
+    $scope.user = userService.getCurrentUser();
+    $scope.$on('dataChanged', function(event, data) {
+        $scope.user = data;
+    });
+
+    $scope.attributeTypes = [];
+    
+    categoryService.getAttributeTypes()
+        .then(response => {
+            $scope.attributeTypes = response.data;
+        })
+        .catch(error => {
+            console.error('Failed to fetch attribute types:', error);
+        });
+    
+    $scope.inputFields = [];
+
+    $scope.addInputField = function() {
+        $scope.inputFields.push({ 
+            Name: '' 
+        });
+    };
+
+    $scope.removeInputField = function(index) {
+        $scope.inputFields.splice(index, 1);
+    };
+    
+   
+    $scope.createCategoryAndAttributes = function(categoryForm, inputFields) {
+        var categoryRequest = {
+            CategoryName: categoryForm.Name,
+            Attributes: inputFields,
+            UserId: $scope.user.id
+        };
+        console.log(categoryRequest);
+
+        $http.post('https://localhost:44311/api/Categories/AddCategory', categoryRequest)
+            .then(function(response) {
+                if (response.status == 200) {
+                    
+
+                
+
+            window.location.href = "#!/home";
+        } 
+    }) .catch(error => {console.log(error)});
+
+    };
+
 }]);

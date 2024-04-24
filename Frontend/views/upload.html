@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="assets/css/upload.css" type="text/css" />
+<div ng-include="'assets/elements/sidebar.html'"></div>
+<div class="upload-form">
+    <form method="post" enctype="multipart/form-data">
+      <h2>Document Upload</h2>
+        <label>Title</label>
+        <input placeholder="Enter Title" type="text" name="title"><br>
+
+        <label>Language</label>
+        <select name="languageId">
+            <option value="" disabled selected>Select Language</option>
+            <option ng-repeat="language in languages" value="{{language.id}}">
+              {{language.language}}
+            </option>
+          </select>
+
+        <label>Category</label>
+        <select name="categoryId" ng-model="selectedCategoryId" ng-change="loadAttributes(selectedCategoryId)">
+            <option value="" disabled selected>Select Category</option>
+            <option ng-repeat="category in categories" value="{{category.id}}">
+              {{category.type}}
+            </option>
+          </select>
+
+        <p>Available To Public<input style="margin-left: 8px;" type="checkbox" ng-click="publicAccess = !publicAccess" name="publicAccess"></p>
+        <input type="file" name="file"><br>
+
+        <div ng-show="attributes.length > 0">
+            <h3> Additional {{categoryName}} Fields</h3>
+            <div ng-repeat="attr in attributes track by $index">
+              <label>{{attr.name}}</label><br>
+              <input type="text" name="{{attr.name}}" placeholder="Enter {{attr.name}}">
+            </div>
+        </div>
+
+        <button type="submit">Upload PDF</button>  
+    </form>
+</div>
