@@ -23,5 +23,13 @@ namespace Backend.Controllers
         {
             return _homeService.getLanguages();
         }
+        [HttpPost]
+        [Route("api/Toggle/Favourite")]
+        public IActionResult ToggleFavourite([FromBody] FavouriteRequest request)
+        {
+            _homeService.toggleFavourite(request);
+
+            return Ok();
+        }
     }
 }

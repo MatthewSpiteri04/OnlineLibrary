@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Threading.Tasks;
 using Backend.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Services
 {
@@ -57,6 +58,20 @@ namespace Backend.Services
             conn.Close();
 
             return list;
+        }
+
+        public void toggleFavourite(FavouriteRequest request)
+        {
+            if (!request.IsFavourite)
+            {
+                query = @"INSERT INTO Favourites([DocumentId], [UserId]) VALUES (" + request.DocumentId + @", " + request.UserId + @");";
+            }
+            else
+            {
+                query = @"DELETE FROM Favourites WHERE [DocumentId] = " + request.DocumentId + @" AND  [UserId] = " + request.UserId;
+            }
+
+            executeCommand();
         }
     }
 }

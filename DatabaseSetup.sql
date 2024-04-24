@@ -25,8 +25,6 @@ CREATE TABLE Users(
 	RoleId INT
 	FOREIGN KEY (RoleId) REFERENCES Roles(Id)
 );
-
-CREATE TABLE Categories(
 CREATE TABLE Categories(
 	Id INT IDENTITY(1,1) PRIMARY KEY,
 	[Name] VARCHAR(50)
