@@ -1,0 +1,49 @@
+.popup-modal {
+    font-family: 'Lato';
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    z-index: 9999;
+    border-radius: 10px;
+    border: 2px solid #BA0C2F;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.popup-content {
+    text-align: center;
+}
+
+.popup-content h2 {
+    margin-top: 0;
+    color: #BA0C2F;
+}
+
+.popup-content button {
+    margin-top: 15px;
+    background-color: white;
+    border: 1px solid #BA0C2F;
+    color: #BA0C2F;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+}
+.popup-content button:hover {
+    background-color: #BA0C2F;
+    color: white;
+}
+
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Adjust the alpha (last value) for the transparency */
+    z-index: 9998; /* Ensure overlay is behind the modal */
+}
+
