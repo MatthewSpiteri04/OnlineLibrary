@@ -16,7 +16,11 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
     })
     .when('/help', {
         templateUrl:'views/help.html',
-        controller: 'users-controller'
+        controller: 'help-controller'
+    })
+    .when('/helpAnswer/:id', {
+        templateUrl:'views/helpAnswer.html',
+        controller: 'helpAnswerController'
     })
     .when('/upload', {
         templateUrl:'views/upload.html',
@@ -307,6 +311,39 @@ OnlineLibrary.service('homeService', function($http) {
 
 
   }]);
+
+
+  OnlineLibrary.controller('help-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
+
+    $http.get('https://localhost:44311/api/help')
+        .then(response => {
+            $scope.helpDetails = response.data;
+            console.log($scope.helpDetails);
+        })
+
+    $scope.searching = function(search){
+    console.log(search);
+        $http.get('https://localhost:44311/api/help/' + search)
+        .then(response => {
+            $scope.helpDetails = response.data;
+            console.log($scope.helpDetails);
+        })  
+    }
+  }]);
+
+
+  /*----------------------------------------*/
+  OnlineLibrary.controller('helpAnswerController', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
+    $scope.questionId = $routeParams.id;
+
+    $http.get('https://localhost:44311/api/help/answer/' + $scope.questionId)
+        .then(response => {
+            $scope.helpDetails = response.data;
+            console.log($scope.helpDetails);
+        })
+    
+  }]);
+  /*---------------------------------------*/
 
   OnlineLibrary.controller('myInfo-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
     $scope.user = userService.getCurrentUser();

@@ -314,20 +314,6 @@ html {
     align-items: center;
 }
 
-.help-Container{
-    display:flex;
-    margin-top: 1;
-    margin-left: auto;
-    margin-right: auto;
-    width:fit-content;
-    /*border-style:solid;
-    border-color:#BA0C2F;*/
-    border-radius: 5px;
-    padding: 3%;
-    align-items: center;
-    justify-content: center;
-
-}
 
 .title{
     font-size: 35px;
@@ -341,94 +327,7 @@ html {
 
 }
 
-.search {
-    background-color: white;
-    font-family: 'Lato';
-    width: 500px; 
-    padding-left: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 4%;
-    border-style: solid;
-    border-color: #BA0C2F;
-    border-radius: 20px;
-}
 
-.search input[type="text"] {
-    border: none;
-    outline: none;
-    width: 90%;
-    padding: 10px;
-    box-sizing: border-box;
-    font-size: 16px;
-}
-
-
-.search > button{
-    float: right;
-    margin-right: 7px;
-    margin-top: 9px;
-    position: relative;
-    background: none;
-    border: none;
-    font-size: 20px;
-}
-
-/*.search > input{
-    width: 0%;
-}*/
-
-.search>button:hover{
-    cursor: pointer;
-}
-
-.frequently{
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    justify-content: center;
-    display: flex;
-    font-family: 'Lato';
-}
-
-.example{
-    background-color: white;
-    font-family: 'Lato';
-    width: 700px;
-    padding-left: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 4%;
-    border-style:solid;
-    border-color:#BA0C2F;
-    border-radius: 20px;
-
-}
-
-.example button {
-    background-color: transparent;
-    border: none;
-    font-family: 'Lato';
-    font-size: 16px;
-    color: black;
-    padding: 10px 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    font-size: 25px;
-}
-
-.example button i {
-    margin-left: 190px;
-}
-
-.example button j {
-    margin-left: 345px;
-}
-
-.example button:hover {
-    cursor: pointer;
-}
 
 .Categories{
     display: flex;
