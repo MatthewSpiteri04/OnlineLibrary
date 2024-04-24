@@ -9,9 +9,10 @@
         name="text"
         class="input"
         id="input"
+        ng-model="searchString"
         placeholder="Search"
       />
-      <i class="fa-solid fa-magnifying-glass magnifying-glass-icon"></i>
+      <i ng-click="searchForDocuments(searchString)" class="fa-solid fa-magnifying-glass magnifying-glass-icon"></i>
     </div>
     <div class="filter-button" ng-click="filterOn = !filterOn">
       Filter
@@ -21,12 +22,26 @@
   <div ng-if="filterOn" class="filter-container">
       <h4>Advanced Filter</h4>
   </div>
-  <div class="grid-container">
+  <div class="grid-container" ng-if="documents == null">
     <div class="grid-item"><i class="fa-solid fa-book-open fa-6x"></i>Books</div>
     <div class="grid-item"><i class="fa-solid fa-inbox fa-6x"></i>FYPs</div>
     <div class="grid-item"><i class="fa-solid fa-newspaper fa-6x"></i>Articles</div>
     <div class="grid-item"><i class="fa-solid fa-book fa-6x"></i>Journals</div>
     <div class="grid-item"><i class="fa-solid fa-file fa-6x"></i>Theses</div>
     <div class="grid-item"><i class="fa-solid fa-file-audio fa-6x"></i>Audio Books</div>
+  </div>
+
+  <div class="documents-container">
+    <div class="document" ng-repeat="document in documents track by $index" ng-if="documents.length > 0">
+      <p style="margin: 0px;">{{$index + 1}}</p>
+      <i class="fa-solid fa-book fa-4x"></i>
+      <div class="text-group">
+        <p id="title">{{document.title}}</p>
+        <p>{{document.category}}</p>
+      </div>
+      <div class="icons">
+        <i class="{{document.isFavourite ? 'fa-solid fa-heart fa-2x' : 'fa-regular fa-heart fa-2x'}}" ng-click="toggleFavourite(document)"></i>
+      </div>
+    </div>
   </div>
 </div>

@@ -50,6 +50,7 @@ h3 {
 }
 
 .upload-form button {
+    margin-top: 10px;
     background-color: #BA0C2F;
     color: white;
     cursor: pointer;
