@@ -21,6 +21,7 @@ namespace Backend
         //executing a query
         protected SqlDataReader executeQuery()
         {
+            //conn.Open();
             if (query == "")
             {
                 throw new Exception("No query has been provided");
@@ -36,7 +37,7 @@ namespace Backend
 
 
         protected void executeCommand()
-		{
+        {
             if (query == "")
             {
                 throw new Exception("No query has been provided");
@@ -49,6 +50,6 @@ namespace Backend
                 new SqlCommand(query, conn).ExecuteNonQuery();
                 conn.Close();
             }
-		}
-	}
+        }
+    }
 }

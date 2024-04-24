@@ -34,9 +34,9 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
         templateUrl:'views/category.html',
         controller: 'categories-controller'
     })
-    .when('/category', {
-        templateUrl:'views/category.html',
-        controller: 'categories-controller'
+    .when('/favourites', {
+        templateUrl:'views/favourites.html',
+        controller: 'favourites-controller'
     })
     .otherwise({
         redirectTo: '/home'
@@ -78,6 +78,94 @@ OnlineLibrary.service('uploadService', function($rootScope, $http) {
         });
     };
   });
+
+  OnlineLibrary.service('favouriteService', function($http) {
+    this.getFavourites = function(id) {
+        return $http.get('https://localhost:44311/api/Get/Favourites/' + id)
+        .then(response => {
+            return response.data;
+        });
+    };
+});
+
+OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favouriteService', 'userService', function($scope, $http, favouriteService, userService) {
+    $scope.user = userService.getCurrentUser();
+    // $scope.filterOn = false;
+    // $scope.documents = null;
+    // $scope.searchString = null;
+    $scope.$on('dataChanged', function(event, data) {
+        $scope.user = data;
+    });
+
+    favouriteService.getFavourites($scope.user.id)
+    .then(data => { 
+        $scope.favourites = data;
+    });
+
+    $scope.toggleFavourite = function(favourite, i){
+        var request = {
+            documentId: favourite.id,
+            userId: $scope.user.id,
+            isFavourite: favourite.isFavourite
+        };
+        $http.post('https://localhost:44311/api/Toggle/Favourite', request).then(function() {
+            window.location.href = "#!/home";   
+            window.location.href = "#!/favourites";            
+           
+            
+        });
+    }
+
+    
+    // $scope.searchForFavourites = function(searchString){
+    //     var id = null;
+    //     if($scope.user != null){
+    //         var id = $scope.user.id;
+    //     }
+
+    //     var response = {
+    //         search: searchString,
+    //         userId: id
+    //     };
+
+    //     return favouriteService.getFavourites(response)
+    //     .then(data => {
+    //         $scope.favourites = data;
+    //     })
+    // };
+
+    // $scope.toggleFavourite = function(favourites) {
+    //     if($scope.user == null || $scope.user == ''){
+    //         $uibModal.open({
+    //             templateUrl: 'assets/elements/popup.html',
+    //             controller: 'popup-controller',
+    //             resolve: {
+    //                 title: function(){
+    //                     return 'User Not Logged In';
+    //                 },
+    //                 message: function(){
+    //                     return 'This feature requires the user to be logged in.';
+    //                 }
+    //             }
+    //           }).result.then(function() {}, function(reason) {}); // Handling the modal return
+    //     } else {
+    //         var request = {
+    //             favouritesId: favourites.id,
+    //             userId: $scope.user.id,
+    //             isFavourite: favourites.isFavourite
+    //         };
+    //         $http.post('https://localhost:44311/api/Toggle/Favourite', request).then(function() {
+    //             $scope.searchForFavourites($scope.searchString);
+               
+    //         });
+            
+    //     }
+       
+    // }
+
+
+}]);
+
 
 OnlineLibrary.service('homeService', function($http) {
     this.getDocuments = function(request) {
@@ -194,7 +282,7 @@ OnlineLibrary.service('homeService', function($http) {
             
         }
     }
-
+    
     $scope.searchForDocuments = function(searchString){
         var id = null;
         if($scope.user != null){
@@ -367,7 +455,10 @@ OnlineLibrary.service('categoryService', function($http) {
     this.getAttributeTypes = function() {
         return $http.get('https://localhost:44311/api/Categories/AttributeTypes');
     };
-});
+    this.getAttributes = function(){
+        return $http.get('https://localhost:44311/api/Categories/GetAttributes');
+    };
+}); 
 
 OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryService', 'userService', function($scope, $http, categoryService, userService){
     $scope.user = userService.getCurrentUser();
@@ -376,6 +467,7 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
     });
 
     $scope.attributeTypes = [];
+    $scope.attributes = [];
     
     categoryService.getAttributeTypes()
         .then(response => {
@@ -384,27 +476,76 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
         .catch(error => {
             console.error('Failed to fetch attribute types:', error);
         });
+
+        categoryService.getAttributes()
+        .then(response => {
+            
+            $scope.attributes = response.data;
+            console.log($scope.attributes);
+        })
+        .catch(error => {
+            console.error('Failed to fetch attributes:', error);
+        });
+
     
     $scope.inputFields = [];
 
-    $scope.addInputField = function() {
-        $scope.inputFields.push({ 
-            Name: '' 
-        });
+  
+    $scope.toggleView = function(inputField) {
+        // Toggle the listView property to switch between select and input views
+        inputField.listView = !inputField.listView;
+    
+        // Clear the inputField.Name when switching to the input view
+        if (!inputField.listView) {
+            inputField.Name = ''; // Clear the input field value
+        }
     };
+    
 
+      $scope.addInputField = function() {
+        $scope.inputFields.push({ 
+            Name: '',
+            listView: true 
+        });
+        console.log($scope.inputFields);
+    };
+    
     $scope.removeInputField = function(index) {
         $scope.inputFields.splice(index, 1);
     };
-    
+
+    $scope.changeOption = function(id, type){
+        id.TypeId = parseInt(id.TypeId);
+        console.log(id);
+        console.log(type);
+        console.log($scope.attributeTypes)
+    }
+
+   
    
     $scope.createCategoryAndAttributes = function(categoryForm, inputFields) {
+        inputFields.forEach(element => {
+            if(!element.listView){
+                element.TypeId = parseInt(element.TypeId)
+            }
+         });
+         
+         var id = 0;
+        if ($scope.user == null) {
+            id = 3;
+        }
+        else{
+            id = $scope.user.id;
+        }
+        
         var categoryRequest = {
             CategoryName: categoryForm.Name,
             Attributes: inputFields,
-            UserId: $scope.user.id
+            UserId: id
         };
-        console.log(categoryRequest);
+        console.log($scope.attributeTypes);
+         console.log(categoryRequest);
+        
 
         $http.post('https://localhost:44311/api/Categories/AddCategory', categoryRequest)
             .then(function(response) {

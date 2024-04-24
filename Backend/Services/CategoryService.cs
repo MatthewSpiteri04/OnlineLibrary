@@ -4,6 +4,7 @@ using Backend.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Backend.Services;
+using System.Data;
 
 
 namespace Backend.Services
@@ -25,6 +26,23 @@ namespace Backend.Services
 			reader.Close();
             conn.Close();
             return attribute_types;
+		}
+
+		public List<Attributes> getAttributes()
+		{
+			List<Attributes> attributes = new List<Attributes>();
+
+			query = @"SELECT * FROM Attributes";
+					
+			SqlDataReader reader = executeQuery();
+
+			while (reader.Read())
+			{
+				Attributes attributeList = new Attributes() { Id = reader.GetInt32(0), Name = reader.GetString(1), TypeId = reader.GetInt32(2) };
+				attributes.Add(attributeList);
+			}
+
+			return attributes;
 		}
 
 

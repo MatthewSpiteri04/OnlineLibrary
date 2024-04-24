@@ -3,27 +3,66 @@
   <h1>Category Manager</h1>
   <div class="Category-Form">
     <form ng-submit="createCategoryAndAttributes(categoryForm, inputFields)">
-      <h2>Enter Category Name</h2>
-      <input type="text" ng-model="categoryForm.Name" />
-
-      <button type="button" ng-click="addInputField()">Add Attribute</button>
-
-      <!-- Dynamically added input fields will be displayed here -->
-      <div ng-repeat="inputField in inputFields">
-        <h2>Enter Attribute Name</h2>
-        <input type="text" ng-model="inputField.Name" />
-        <h2>Select Attribute Type</h2>
-        <select ng-model="inputField.TypeId">
-          <option value="" disabled selected>Select Type Name</option>
-          <option ng-repeat="type in attributeTypes" value="{{ type.id }}">
-            {{ type.typeName }}
-          </option>
-        </select>
-        <button type="button" ng-click="removeInputField($index)">
-          Remove
-        </button>
+      <div class="Category-Section">
+        <div class="Category-input">
+          <h2>Category Name</h2>
+          <input placeholder="Enter Category Name" type="text" ng-model="categoryForm.Name" />
+        </div>
+        <div class="Add-Attribute">
+          <button type="button" ng-click="addInputField()">
+            <i class="fa-solid fa-plus"></i>
+            Add Attribute
+          </button>
+        </div>
       </div>
-      <button type="submit">Submit</button>
+      
+      <div class="Attributes" ng-repeat="inputField in inputFields">
+        <div class="Attribute-Input">
+          <div class="Attribute-Name">
+            <h2>Attribute Name</h2>
+            <div ng-show="inputField.listView">
+              <select ng-model="inputField.Id">
+                <option value="" disabled selected>Select Existing Attribute</option>
+                <option
+                  ng-repeat="attribute in attributes"
+                  value="{{ attribute.id }}"
+                >
+                  {{ attribute.name }}
+                </option>
+              </select>
+            </div>
+
+            <div ng-hide="inputField.listView">
+              <div class="Type">
+                <div class="TypeName">
+                  <input placeholder="Enter Attribute Name" type="text" ng-model="inputField.Name" />
+                </div>
+                <div class="Attribute-Type">
+                  <h2>Select Attribute Type</h2>
+                  <select ng-model="inputField.TypeId">
+                    <option value="" disabled selected>Select Type Name</option>
+                    <option
+                      ng-repeat="type in attributeTypes"
+                      value="{{ type.id }}"
+                    >
+                      {{ type.typeName }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="Buttons">
+          <div class="View" ng-click="toggleView(inputField)">
+            {{ inputField.listView ? 'Manual Input' : 'Show List' }}
+          </div>
+          <div class="Remove" type="button" ng-click="removeInputField($index)">
+            <i class="fa-solid fa-circle-xmark"></i>
+          </div>
+        </div>
+      </div>
+      <button id="Submit" type="submit">Submit</button>
     </form>
   </div>
 </div>

@@ -18,26 +18,39 @@ namespace Backend.Controllers
 			return _categoryService.getAttributeTypes();
 		}
 
+		[HttpGet]
+		[Route("api/Categories/GetAttributes")]
+
+		public List<Attributes> GetAttributes()
+		{
+			return _categoryService.getAttributes();
+		}
+
 		[HttpPost]
 		[Route("api/Categories/AddCategory")]
 		public IActionResult CreateCategory([FromBody] CategoryAttributes request)
 		{
-            IActionResult response;
-			bool validAttributeList = true;
-            HashSet<string> uniqueAttributesRequest = new HashSet<string>();
-            foreach (Attributes attrb in request.Attributes)
-            {
-                if (uniqueAttributesRequest.Contains(attrb.Name))
-                {
-                    validAttributeList = false;
-                }
-                else
-                {
-                    uniqueAttributesRequest.Add(attrb.Name);
-                }
-            }
+			if (request == null || request.Attributes == null)
+			{
+				return BadRequest("Request or Attributes are null");
+			}
 
-            bool validAttributes = _categoryService.checkValidAttributes(request.Attributes);
+			IActionResult response;
+			bool validAttributeList = true;
+			HashSet<string> uniqueAttributesRequest = new HashSet<string>();
+			foreach (Attributes attrb in request.Attributes)
+			{
+				if (uniqueAttributesRequest.Contains(attrb.Name) && (attrb.Name != ""))
+				{
+					validAttributeList = false;
+				}
+				else
+				{
+					uniqueAttributesRequest.Add(attrb.Name);
+				}
+			}
+
+			bool validAttributes = _categoryService.checkValidAttributes(request.Attributes);
 			bool validCategory = _categoryService.checkValidCategories(request.CategoryName);
 			bool validUser = _categoryService.checkValidUser(request.UserId);
 
@@ -46,31 +59,38 @@ namespace Backend.Controllers
 				int categoryId = _categoryService.createCategory(request.CategoryName);
 
 				List<int> attributeId = new List<int>();
+
 				foreach (var attribute in request.Attributes)
 				{
-					attributeId.Add(_categoryService.createAttributes(attribute));
+					if (!attribute.ListView)
+					{
+						attributeId.Add(_categoryService.createAttributes(attribute));
+					}
+					else
+					{
+
+						attributeId.Add((int)attribute.Id);
+					}
+
 				}
 
 				_categoryService.createCategoryAttributes(categoryId, attributeId);
 				response = Ok(new { message = "Success!" });
 
 			}
-            else if (!validAttributeList)
-            {
-                response = BadRequest(new { message = "Duplicate Attributes In List" });
-            }
-            else if (!validAttributes)
+			else if (!validAttributeList)
 			{
-				response = BadRequest(new {message = "Duplicate Attribute"});
+				response = BadRequest(new { message = "Duplicate Attributes In List" });
+			}
+			else if (!validAttributes)
+			{
+				response = BadRequest(new { message = "Duplicate Attribute" });
 			}
 			else if (!validCategory)
 			{
 				response = BadRequest(new { message = "Duplicate Category" });
 			}
-			else if (!validUser)
-			{
-				response = Unauthorized(new { message = "User Cannot Manage Categories" });
-			}
+
 			else
 			{
 				response = BadRequest(new { message = "Unknown Error Occurred " });
@@ -79,6 +99,6 @@ namespace Backend.Controllers
 
 		}
 
-		
+
 	}
 }
