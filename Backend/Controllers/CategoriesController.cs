@@ -40,7 +40,7 @@ namespace Backend.Controllers
 			HashSet<string> uniqueAttributesRequest = new HashSet<string>();
 			foreach (Attributes attrb in request.Attributes)
 			{
-				if (uniqueAttributesRequest.Contains(attrb.Name))
+				if (uniqueAttributesRequest.Contains(attrb.Name) && (attrb.Name != ""))
 				{
 					validAttributeList = false;
 				}

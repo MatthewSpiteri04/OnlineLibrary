@@ -84,8 +84,11 @@ OnlineLibrary.service('uploadService', function($rootScope, $http) {
     };
 });
 
-OnlineLibrary.controller('favourites-controller', ['$scope', 'favouriteService', 'userService', function($scope, favouriteService, userService) {
+OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favouriteService', 'userService', function($scope, $http, favouriteService, userService) {
     $scope.user = userService.getCurrentUser();
+    // $scope.filterOn = false;
+    // $scope.documents = null;
+    // $scope.searchString = null;
     $scope.$on('dataChanged', function(event, data) {
         $scope.user = data;
     });
@@ -93,11 +96,69 @@ OnlineLibrary.controller('favourites-controller', ['$scope', 'favouriteService',
     favouriteService.getFavourites($scope.user.id)
     .then(data => { 
         $scope.favourites = data;
-    });;
-    
-    $scope.test = function(){
-        console.log($scope.favourites);
+    });
+
+    $scope.toggleFavourite = function(favourite, i){
+        var request = {
+            documentId: favourite.id,
+            userId: $scope.user.id,
+            isFavourite: favourite.isFavourite
+        };
+        $http.post('https://localhost:44311/api/Toggle/Favourite', request).then(function() {
+            window.location.href = "#!/home";   
+            window.location.href = "#!/favourites";            
+           
+            
+        });
     }
+
+    
+    // $scope.searchForFavourites = function(searchString){
+    //     var id = null;
+    //     if($scope.user != null){
+    //         var id = $scope.user.id;
+    //     }
+
+    //     var response = {
+    //         search: searchString,
+    //         userId: id
+    //     };
+
+    //     return favouriteService.getFavourites(response)
+    //     .then(data => {
+    //         $scope.favourites = data;
+    //     })
+    // };
+
+    // $scope.toggleFavourite = function(favourites) {
+    //     if($scope.user == null || $scope.user == ''){
+    //         $uibModal.open({
+    //             templateUrl: 'assets/elements/popup.html',
+    //             controller: 'popup-controller',
+    //             resolve: {
+    //                 title: function(){
+    //                     return 'User Not Logged In';
+    //                 },
+    //                 message: function(){
+    //                     return 'This feature requires the user to be logged in.';
+    //                 }
+    //             }
+    //           }).result.then(function() {}, function(reason) {}); // Handling the modal return
+    //     } else {
+    //         var request = {
+    //             favouritesId: favourites.id,
+    //             userId: $scope.user.id,
+    //             isFavourite: favourites.isFavourite
+    //         };
+    //         $http.post('https://localhost:44311/api/Toggle/Favourite', request).then(function() {
+    //             $scope.searchForFavourites($scope.searchString);
+               
+    //         });
+            
+    //     }
+       
+    // }
+
 
 }]);
 
@@ -217,7 +278,7 @@ OnlineLibrary.service('homeService', function($http) {
             
         }
     }
-
+    
     $scope.searchForDocuments = function(searchString){
         var id = null;
         if($scope.user != null){
