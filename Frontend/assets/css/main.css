@@ -6,7 +6,7 @@ html {
 .header {
     background: #BA0C2F;
     color: white;
-    font-family: 'PT Sans';
+    font-family: 'Lato';
     display: flex;
     width: 100%;
     top: 0;
@@ -162,7 +162,7 @@ html {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    font-family: "PT Sans";
+    font-family: "Lato";
     padding-right: 5px;
 }
 
@@ -334,7 +334,7 @@ html {
     margin-left: auto;
     margin-right: auto;
     margin-top: 0%;
-    font-family: 'PT Sans';
+    font-family: 'Lato';
     color:black;
     justify-content: center;
     display: flex;
@@ -343,7 +343,7 @@ html {
 
 .search {
     background-color: white;
-    font-family: 'PT Sans';
+    font-family: 'Lato';
     width: 500px; 
     padding-left: 20px;
     margin-left: auto;
@@ -388,12 +388,12 @@ html {
     margin-bottom: 10px;
     justify-content: center;
     display: flex;
-    font-family: 'PT Sans';
+    font-family: 'Lato';
 }
 
 .example{
     background-color: white;
-    font-family: 'PT Sans';
+    font-family: 'Lato';
     width: 700px;
     padding-left: 20px;
     margin-left: auto;
@@ -408,7 +408,7 @@ html {
 .example button {
     background-color: transparent;
     border: none;
-    font-family: 'PT Sans';
+    font-family: 'Lato';
     font-size: 16px;
     color: black;
     padding: 10px 0;
@@ -435,7 +435,7 @@ html {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-left: 180px;
+    margin-left: auto;
     margin-right: auto;
     margin-top: 120px;
     width: 1000px;
@@ -456,7 +456,10 @@ html {
 .Categories > h1{
     display: flex;
     justify-content: center;
-  
+}
+
+.Category-input > h2{
+    margin-bottom: 5px;
 }
 
 .Category-Section{
@@ -486,7 +489,7 @@ html {
    
     background-color: #BA0C2F;
     color: white;
-    padding: 5px;
+    padding: 10px;
     border: none;
     width: fit-content;
     border-radius: 7px;
@@ -494,7 +497,6 @@ html {
     font-weight: bolder;
     margin-right: 5px;
     margin-bottom: 10px;
-    float: right;
 }
 
 .Category-input > input{
@@ -660,7 +662,7 @@ html {
 }
 
 .Remove:hover{
-    color: red;
+    color: #950924;
 }
 
 .Attributes > input{

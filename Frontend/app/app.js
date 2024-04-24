@@ -30,9 +30,9 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
         templateUrl:'views/category.html',
         controller: 'categories-controller'
     })
-    .when('/category', {
-        templateUrl:'views/category.html',
-        controller: 'categories-controller'
+    .when('/favourites', {
+        templateUrl:'views/favourites.html',
+        controller: 'favourites-controller'
     })
     .otherwise({
         redirectTo: '/home'
@@ -74,6 +74,33 @@ OnlineLibrary.service('uploadService', function($rootScope, $http) {
         });
     };
   });
+
+  OnlineLibrary.service('favouriteService', function($http) {
+    this.getFavourites = function(id) {
+        return $http.get('https://localhost:44311/api/Get/Favourites/' + id)
+        .then(response => {
+            return response.data;
+        });
+    };
+});
+
+OnlineLibrary.controller('favourites-controller', ['$scope', 'favouriteService', 'userService', function($scope, favouriteService, userService) {
+    $scope.user = userService.getCurrentUser();
+    $scope.$on('dataChanged', function(event, data) {
+        $scope.user = data;
+    });
+
+    favouriteService.getFavourites($scope.user.id)
+    .then(data => { 
+        $scope.favourites = data;
+    });;
+    
+    $scope.test = function(){
+        console.log($scope.favourites);
+    }
+
+}]);
+
 
 OnlineLibrary.service('homeService', function($http) {
     this.getDocuments = function(request) {
