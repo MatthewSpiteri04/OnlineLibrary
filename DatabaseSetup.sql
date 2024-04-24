@@ -115,6 +115,14 @@ CREATE TABLE RolesToPrivileges (
 	FOREIGN KEY (PrivilegeId) REFERENCES Privileges(Id)
 );
 
+CREATE TABLE HelpDetails (
+	Id INT IDENTITY(1,1) PRIMARY KEY,
+	Question Nvarchar(500),
+	AnswerText Nvarchar(500)
+)
+
+
+
 INSERT INTO Roles VALUES ('Public'), ('AcademicUser'), ('Librarian');
 INSERT INTO Privileges VALUES ('Manage Categories'), ('Academic User');
 INSERT INTO RolesToPrivileges VALUES (2, 2), (3, 2), (3, 1);
@@ -126,3 +134,4 @@ INSERT INTO Users VALUES ('Matthew', 'Spiteri', 'Spim04', 'matthewspiteri@gmail.
 INSERT INTO Users VALUES ('Gorg', 'Borg', 'Gborg', 'gorgborg@gmail.com', 'gb05', 2);
 INSERT INTO Users VALUES ('Chris', 'Calleja', 'Cc04', 'chriscalleja@gmail.com', 'chris04', 3);
 
+INSERT INTO HelpDetails VALUES ('What is the client portal and how do I use it', '1234'), ('How do I download resources', 'Test');

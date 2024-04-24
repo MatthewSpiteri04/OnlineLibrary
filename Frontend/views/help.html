@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="assets/css/extra.css" type="text/css"/>
 <div ng-include="'assets/elements/sidebar.html'"></div>
 <div class="help-Container">
     <div class="help">
@@ -9,26 +10,25 @@
           </h1>
         </div>
 
-            <div class="search">
-              <input type="text" placeholder="Search">
-              <button id="magnifyingglass"><i class="fa-solid fa-magnifying-glass"></i></button>
-                
-            </input>
-              
-            </div>
+            <div class="search-box">
 
-            <div class="frequently">
-              <h2>Frequently Asked Questions: </h2>
-            </div>
+              <div class="row">
+                <input type="text" id="input-box" placeholder="Search" autocomplete="off" ng-model="search" ng-click="searchbox()">
 
-            <div class="example">
-                <button id="magnifyingglass">What is the client portal and how do I use it <i class="fa-solid fa-magnifying-glass"></i></button>
-              
-            </div>
+                <button ng-click="searching(search)"><i class="fa-solid fa-magnifying-glass magnifying-glass-icon"></i></button>
+                </input>
+              </div>  
 
-            <div class="example">
-                <button id="magnifyingglass">How do I download resources <j class="fa-solid fa-magnifying-glass"></i></button>
-                                    
+            </div> 
+
+            <h2>Help Results:</h2>    
+
+            <div class="example" ng-repeat="x in helpDetails" ng-click="search-box()">
+              <div class="row2">
+                <a href="#!/helpAnswer/{{x.id}}">
+                  <button id="link">{{x.question}}</button>
+                </a>
+              </div>
             </div>
     </div>
 </div>
