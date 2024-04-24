@@ -27,7 +27,6 @@ CREATE TABLE Users(
 );
 
 CREATE TABLE Categories(
-CREATE TABLE Categories(
 	Id INT IDENTITY(1,1) PRIMARY KEY,
 	[Name] VARCHAR(50)
 );
@@ -79,7 +78,7 @@ CREATE TABLE DocumentAttributes (
 	FOREIGN KEY (AttributeId) REFERENCES Attributes(Id)
 );
 
-CREATE TABLE Favorites (
+CREATE TABLE Favourites (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     UserId INT,
     DocumentId INT

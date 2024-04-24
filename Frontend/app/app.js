@@ -1,4 +1,4 @@
-var OnlineLibrary = angular.module('OnlineLibrary', ['ngRoute']);
+var OnlineLibrary = angular.module('OnlineLibrary', ['ngRoute', 'ui.bootstrap', 'ngAnimate']);
 
 OnlineLibrary.config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -52,7 +52,7 @@ OnlineLibrary.service('userService', function($rootScope, $http) {
     };
   });
 
-  OnlineLibrary.service('uploadService', function($rootScope, $http) {
+OnlineLibrary.service('uploadService', function($rootScope, $http) {
     this.getLanguages = function(){
         return $http.get('https://localhost:44311/api/Get/Languages')
         .then(response => {
@@ -74,6 +74,15 @@ OnlineLibrary.service('userService', function($rootScope, $http) {
         });
     };
   });
+
+OnlineLibrary.service('homeService', function($http) {
+    this.getDocuments = function(request) {
+        return $http.post('https://localhost:44311/api/Get/Documents', request)
+        .then(response => {
+            return response.data;
+        });;
+    };
+});
 
   OnlineLibrary.controller('upload-controller', ['$scope', 'userService', 'uploadService', function($scope, userService, uploadService){
     $scope.user = userService.getCurrentUser();
@@ -137,10 +146,67 @@ OnlineLibrary.service('userService', function($rootScope, $http) {
 
   }]);
 
+  OnlineLibrary.controller('popup-controller', ['$scope', '$uibModalInstance', 'title', 'message', function($scope, $uibModalInstance, title, message){
+    $scope.title = title;
+    $scope.message = message;
+    $scope.closePopup = function(){
+        $uibModalInstance.dismiss('close');
+    }
+  }]);
 
-  OnlineLibrary.controller('home-controller', ['$scope', '$http', 'userService', 'uploadService', function($scope, $http, userService, uploadService){
-    $scope.user = null;
+  OnlineLibrary.controller('home-controller', ['$scope', '$http', '$uibModal', 'homeService', 'userService', 'uploadService', function($scope, $http, $uibModal,homeService, userService, uploadService){
+    $scope.user = userService.getCurrentUser();
     $scope.filterOn = false;
+    $scope.documents = null;
+    $scope.searchString = null;
+
+    $scope.$on('dataChanged', function(event, data) {
+        $scope.user = data;
+    });
+
+    $scope.toggleFavourite = function(document) {
+        if($scope.user == null || $scope.user == ''){
+            $uibModal.open({
+                templateUrl: 'assets/elements/popup.html',
+                controller: 'popup-controller',
+                resolve: {
+                    title: function(){
+                        return 'User Not Logged In';
+                    },
+                    message: function(){
+                        return 'This feature requires the user to be logged in.';
+                    }
+                }
+              }).result.then(function() {}, function(reason) {}); // Handling the modal return
+        } else {
+            var request = {
+                documentId: document.id,
+                userId: $scope.user.id,
+                isFavourite: document.isFavourite
+            };
+            $http.post('https://localhost:44311/api/Toggle/Favourite', request).then(function() {
+                $scope.searchForDocuments($scope.searchString);
+            });
+            
+        }
+    }
+
+    $scope.searchForDocuments = function(searchString){
+        var id = null;
+        if($scope.user != null){
+            var id = $scope.user.id;
+        }
+
+        var response = {
+            search: searchString,
+            userId: id
+        };
+
+        return homeService.getDocuments(response)
+        .then(data => {
+            $scope.documents = data;
+        })
+    };
 
     uploadService.getLanguages()
     .then(data => { 
@@ -149,9 +215,7 @@ OnlineLibrary.service('userService', function($rootScope, $http) {
     .then(data => {
         $scope.categories = data});
 
-    $scope.$on('dataChanged', function(event, data) {
-        $scope.user = data;
-    });
+    
 
 
   }]);
@@ -167,8 +231,8 @@ OnlineLibrary.service('userService', function($rootScope, $http) {
 
   }]);
 
-// USERS CONTROLLER
-OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
+  // USERS CONTROLLER
+  OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
     $scope.currentUser = {};
 
     $scope.getRoles = function(id) {
