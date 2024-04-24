@@ -316,7 +316,6 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
       $scope.addInputField = function() {
         $scope.inputFields.push({ 
             Name: '',
-            TypeId: 0,
             listView: true 
         });
         console.log($scope.inputFields);
@@ -326,19 +325,34 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
         $scope.inputFields.splice(index, 1);
     };
 
+    $scope.changeOption = function(id, type){
+        id.TypeId = parseInt(id.TypeId);
+        console.log(id);
+        console.log(type);
+        console.log($scope.attributeTypes)
+    }
+
    
    
     $scope.createCategoryAndAttributes = function(categoryForm, inputFields) {
         inputFields.forEach(element => {
-        if(!element.listView){
-            element.id = 0;
+            if(!element.listView){
+                element.TypeId = parseInt(element.TypeId)
             }
-         })    
+         });
+         
+         var id = 0;
+        if ($scope.user == null) {
+            id = 3;
+        }
+        else{
+            id = $scope.user.id;
+        }
         
         var categoryRequest = {
             CategoryName: categoryForm.Name,
             Attributes: inputFields,
-            UserId: $scope.user.id
+            UserId: id
         };
         console.log($scope.attributeTypes);
          console.log(categoryRequest);

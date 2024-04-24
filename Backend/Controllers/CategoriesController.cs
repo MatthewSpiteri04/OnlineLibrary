@@ -68,7 +68,8 @@ namespace Backend.Controllers
 					}
 					else
 					{
-						attributeId.Add(attribute.Id);
+
+						attributeId.Add((int)attribute.Id);
 					}
 
 				}

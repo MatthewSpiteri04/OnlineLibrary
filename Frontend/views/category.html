@@ -43,9 +43,9 @@
                     <option value="" disabled selected>Select Type Name</option>
                     <option
                       ng-repeat="type in attributeTypes"
-                      value="{{ type }}"
+                      value="{{ type.id }}"
                     >
-                      {{ type }}
+                      {{ type.typeName }}
                     </option>
                   </select>
                 </div>
