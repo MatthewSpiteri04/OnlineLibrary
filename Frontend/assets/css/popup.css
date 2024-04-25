@@ -19,10 +19,17 @@
 .popup-content h2 {
     margin-top: 0;
     color: #BA0C2F;
+    font-size: 35px;
+}
+
+.popup-content strong {
+    margin: 15px 15px 15px 15px;
+    font-size: 20px;
 }
 
 .popup-content button {
-    margin-top: 15px;
+    font-size: 18px;
+    margin-top: 40px;
     background-color: white;
     border: 1px solid #BA0C2F;
     color: #BA0C2F;

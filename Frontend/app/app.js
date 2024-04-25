@@ -176,7 +176,7 @@ OnlineLibrary.service('homeService', function($http) {
     };
 });
 
-  OnlineLibrary.controller('upload-controller', ['$scope', 'userService', 'uploadService', function($scope, userService, uploadService){
+  OnlineLibrary.controller('upload-controller', ['$scope', 'userService', 'uploadService', '$uibModal', function($scope, userService, uploadService, $uibModal){
     $scope.user = userService.getCurrentUser();
     $scope.publicAccess = false;
     $scope.attributes = [];
@@ -220,7 +220,8 @@ OnlineLibrary.service('homeService', function($http) {
             attributeList.push({id: attr.id, value: temp});
         });
         event.preventDefault();
-        
+        console.log(event);
+        debugger;
         
         formData.set("publicAccess", $scope.publicAccess);
         formData.set("userId", $scope.user.id);
@@ -231,7 +232,8 @@ OnlineLibrary.service('homeService', function($http) {
             method: 'POST',
             body: formData
         }).then(response =>{
-            console.log(response);
+            
+            window.location.href = "#!/home"
         });
 
     }
