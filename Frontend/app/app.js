@@ -88,7 +88,7 @@ OnlineLibrary.service('uploadService', function($rootScope, $http) {
     };
 });
 
-OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favouriteService', 'userService', function($scope, $http, favouriteService, userService) {
+OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favouriteService', 'userService', '$uibModal', function($scope, $http, favouriteService, userService, $uibModal) {
     $scope.user = userService.getCurrentUser();
     // $scope.filterOn = false;
     // $scope.documents = null;
@@ -103,18 +103,48 @@ OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favourite
     });
 
     $scope.toggleFavourite = function(favourite, i){
-        var request = {
-            documentId: favourite.id,
-            userId: $scope.user.id,
-            isFavourite: favourite.isFavourite
-        };
-        $http.post('https://localhost:44311/api/Toggle/Favourite', request).then(function() {
-            window.location.href = "#!/home";   
-            window.location.href = "#!/favourites";            
-           
-            
-        });
-    }
+        $uibModal.open({
+            templateUrl: 'assets/elements/confirmation.html',
+            controller: 'confirmation-controller',
+            resolve: {
+                title: function(){
+                    return 'Removing from Favourites';
+                },
+                message: function(){
+                    return 'Are you sure you want to remove this item from favourites';
+                }
+            }
+          }).result.then(function() { }, function(reason) {
+            if(reason == 'ok') {
+                $uibModal.open({
+                    templateUrl: 'assets/elements/popup.html',
+                    controller: 'popup-controller',
+                    resolve: {
+                        title: function(){
+                            return 'Successfully Removed';
+                        },
+                        message: function(){
+                            return 'Your item has been successfully removed';
+                        }
+                    }
+                  }).result.then(function() { }, function(reason) {});
+
+                var request = {
+                    documentId: favourite.id,
+                    userId: $scope.user.id,
+                    isFavourite: favourite.isFavourite
+                };
+                $http.post('https://localhost:44311/api/Toggle/Favourite', request).then(function() {
+                    favouriteService.getFavourites($scope.user.id)
+                    .then(data => { 
+                        $scope.favourites = data;
+                    });    
+                });
+            }
+          }); 
+
+        
+    };
 
     
     // $scope.searchForFavourites = function(searchString){
@@ -245,6 +275,17 @@ OnlineLibrary.service('homeService', function($http) {
     $scope.message = message;
     $scope.closePopup = function(){
         $uibModalInstance.dismiss('close');
+    }
+  }]);
+
+  OnlineLibrary.controller('confirmation-controller', ['$scope', '$uibModalInstance', 'title', 'message', function($scope, $uibModalInstance, title, message){
+    $scope.title = title;
+    $scope.message = message;
+    $scope.cancel = function(){
+        $uibModalInstance.dismiss('close');
+    }
+    $scope.ok = function(){
+        $uibModalInstance.dismiss('ok');
     }
   }]);
 
