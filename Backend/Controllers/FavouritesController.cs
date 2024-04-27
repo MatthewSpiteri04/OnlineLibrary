@@ -10,13 +10,18 @@ namespace Backend.Controllers
 	{
 		FavouritesService _favouritesService = new FavouritesService();
 
-		[HttpGet]
-		[Route("api/Get/Favourites/{id}")]
-		public List<Documents> GetFavourites(int id)
+		[HttpPost]
+		[Route("api/Get/Favourites")]
+		public List<Documents> GetFavourites([FromBody] FavouriteSearchRequest request)
 		{
-			return _favouritesService.getFavourites(id);
-		}
-
-
+            if (request.SearchString == null || request.SearchString == "")
+            {
+                return _favouritesService.getFavourites(request.UserId);
+            }
+            else
+            {
+                return _favouritesService.getFavouritesBySearch(request);
+            }
+        }
     }
 }

@@ -2,7 +2,7 @@
 <div ng-include="'assets/elements/sidebar.html'"></div>
 <div class="home">
   <h1>What are you looking for?</h1>
-  <!-- <div class="Search-bar">
+  <div class="Search-bar">
     <div class="InputContainer">
       <input
         type="text"
@@ -24,23 +24,9 @@
         class="{{filterOn ? 'fa-solid fa-caret-up' :' fa-solid fa-caret-down'}}"
       ></i>
     </div>
-  </div> -->
+  </div>
   <div ng-if="filterOn" class="filter-container">
     <h4>Advanced Filter</h4>
-  </div>
-  <div class="grid-container" ng-if="favourites == null">
-    <div class="grid-item">
-      <i class="fa-solid fa-book-open fa-6x"></i>Books
-    </div>
-    <div class="grid-item"><i class="fa-solid fa-inbox fa-6x"></i>FYPs</div>
-    <div class="grid-item">
-      <i class="fa-solid fa-newspaper fa-6x"></i>Articles
-    </div>
-    <div class="grid-item"><i class="fa-solid fa-book fa-6x"></i>Journals</div>
-    <div class="grid-item"><i class="fa-solid fa-file fa-6x"></i>Theses</div>
-    <div class="grid-item">
-      <i class="fa-solid fa-file-audio fa-6x"></i>Audio Books
-    </div>
   </div>
 
   <div class="documents-container">

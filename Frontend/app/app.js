@@ -38,6 +38,10 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
         templateUrl:'views/favourites.html',
         controller: 'favourites-controller'
     })
+    .when('/security', {
+        templateUrl:'views/security.html',
+        controller: 'security-controller'
+    })
     .otherwise({
         redirectTo: '/home'
     });
@@ -79,9 +83,14 @@ OnlineLibrary.service('uploadService', function($rootScope, $http) {
     };
   });
 
-  OnlineLibrary.service('favouriteService', function($http) {
-    this.getFavourites = function(id) {
-        return $http.get('https://localhost:44311/api/Get/Favourites/' + id)
+OnlineLibrary.service('favouriteService', function($http) {
+    this.getFavourites = function(id, search) {
+        console.log(request);
+        var request = {
+            userId: id,
+            searchString: search
+        }
+        return $http.post('https://localhost:44311/api/Get/Favourites', request)
         .then(response => {
             return response.data;
         });
@@ -90,14 +99,13 @@ OnlineLibrary.service('uploadService', function($rootScope, $http) {
 
 OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favouriteService', 'userService', '$uibModal', function($scope, $http, favouriteService, userService, $uibModal) {
     $scope.user = userService.getCurrentUser();
-    // $scope.filterOn = false;
-    // $scope.documents = null;
-    // $scope.searchString = null;
+    $scope.filterOn = false;
+    $scope.searchString = null;
     $scope.$on('dataChanged', function(event, data) {
         $scope.user = data;
     });
 
-    favouriteService.getFavourites($scope.user.id)
+    favouriteService.getFavourites($scope.user.id, $scope.searchString)
     .then(data => { 
         $scope.favourites = data;
     });
@@ -115,83 +123,34 @@ OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favourite
                 }
             }
           }).result.then(function() { }, function(reason) {
-            if(reason == 'ok') {
-                $uibModal.open({
-                    templateUrl: 'assets/elements/popup.html',
-                    controller: 'popup-controller',
-                    resolve: {
-                        title: function(){
-                            return 'Successfully Removed';
-                        },
-                        message: function(){
-                            return 'Your item has been successfully removed';
-                        }
-                    }
-                  }).result.then(function() { }, function(reason) {});
-
-                var request = {
-                    documentId: favourite.id,
-                    userId: $scope.user.id,
-                    isFavourite: favourite.isFavourite
-                };
-                $http.post('https://localhost:44311/api/Toggle/Favourite', request).then(function() {
-                    favouriteService.getFavourites($scope.user.id)
-                    .then(data => { 
-                        $scope.favourites = data;
-                    });    
-                });
-            }
+            var request = {
+                documentId: favourite.id,
+                userId: $scope.user.id,
+                isFavourite: favourite.isFavourite
+            };
+            $http.post('https://localhost:44311/api/Toggle/Favourite', request).then(function() {
+                favouriteService.getFavourites($scope.user.id)
+                .then(data => { 
+                    $scope.favourites = data;
+                });    
+            });
           }); 
 
         
     };
 
     
-    // $scope.searchForFavourites = function(searchString){
-    //     var id = null;
-    //     if($scope.user != null){
-    //         var id = $scope.user.id;
-    //     }
+    $scope.searchForFavourites = function(searchString){
+        var id = null;
+        if($scope.user != null){
+            var id = $scope.user.id;
+        }
 
-    //     var response = {
-    //         search: searchString,
-    //         userId: id
-    //     };
-
-    //     return favouriteService.getFavourites(response)
-    //     .then(data => {
-    //         $scope.favourites = data;
-    //     })
-    // };
-
-    // $scope.toggleFavourite = function(favourites) {
-    //     if($scope.user == null || $scope.user == ''){
-    //         $uibModal.open({
-    //             templateUrl: 'assets/elements/popup.html',
-    //             controller: 'popup-controller',
-    //             resolve: {
-    //                 title: function(){
-    //                     return 'User Not Logged In';
-    //                 },
-    //                 message: function(){
-    //                     return 'This feature requires the user to be logged in.';
-    //                 }
-    //             }
-    //           }).result.then(function() {}, function(reason) {}); // Handling the modal return
-    //     } else {
-    //         var request = {
-    //             favouritesId: favourites.id,
-    //             userId: $scope.user.id,
-    //             isFavourite: favourites.isFavourite
-    //         };
-    //         $http.post('https://localhost:44311/api/Toggle/Favourite', request).then(function() {
-    //             $scope.searchForFavourites($scope.searchString);
-               
-    //         });
-            
-    //     }
-       
-    // }
+        return favouriteService.getFavourites(id, searchString)
+        .then(data => {
+            $scope.favourites = data;
+        })
+    };
 
 
 }]);
