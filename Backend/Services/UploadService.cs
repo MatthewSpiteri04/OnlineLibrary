@@ -91,24 +91,25 @@ namespace Backend.Services
             }
         }
 
-        public List<AttributeRequest> getAttributes(int categoryId)
+        public List<AttributesTypeRequest> getAttributes(int categoryId)
         {
-            List<AttributeRequest > attributes = new List<AttributeRequest>();
+            List<AttributesTypeRequest> attributes = new List<AttributesTypeRequest>();
 
-            query = @"SELECT A.* FROM Categories C
+            query = @"SELECT A.[Id], A.[Name], AT.[TagName] FROM Categories C
                       INNER JOIN CategoryAttributes CA ON C.Id = CA.CategoryId
                       INNER JOIN Attributes A ON A.Id = CA.AttributeId
+                      INNER JOIN AttributeTypes [AT] ON AT.Id = A.TypeId
                       WHERE C.Id = " + categoryId;
 
             SqlDataReader reader = executeQuery();
 
             while (reader.Read())
             {
-                attributes.Add(new AttributeRequest()
+                attributes.Add(new AttributesTypeRequest()
                 {
                     Id = reader.GetInt32(0),
                     Name = reader.GetString(1),
-                    TypeId = reader.GetInt32(2)
+                    Type = reader.GetString(2)
                 });
             }
             reader.Close();

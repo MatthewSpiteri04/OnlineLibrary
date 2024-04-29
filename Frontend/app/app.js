@@ -287,6 +287,34 @@ OnlineLibrary.service('homeService', function($http) {
         $scope.user = data;
     });
 
+    $scope.downloadDocument = function(document){
+        console.log(document);
+        $http.post('https://localhost:44311/api/Download/Document', document, { responseType: 'arraybuffer' }).then(function(response) {
+            var blob = new Blob([response.data], { type: "application/pdf" });
+            var url = window.URL.createObjectURL(blob);
+            
+            // Create anchor element
+            var a = angular.element('<a></a>');
+            a.attr({
+                href: url,
+                download: document.title + ".pdf"
+            });
+
+            // Append anchor element to document body
+            angular.element(document.body).append(a);
+
+            // Simulate click event
+            a[0].click();
+            
+            // Clean up
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        })
+        .catch(function(error) {
+            console.error('Error downloading document:', error);
+        });
+    };
+
     $scope.toggleFavourite = function(document) {
         if($scope.user == null || $scope.user == ''){
             $uibModal.open({

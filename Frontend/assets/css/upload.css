@@ -24,6 +24,8 @@
 }
 
 .upload-form input[type="text"],
+.upload-form input[type="number"],
+.upload-form input[type="date"],
 .upload-form select,
 .upload-form button {
     font-family: 'Lato';
@@ -56,9 +58,13 @@
 
 label {
     align-self: start;
-    cursor: text;
     color: #BA0C2F;
     font-weight: bold;
     margin-bottom: 5px;
     margin-top: 10px;
+}
+
+.checkbox-text {
+    color: #BA0C2F;
+    font-weight: bold;
 }
