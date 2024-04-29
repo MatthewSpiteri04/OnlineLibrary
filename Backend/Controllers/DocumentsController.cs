@@ -29,6 +29,7 @@ namespace Backend.Controllers
             }
 
         }
+
         [HttpPost]
         [Route("api/Toggle/Favourite")]
         public IActionResult ToggleFavourite([FromBody] FavouriteRequest request)

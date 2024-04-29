@@ -2,7 +2,7 @@
 <div ng-controller="elements-controller" class="Sidebar-Container-lib">
   <div class="Sidebar">
     <div class="My-Info-Icon">
-      <a href="#!/my-info">
+      <a ng-click="navigate('myinfo')">
         <div class="link-lib">
           <i class="fa-solid fa-circle-user fa-3x"></i>
           <h3>My Info</h3>
@@ -11,7 +11,7 @@
     </div>
 
     <div class="Favourites">
-      <a href="#!/favourites">
+      <a ng-click="navigate('favourites')">
         <div class="link-lib">
           <i class="fa-solid fa-heart fa-3x"></i>
           <h3>Favourites</h3>
@@ -38,7 +38,7 @@
     </div>
 
     <div class="Privacy">
-      <a href="#!/privacy">
+      <a ng-click="navigate('security')">
         <div class="link-lib">
           <i class="fa-solid fa-user-shield fa-3x"></i>
           <h3>Security</h3>
@@ -47,7 +47,7 @@
     </div>
 
     <div class="Help">
-      <a href="#!/help">
+      <a ng-click="navigate('help')">
         <div class="link-lib">
           <i class="fa-solid fa-circle-info fa-3x"></i>
           <h3>Help</h3>

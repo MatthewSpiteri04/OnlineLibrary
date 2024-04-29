@@ -1,22 +1,21 @@
 <link rel="stylesheet" href="assets/css/myInfo.css" type="text/css" />
 <div ng-include="'assets/elements/sidebar.html'"></div>
-    <div class="My-Info-Page">
+<div class="my-info-container">
+    <div>
+      <h2> <i class="fa-solid fa-circle-user"></i>My Info</h2>
+        <label>Name</label>
+        <input placeholder="Enter First Name" type="text" ng-model="user.firstName" ng-disabled="true">
 
-    <h1>
-      <i class="fa-solid fa-user"></i>
-      My Info </h1>
-            <div class="My-Info-Container">
-             
-                <div class="My-Info">
-                 
-                      <div id="myInfo">
-                        
-                        <p>First Name: <span id="first-name">{{user.firstName}}</span></p>
-                        <p>Last Name: <span id="last-name">{{user.lastName}}</span></p>
-                        <p>Username: <span id="username">{{user.username}}</span></p>
-                        <p>Email: <span id="email">{{user.email}}</span></p>
-                    </div>
-                   
-                </div>      
-            </div>
-          </div>        
+        <label>Surname</label>
+        <input placeholder="Enter Last Name" type="text" ng-model="user.lastName" ng-disabled="true">
+
+        <label>Username</label>
+        <input placeholder="Enter Username" type="text" ng-model="user.username" ng-disabled="true">
+
+        <label>Email</label>
+        <input placeholder="Enter Email" type="text" ng-model="user.email" ng-disabled="true">
+        <br>
+
+        <button ng-click="Logout()"><i class="fa-solid fa-right-from-bracket"></i><strong>Log Out</strong></button>  
+    </div>
+</div>
