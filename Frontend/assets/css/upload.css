@@ -12,14 +12,6 @@
     margin-top: 20px;
 }
 
-h3 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #BA0C2F;
-    font-size: 28px;
-}
-
 .upload-form form {
     display: flex;
     flex-direction: column;

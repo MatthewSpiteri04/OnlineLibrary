@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="assets/css/security.css" type="text/css" />
+<div ng-include="'assets/elements/sidebar.html'"></div>
+<div class="security-form">
+    <form>
+      <h2> <i style="padding-right: 10px;"  class="fa-solid fa-user-lock"></i>  Account Security</h2>
+        <label>Name</label>
+        <input placeholder="Enter First Name" type="text" ng-model="userSecurity.firstName" ng-disabled="!editMode" class="{{!editMode ? 'edit-mode-off' : 'edit-mode-on'}}">
+
+        <label>Surname</label>
+        <input placeholder="Enter Last Name" type="text" ng-model="userSecurity.lastName" ng-disabled="!editMode" class="{{!editMode ? 'edit-mode-off' : 'edit-mode-on'}}">
+
+        <label>Username</label>
+        <input placeholder="Enter Username" type="text" ng-model="userSecurity.username" ng-disabled="!editMode" class="{{!editMode ? 'edit-mode-off' : 'edit-mode-on'}}">
+
+        <label>Email</label>
+        <input placeholder="Enter Email" type="text" ng-model="userSecurity.email" ng-disabled="!editMode" class="{{!editMode ? 'edit-mode-off' : 'edit-mode-on'}}">
+
+        <label>Password</label>
+        <input placeholder="Enter Password" type="text" ng-model="userSecurity.password" ng-disabled="!editMode" class="{{!editMode ? 'edit-mode-off' : 'edit-mode-on'}}">
+
+        <button ng-click="updateSecurity()"><i class="{{!editMode ? 'fa-solid fa-pencil' : 'fa-solid fa-check'}}" style="margin-right: 10px;"></i><strong>{{!editMode ? 'Edit Account' : 'Save Changes'}}</strong></button>  
+    </form>
+</div>
