@@ -33,7 +33,8 @@ CREATE TABLE Categories(
 
 CREATE TABLE AttributeTypes (
     Id INT IDENTITY(1,1) PRIMARY KEY,
-    [TypeName] NVARCHAR(50)
+    [TypeName] NVARCHAR(50),
+	[TagName] NVARCHAR(50),
 );
 
 CREATE TABLE Attributes (
@@ -119,7 +120,7 @@ CREATE TABLE HelpDetails (
 	Id INT IDENTITY(1,1) PRIMARY KEY,
 	Question Nvarchar(500),
 	AnswerText Nvarchar(500)
-)
+);
 
 
 
@@ -127,8 +128,8 @@ INSERT INTO Roles VALUES ('Public'), ('AcademicUser'), ('Librarian');
 INSERT INTO Privileges VALUES ('Manage Categories'), ('Academic User');
 INSERT INTO RolesToPrivileges VALUES (2, 2), (3, 2), (3, 1);
 
-INSERT INTO Languages VALUES ('English'), ('Italiano'), ('Español'), ('Français'), ('Deutsch'), ('Português');
-INSERT INTO AttributeTypes VALUES ('Number'), ('Text'), ('True/False'), ('Date');
+INSERT INTO Languages VALUES  ('Malti'), ('English'), ('Italiano'), ('Español'), ('Français'), ('Deutsch'), ('Português');
+INSERT INTO AttributeTypes VALUES ('Number', 'number'), ('Text', 'text'), ('True/False', 'checkbox'), ('Date', 'date');
 
 INSERT INTO Users VALUES ('Matthew', 'Spiteri', 'Spim04', 'matthewspiteri@gmail.com', 'matt04', 1);
 INSERT INTO Users VALUES ('Gorg', 'Borg', 'Gborg', 'gorgborg@gmail.com', 'gb05', 2);

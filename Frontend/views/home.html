@@ -40,6 +40,7 @@
         <p>{{document.category}}</p>
       </div>
       <div class="icons">
+        <i class="fa-solid fa-download fa-2x" ng-click="downloadDocument(document)" download="{{document.title}}"></i>
         <i class="{{document.isFavourite ? 'fa-solid fa-heart fa-2x' : 'fa-regular fa-heart fa-2x'}}" ng-click="toggleFavourite(document)"></i>
       </div>
     </div>

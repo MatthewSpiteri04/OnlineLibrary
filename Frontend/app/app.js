@@ -287,6 +287,34 @@ OnlineLibrary.service('homeService', function($http) {
         $scope.user = data;
     });
 
+    $scope.downloadDocument = function(document){
+        console.log(document);
+        $http.post('https://localhost:44311/api/Download/Document', document, { responseType: 'arraybuffer' }).then(function(response) {
+            var blob = new Blob([response.data], { type: "application/pdf" });
+            var url = window.URL.createObjectURL(blob);
+            
+            // Create anchor element
+            var a = angular.element('<a></a>');
+            a.attr({
+                href: url,
+                download: document.title + ".pdf"
+            });
+
+            // Append anchor element to document body
+            angular.element(document.body).append(a);
+
+            // Simulate click event
+            a[0].click();
+            
+            // Clean up
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        })
+        .catch(function(error) {
+            console.error('Error downloading document:', error);
+        });
+    };
+
     $scope.toggleFavourite = function(document) {
         if($scope.user == null || $scope.user == ''){
             $uibModal.open({
@@ -563,17 +591,30 @@ OnlineLibrary.service('categoryService', function($http) {
     };
 }); 
 
-OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryService', 'userService', function($scope, $http, categoryService, userService){
+OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryService', 'userService', 'uploadService', '$uibModal', function($scope, $http, categoryService, userService, uploadService, $uibModal){
     $scope.user = userService.getCurrentUser();
     $scope.$on('dataChanged', function(event, data) {
         $scope.user = data;
     });
 
+    $scope.screen = 'choice';
+
     $scope.attributeTypes = [];
     $scope.attributes = [];
+    $scope.categories = [];
     
     if ($scope.user != null) {
         if($scope.user.Roles.includes('Manage Categories')) {
+            $scope.changeScreen = function(value) {
+                $scope.screen = value;
+            }
+
+            uploadService.getCategories()
+            .then(data => {
+                $scope.categories = data;
+                console.log($scope.categories);
+            });
+
             categoryService.getAttributeTypes()
             .then(response => {
                 $scope.attributeTypes = response.data;
@@ -605,6 +646,25 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
                     inputField.Name = ''; // Clear the input field value
                 }
             };
+
+            $scope.deleteCategory = function(category, index) {
+                $http.delete('https://localhost:44311/api/Delete/Category/'+ category.id).then(response => {
+                    $scope.categories.splice(index, 1);
+                }).catch(error => {
+                    $uibModal.open({
+                        templateUrl: 'assets/elements/popup.html',
+                        controller: 'popup-controller',
+                        resolve: {
+                            title: function(){
+                                return error.data.title;
+                            },
+                            message: function(){
+                                return error.data.message;
+                            }
+                        }
+                      }).result.then(function() {}, function(reason) {});
+                });
+            }
             
 
             $scope.addInputField = function() {

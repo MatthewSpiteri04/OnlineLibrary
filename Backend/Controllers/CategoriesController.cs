@@ -26,7 +26,22 @@ namespace Backend.Controllers
 			return _categoryService.getAttributes();
 		}
 
-		[HttpPost]
+		[HttpDelete]
+        [Route("api/Delete/Category/{id}")]
+        public IActionResult DeleteCategory(int id)
+		{
+			if (_categoryService.deleteCategory(id))
+			{
+				return Ok();
+			}
+			else
+			{
+				return BadRequest(new { Title = "Delete Failed", Message = "This category has documents related to it. Make sure this category isn't being used first."});
+			}
+		}
+
+
+        [HttpPost]
 		[Route("api/Categories/AddCategory")]
 		public IActionResult CreateCategory([FromBody] CategoryAttributes request)
 		{

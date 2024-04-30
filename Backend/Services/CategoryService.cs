@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Backend.Services;
 using System.Data;
+using System.Collections.Generic;
 
 
 namespace Backend.Services
@@ -230,5 +231,23 @@ namespace Backend.Services
 			}
 		}
 
-	}
+        public bool deleteCategory(int id)
+        {
+			try
+			{
+                query = @"	DELETE FROM CategoryAttributes WHERE CategoryId = " + id + @"; 
+						DELETE FROM Categories WHERE [Id] = " + id;
+
+                executeCommand();
+
+                return true;
+            }
+			catch 
+			{
+				return false;
+			}
+
+			
+        }
+    }
 }
