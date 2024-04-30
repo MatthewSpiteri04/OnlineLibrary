@@ -591,17 +591,30 @@ OnlineLibrary.service('categoryService', function($http) {
     };
 }); 
 
-OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryService', 'userService', function($scope, $http, categoryService, userService){
+OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryService', 'userService', 'uploadService', '$uibModal', function($scope, $http, categoryService, userService, uploadService, $uibModal){
     $scope.user = userService.getCurrentUser();
     $scope.$on('dataChanged', function(event, data) {
         $scope.user = data;
     });
 
+    $scope.screen = 'choice';
+
     $scope.attributeTypes = [];
     $scope.attributes = [];
+    $scope.categories = [];
     
     if ($scope.user != null) {
         if($scope.user.Roles.includes('Manage Categories')) {
+            $scope.changeScreen = function(value) {
+                $scope.screen = value;
+            }
+
+            uploadService.getCategories()
+            .then(data => {
+                $scope.categories = data;
+                console.log($scope.categories);
+            });
+
             categoryService.getAttributeTypes()
             .then(response => {
                 $scope.attributeTypes = response.data;
@@ -633,6 +646,25 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
                     inputField.Name = ''; // Clear the input field value
                 }
             };
+
+            $scope.deleteCategory = function(category, index) {
+                $http.delete('https://localhost:44311/api/Delete/Category/'+ category.id).then(response => {
+                    $scope.categories.splice(index, 1);
+                }).catch(error => {
+                    $uibModal.open({
+                        templateUrl: 'assets/elements/popup.html',
+                        controller: 'popup-controller',
+                        resolve: {
+                            title: function(){
+                                return error.data.title;
+                            },
+                            message: function(){
+                                return error.data.message;
+                            }
+                        }
+                      }).result.then(function() {}, function(reason) {});
+                });
+            }
             
 
             $scope.addInputField = function() {
