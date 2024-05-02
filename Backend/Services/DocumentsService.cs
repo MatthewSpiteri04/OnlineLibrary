@@ -67,12 +67,14 @@ namespace Backend.Services
             {
                 query = @"SELECT 
                           D.[Id], 
+                          D.[UserId],
                           C.[Name], 
                           D.[Title], 
                           L.[Language], 
                           D.[UploadDate], 
                           D.[PublicAccess], 
                           D.[DocumentLocation], 
+                          D.[FileExtension], 
                           CAST(0 AS BIT) AS IsFavourite  
                       FROM 
                           Documents D
@@ -86,13 +88,15 @@ namespace Backend.Services
             else
             {
                 query = @"SELECT 
-                        D.[Id], 
+                        D.[Id],
+                        D.[UserId], 
                         C.[Name], 
                         D.[Title], 
                         L.[Language], 
                         D.[UploadDate], 
                         D.[PublicAccess], 
                         D.[DocumentLocation], 
+                        D.[FileExtension], 
                         CASE 
                             WHEN EXISTS (SELECT 1 FROM Favourites WHERE DocumentId = D.[Id] AND UserId = " + request.UserId + @")
                                 THEN CAST(1 AS BIT)
@@ -116,13 +120,15 @@ namespace Backend.Services
                 list.Add(new Documents()
                 {
                     Id = reader.GetInt32(0),
-                    Category = reader.GetString(1),
-                    Title = reader.GetString(2),
-                    Language = reader.GetString(3),
-                    UploadDate = reader.GetDateTime(4),
-                    PublicAccess = reader.GetBoolean(5),
-                    DocumentLocation = reader.GetString(6),
-                    IsFavourite = reader.GetBoolean(7)
+                    UserId = reader.GetInt32(1),
+                    Category = reader.GetString(2),
+                    Title = reader.GetString(3),
+                    Language = reader.GetString(4),
+                    UploadDate = reader.GetDateTime(5),
+                    PublicAccess = reader.GetBoolean(6),
+                    DocumentLocation = reader.GetString(7),
+                    FileExtension = reader.GetString(8),
+                    IsFavourite = reader.GetBoolean(9)
                 });
             }
             reader.Close();
@@ -137,13 +143,13 @@ namespace Backend.Services
 
             if (UserId < 0)
             { 
-                query = @"SELECT D.[Id], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], CAST(0 AS BIT) AS IsFavourite FROM Documents D
+                query = @"SELECT D.[Id], D.[UserId], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], D.[FileExtension], CAST(0 AS BIT) AS IsFavourite FROM Documents D
                           INNER JOIN Categories C ON D.CategoryId = C.Id
                           INNER JOIN Languages L ON D.LanguageId = L.Id;";
             }
             else
             {
-                query = @"SELECT D.[Id], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], CASE 
+                query = @"SELECT D.[Id], D.[UserId], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], D.[FileExtension], CASE 
                           WHEN EXISTS (SELECT 1 FROM Favourites WHERE DocumentId = D.[Id] AND UserId = " + UserId + @")
                               THEN CAST(1 AS BIT)
                               ELSE CAST(0 AS BIT)
@@ -160,13 +166,15 @@ namespace Backend.Services
                 list.Add(new Documents()
                 {
                     Id = reader.GetInt32(0),
-                    Category = reader.GetString(1),
-                    Title = reader.GetString(2),
-                    Language = reader.GetString(3),
-                    UploadDate = reader.GetDateTime(4),
-                    PublicAccess = reader.GetBoolean(5),
-                    DocumentLocation = reader.GetString(6),
-                    IsFavourite = reader.GetBoolean(7)
+                    UserId = reader.GetInt32(1),
+                    Category = reader.GetString(2),
+                    Title = reader.GetString(3),
+                    Language = reader.GetString(4),
+                    UploadDate = reader.GetDateTime(5),
+                    PublicAccess = reader.GetBoolean(6),
+                    DocumentLocation = reader.GetString(7),
+                    FileExtension = reader.GetString(8),
+                    IsFavourite = reader.GetBoolean(9)
                 });
             }
             reader.Close();

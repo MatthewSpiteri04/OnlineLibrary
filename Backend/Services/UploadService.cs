@@ -67,7 +67,7 @@ namespace Backend.Services
                 var = 0;
             }
 
-            query = @"INSERT INTO Documents VALUES (" + request.CategoryId + @", '" + request.Title + @"', '" + request.LanguageId + @"', GETDATE(), " + var + @", '" + request.DocumentLocation + @"');
+            query = @"INSERT INTO Documents VALUES (" + request.UserId + @", " + request.CategoryId + @", '" + request.Title + @"', '" + request.LanguageId + @"', GETDATE(), " + var + @", '" + request.DocumentLocation + @"' , '" + request.FileExtension + @"');
                       SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
             SqlDataReader reader = executeQuery();

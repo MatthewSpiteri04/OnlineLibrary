@@ -56,6 +56,27 @@ label {
     cursor: not-allowed;
 }
 
+.my-upload-button {
+    height: 60px;
+    background-color: white !important;
+    border: 2px solid #BA0C2F !important;
+    transition: background-color 0.3s ease !important;
+    cursor: pointer !important;
+    color: #BA0C2F !important;
+}
+
+.my-upload-button strong, .my-upload-button i {
+    font-size: 18px;
+}
+
+.my-upload-button:hover {
+    background-color: #BA0C2F !important;
+    border: 2px solid #BA0C2F !important;
+    transition: background-color 0.3s ease !important;
+    cursor: pointer !important;
+    color: white !important;
+}
+
 .my-info-container button {
     margin-top: 10px;
     background-color: #BA0C2F;
@@ -69,3 +90,4 @@ label {
     background-color: #950924;
     border: 2px solid #950924;
 }
+

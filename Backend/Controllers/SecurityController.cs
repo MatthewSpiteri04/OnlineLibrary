@@ -18,5 +18,31 @@ namespace Backend.Controllers
 
         }
 
+        [HttpDelete]
+        [Route("api/Delete/User/{id}")]
+        public IActionResult DeleteUser(int id)
+        {
+            bool userHaveDocuments = _securityService.getUserDocuments(id);
+
+            if (userHaveDocuments)
+            {
+                User headmaster = _securityService.searchForFileHandler(id);
+
+                if (headmaster.Id <= 0)
+                {
+                    return BadRequest(new { Title = "User Cannot Be Deleted", Message = "No other eligible user can handle your documents" });
+                }
+                else
+                {
+                    _securityService.updateDocumentsAndDeleteUser(headmaster, id);
+                    return Ok();
+                }
+            }
+            else
+            {
+                _securityService.deleteUser(id);
+                return Ok();
+            }
+        }
     }
 }

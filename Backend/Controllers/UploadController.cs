@@ -18,12 +18,12 @@ namespace Backend.Controllers
 
             if (_uploadService.CanUserUpload(request.UserId))
             {
-                var allowedExtensions = new[] { ".pdf", ".doc", ".docx", ".txt", ".mp3" }; // Add more extensions if needed
+                var allowedExtensions = new[] { ".pdf", ".doc", ".docx", ".txt", ".mp3", ".wav", ".xlsx", ".pptx" }; // Add more extensions if needed
 
                 var fileExtension = Path.GetExtension(request.File.FileName).ToLower();
                 if (!allowedExtensions.Contains(fileExtension))
                 {
-                    return BadRequest("File Type Not Allowed");
+                    return BadRequest(new {Title="File Not Supported", Message="This file type is not recognised. Upload has been halted."});
                 }
 
                 var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
@@ -39,12 +39,14 @@ namespace Backend.Controllers
 
                 UploadDatabaseRequest database_request = new UploadDatabaseRequest()
                 {
+                    UserId = request.UserId,
                     CategoryId = request.CategoryId,
                     Title = request.Title,
                     LanguageId = request.LanguageId,
                     UploadDate = DateTime.Now,
                     PublicAccess = request.PublicAccess,
-                    DocumentLocation = fileName
+                    DocumentLocation = fileName,
+                    FileExtension = fileExtension
                 };
 
                 int documentId = _uploadService.SaveUploadedFile(database_request);
@@ -70,7 +72,42 @@ namespace Backend.Controllers
 
             var stream = new FileStream(document.DocumentLocation, FileMode.Open, FileAccess.Read);
 
-            return File(stream, "application/pdf");
+            if (document.FileExtension == ".pdf")
+            {
+                return File(stream, "application/pdf");
+            }
+            else if (document.FileExtension == ".wav")
+            {
+                return File(stream, "audio/wav");
+            }
+            else if (document.FileExtension == ".mp3")
+            {
+                return File(stream, "audio/mpeg");
+            }
+            else if (document.FileExtension == ".doc")
+            {
+                return File(stream, "application/msword");
+            }
+            else if (document.FileExtension == ".docx")
+            {
+                return File(stream, "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+            }
+            else if (document.FileExtension == ".xlsx")
+            {
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            }
+            else if (document.FileExtension == ".pptx")
+            {
+                return File(stream, "application/vnd.openxmlformats-officedocument.presentationml.presentation");
+            }
+            else if (document.FileExtension == ".txt")
+            {
+                return File(stream, "text/plain");
+            }
+            else
+            {
+                return BadRequest(new {Title = "File Extension Not Recognised", Message = "This file's extension is not recognised."});
+            }
         }
 
         [HttpGet]

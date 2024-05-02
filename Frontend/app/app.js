@@ -50,6 +50,12 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
 OnlineLibrary.service('userService', function($rootScope, $http) {
     var user = null;
 
+    this.logout = function(){
+        sessionStorage.clear()
+        window.location.href = "#!/home";
+        this.setCurrentUser(null);
+    };
+
     this.getRoles = function(id) {
         return $http.get('https://localhost:44311/api/User/Roles/' + id)
         .then(response => {
@@ -58,7 +64,6 @@ OnlineLibrary.service('userService', function($rootScope, $http) {
     };
     
     this.getCurrentUser = function() {
-        console.log("Test:", JSON.parse(sessionStorage.getItem('loginData')));
         return JSON.parse(sessionStorage.getItem('loginData'));
     };
 
@@ -236,16 +241,41 @@ OnlineLibrary.service('homeService', function($http) {
                 formData.set("publicAccess", $scope.publicAccess);
                 formData.set("userId", $scope.user.id);
                 formData.set("attributesListJSON", JSON.stringify(attributeList));
-                console.log(formData.get("attributesListJSON"));
         
                 fetch('https://localhost:44311/api/Upload/File', {
                     method: 'POST',
                     body: formData
                 }).then(response =>{
-                    
+                    if(response.status == 400){
+                        $uibModal.open({
+                            templateUrl: 'assets/elements/popup.html',
+                            controller: 'popup-controller',
+                            resolve: {
+                                title: function(){
+                                    return "File Not Supported";
+                                },
+                                message: function(){
+                                    return "This file type is not recognised. Upload has been halted.";
+                                }
+                            }
+                        }).result.then(function() { }, function(reason) {});
+                    }
+                    if (response.status == 200) {
+                        $uibModal.open({
+                            templateUrl: 'assets/elements/popup.html',
+                            controller: 'popup-controller',
+                            resolve: {
+                                title: function(){
+                                    return "Success";
+                                },
+                                message: function(){
+                                    return "Your file has been successfully uploaded.";
+                                }
+                            }
+                        }).result.then(function() { }, function(reason) {});
+                    }
                     window.location.href = "#!/home"
-                });
-        
+                })        
             }
         
         }
@@ -290,14 +320,14 @@ OnlineLibrary.service('homeService', function($http) {
     $scope.downloadDocument = function(document){
         console.log(document);
         $http.post('https://localhost:44311/api/Download/Document', document, { responseType: 'arraybuffer' }).then(function(response) {
-            var blob = new Blob([response.data], { type: "application/pdf" });
+            var blob = new Blob([response.data]);
             var url = window.URL.createObjectURL(blob);
             
             // Create anchor element
             var a = angular.element('<a></a>');
             a.attr({
                 href: url,
-                download: document.title + ".pdf"
+                download: document.title + document.fileExtension
             });
 
             // Append anchor element to document body
@@ -377,15 +407,12 @@ OnlineLibrary.service('homeService', function($http) {
     $http.get('https://localhost:44311/api/help')
         .then(response => {
             $scope.helpDetails = response.data;
-            console.log($scope.helpDetails);
         })
 
     $scope.searching = function(search){
-    console.log(search);
         $http.get('https://localhost:44311/api/help/' + search)
         .then(response => {
             $scope.helpDetails = response.data;
-            console.log($scope.helpDetails);
         })  
     }
   }]);
@@ -396,7 +423,6 @@ OnlineLibrary.service('homeService', function($http) {
     $http.get('https://localhost:44311/api/help/answer/' + $scope.questionId)
         .then(response => {
             $scope.helpDetails = response.data;
-            console.log($scope.helpDetails);
         })    
   }]);
 
@@ -405,17 +431,14 @@ OnlineLibrary.service('homeService', function($http) {
 
     $scope.$on('dataChanged', function(event, data) {
         $scope.user = data;
-        console.log($scope.user);
-    });
+        });
     
     if($scope.user == null){ 
         window.location.href = '#!/home'
     }
 
     $scope.Logout = function(){
-        sessionStorage.clear()
-        window.location.href = "#!/home";
-        userService.setCurrentUser(null);
+        userService.logout();
     }
   }]);
 
@@ -469,8 +492,8 @@ OnlineLibrary.service('homeService', function($http) {
             $http.post('https://localhost:44311/api/User/Add', request)
             .then(response => {
                 if (response.status == 200) {
-                    $scope.currentUser = response.data;
-                    $scope.getRoles(response.data.id);
+                    userService.setCurrentUser(response.data);
+                    $scope.currentUser = userService.getCurrentUser();
                     window.location.href = "#!/home";
                 }
                 else {
@@ -501,9 +524,13 @@ OnlineLibrary.service('securityService', function($http) {
     this.updateAccountDetails = function(request) {
         return $http.put('https://localhost:44311/api/Update/UserInfo', request);
     };
+    
+    this.deleteAccount = function(id) {
+        return $http.delete('https://localhost:44311/api/Delete/User/' + id);
+    };
 }); 
 
-OnlineLibrary.controller('security-controller', ['$scope', 'userService', 'securityService', function($scope, userService, securityService){
+OnlineLibrary.controller('security-controller', ['$scope', 'userService', 'securityService', '$uibModal', function($scope, userService, securityService, $uibModal){
     $scope.user = userService.getCurrentUser();
     $scope.editMode = false;
 
@@ -512,7 +539,7 @@ OnlineLibrary.controller('security-controller', ['$scope', 'userService', 'secur
     });
     
     if($scope.user != null) {
-        $scope.userSecurity = angular.copy($scope.user)
+        $scope.userSecurity = angular.copy($scope.user);
 
         $scope.updateSecurity = function(){
             if($scope.editMode == false)
@@ -536,7 +563,40 @@ OnlineLibrary.controller('security-controller', ['$scope', 'userService', 'secur
                     userService.setCurrentUser(response.data);
                 });
             }
-        }
+        };
+
+        $scope.deleteAccount = function(){
+            securityService.deleteAccount($scope.user.id)
+            .then(response => {
+                userService.logout();
+                $uibModal.open({
+                    templateUrl: 'assets/elements/popup.html',
+                    controller: 'popup-controller',
+                    resolve: {
+                        title: function(){
+                            return "User Account Deleted";
+                        },
+                        message: function(){
+                            return "User account has been removed successfully";
+                        }
+                    }
+                  }).result.then(function() {}, function(reason) {});
+            }).catch(error => {
+                $uibModal.open({
+                    templateUrl: 'assets/elements/popup.html',
+                    controller: 'popup-controller',
+                    resolve: {
+                        title: function(){
+                            return error.data.title;
+                        },
+                        message: function(){
+                            return error.data.message;
+                        }
+                    }
+                  }).result.then(function() {}, function(reason) {});
+            });
+        };
+
     } else {
         window.location.href = "#!/home";
     };
@@ -548,7 +608,6 @@ OnlineLibrary.controller('elements-controller', ['$scope', 'userService', '$uibM
 
     $scope.$on('dataChanged', function(event, data) {
         $scope.user = data;
-        console.log($scope.user);
     });
 
     $scope.navigate = function(tab) {

@@ -7,6 +7,7 @@ using Backend.Services;
 using System.Data;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Reflection.PortableExecutable;
 
 
 namespace Backend.Services
@@ -43,6 +44,73 @@ namespace Backend.Services
             }
 
             return user;
+        }
+
+        public User searchForFileHandler(int id)
+        {
+            query = @"SELECT TOP(1) U.* FROM Users U
+                    LEFT JOIN  Roles R
+                    ON U.RoleId = R.Id
+                    LEFT JOIN RolesToPrivileges RP
+                    ON R.Id = RP.RoleId
+                    LEFT JOIN Privileges P
+                    ON P.Id = RP.PrivilegeId
+                    WHERE P.[Description] = 'Handle No ID Documents'  AND U.Id != " + id;
+            ;
+
+            User user = new User();
+            SqlDataReader reader = executeQuery();
+
+            while (reader.Read())
+            {
+                user = new User() { Id = reader.GetInt32(0), FirstName = reader.GetString(1), LastName = reader.GetString(2), Username = reader.GetString(3), Email = reader.GetString(4), Password = reader.GetString(5), RoleId = reader.GetInt32(6) };
+            }
+            reader.Close();
+            conn.Close();
+
+            return user;
+        }
+
+        public void updateDocumentsAndDeleteUser(User headmaster, int id)
+        {
+            query = @"UPDATE Documents
+                    SET [UserId] = " + headmaster.Id + @"
+                    WHERE [UserId] = " + id + @";
+
+                    DELETE FROM Users WHERE [Id] = " + id;
+
+            executeCommand();
+        }
+
+        public bool getUserDocuments(int id)
+        {
+            int documentCount = 0;
+
+            query = @"SELECT COUNT(*) FROM Documents WHERE UserId = " + id;
+
+            SqlDataReader reader = executeQuery();
+
+            while (reader.Read())
+            {
+                documentCount = reader.GetInt32(0);
+            }
+            reader.Close();
+            conn.Close();
+
+            if(documentCount <= 0)
+            {
+                return false;
+            } 
+            else
+            {
+                return true;
+            }
+        }
+
+        public int deleteUser(int id)
+        {
+            query = @"DELETE FROM Users WHERE [Id] = " + id;
+            return executeCommand();
         }
     }
 }

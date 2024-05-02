@@ -96,6 +96,7 @@ namespace Backend.Services
                 id = reader.GetInt32(0);
             }
             reader.Close();
+            conn.Close();
             
             if (id > 0)
             {
