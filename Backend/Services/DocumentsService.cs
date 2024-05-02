@@ -15,50 +15,6 @@ namespace Backend.Services
 
         }
 
-        public List<CategoryRequest> getCategories()
-        {
-            List<CategoryRequest> list = new List<CategoryRequest>();
-
-            query = @"SELECT * FROM Categories";
-
-            SqlDataReader reader = executeQuery();
-
-            while (reader.Read())
-            {
-                list.Add(new CategoryRequest()
-                {
-                    Id = reader.GetInt32(0),
-                    Type = reader.GetString(1)
-                });
-            }
-            reader.Close();
-            conn.Close();
-
-            return list;
-        }
-
-        public List<LanguageRequest> getLanguages()
-        {
-            List<LanguageRequest> list = new List<LanguageRequest>();
-
-            query = @"SELECT * FROM Languages";
-
-            SqlDataReader reader = executeQuery();
-
-            while (reader.Read())
-            {
-                list.Add(new LanguageRequest()
-                {
-                    Id = reader.GetInt32(0),
-                    Language = reader.GetString(1)
-                });
-            }
-            reader.Close();
-            conn.Close();
-
-            return list;
-        }
-
         public List<Documents> getDocuments(DocumentRequestModel request, int UserId)
         {
             List<Documents> list = new List<Documents>();
@@ -67,12 +23,14 @@ namespace Backend.Services
             {
                 query = @"SELECT 
                           D.[Id], 
+                          D.[UserId],
                           C.[Name], 
                           D.[Title], 
                           L.[Language], 
                           D.[UploadDate], 
                           D.[PublicAccess], 
                           D.[DocumentLocation], 
+                          D.[FileExtension], 
                           CAST(0 AS BIT) AS IsFavourite  
                       FROM 
                           Documents D
@@ -86,13 +44,15 @@ namespace Backend.Services
             else
             {
                 query = @"SELECT 
-                        D.[Id], 
+                        D.[Id],
+                        D.[UserId], 
                         C.[Name], 
                         D.[Title], 
                         L.[Language], 
                         D.[UploadDate], 
                         D.[PublicAccess], 
                         D.[DocumentLocation], 
+                        D.[FileExtension], 
                         CASE 
                             WHEN EXISTS (SELECT 1 FROM Favourites WHERE DocumentId = D.[Id] AND UserId = " + request.UserId + @")
                                 THEN CAST(1 AS BIT)
@@ -116,13 +76,15 @@ namespace Backend.Services
                 list.Add(new Documents()
                 {
                     Id = reader.GetInt32(0),
-                    Category = reader.GetString(1),
-                    Title = reader.GetString(2),
-                    Language = reader.GetString(3),
-                    UploadDate = reader.GetDateTime(4),
-                    PublicAccess = reader.GetBoolean(5),
-                    DocumentLocation = reader.GetString(6),
-                    IsFavourite = reader.GetBoolean(7)
+                    UserId = reader.GetInt32(1),
+                    Category = reader.GetString(2),
+                    Title = reader.GetString(3),
+                    Language = reader.GetString(4),
+                    UploadDate = reader.GetDateTime(5),
+                    PublicAccess = reader.GetBoolean(6),
+                    DocumentLocation = reader.GetString(7),
+                    FileExtension = reader.GetString(8),
+                    IsFavourite = reader.GetBoolean(9)
                 });
             }
             reader.Close();
@@ -137,13 +99,13 @@ namespace Backend.Services
 
             if (UserId < 0)
             { 
-                query = @"SELECT D.[Id], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], CAST(0 AS BIT) AS IsFavourite FROM Documents D
+                query = @"SELECT D.[Id], D.[UserId], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], D.[FileExtension], CAST(0 AS BIT) AS IsFavourite FROM Documents D
                           INNER JOIN Categories C ON D.CategoryId = C.Id
                           INNER JOIN Languages L ON D.LanguageId = L.Id;";
             }
             else
             {
-                query = @"SELECT D.[Id], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], CASE 
+                query = @"SELECT D.[Id], D.[UserId], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], D.[FileExtension], CASE 
                           WHEN EXISTS (SELECT 1 FROM Favourites WHERE DocumentId = D.[Id] AND UserId = " + UserId + @")
                               THEN CAST(1 AS BIT)
                               ELSE CAST(0 AS BIT)
@@ -160,13 +122,15 @@ namespace Backend.Services
                 list.Add(new Documents()
                 {
                     Id = reader.GetInt32(0),
-                    Category = reader.GetString(1),
-                    Title = reader.GetString(2),
-                    Language = reader.GetString(3),
-                    UploadDate = reader.GetDateTime(4),
-                    PublicAccess = reader.GetBoolean(5),
-                    DocumentLocation = reader.GetString(6),
-                    IsFavourite = reader.GetBoolean(7)
+                    UserId = reader.GetInt32(1),
+                    Category = reader.GetString(2),
+                    Title = reader.GetString(3),
+                    Language = reader.GetString(4),
+                    UploadDate = reader.GetDateTime(5),
+                    PublicAccess = reader.GetBoolean(6),
+                    DocumentLocation = reader.GetString(7),
+                    FileExtension = reader.GetString(8),
+                    IsFavourite = reader.GetBoolean(9)
                 });
             }
             reader.Close();
@@ -186,6 +150,123 @@ namespace Backend.Services
             }
 
             executeCommand();
+        }
+
+        public List<Documents> getMyUploads(int id)
+        {
+            List<Documents> list = new List<Documents>();
+
+            query = @"SELECT D.[Id], D.[UserId], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], D.[FileExtension], CASE 
+                          WHEN EXISTS (SELECT 1 FROM Favourites WHERE DocumentId = D.[Id] AND UserId = " + id + @")
+                              THEN CAST(1 AS BIT)
+                              ELSE CAST(0 AS BIT)
+                              END AS IsFavourite  
+                          FROM Documents D
+                          INNER JOIN Categories C ON D.CategoryId = C.Id
+                          INNER JOIN Languages L ON D.LanguageId = L.Id
+                          WHERE D.[UserId] = " + id;
+
+            SqlDataReader reader = executeQuery();
+
+            while (reader.Read())
+            {
+                list.Add(new Documents()
+                {
+                    Id = reader.GetInt32(0),
+                    UserId = reader.GetInt32(1),
+                    Category = reader.GetString(2),
+                    Title = reader.GetString(3),
+                    Language = reader.GetString(4),
+                    UploadDate = reader.GetDateTime(5),
+                    PublicAccess = reader.GetBoolean(6),
+                    DocumentLocation = reader.GetString(7),
+                    FileExtension = reader.GetString(8),
+                    IsFavourite = reader.GetBoolean(9)
+                });
+            }
+            reader.Close();
+            conn.Close();
+
+            return list;
+        }
+
+        public List<Documents> getMyUploadsBySearch(int id, string search)
+        {
+            List<Documents> list = new List<Documents>();
+
+            query = @"SELECT D.[Id], D.[UserId], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], D.[FileExtension], CASE 
+                          WHEN EXISTS (SELECT 1 FROM Favourites WHERE DocumentId = D.[Id] AND UserId = " + id + @")
+                              THEN CAST(1 AS BIT)
+                              ELSE CAST(0 AS BIT)
+                              END AS IsFavourite  
+                          FROM Documents D
+                          INNER JOIN Categories C ON D.CategoryId = C.Id
+                          INNER JOIN Languages L ON D.LanguageId = L.Id
+                          WHERE D.[Title] LIKE '%" + search + @"%' AND D.[UserId] = " + id;
+
+            SqlDataReader reader = executeQuery();
+
+            while (reader.Read())
+            {
+                list.Add(new Documents()
+                {
+                    Id = reader.GetInt32(0),
+                    UserId = reader.GetInt32(1),
+                    Category = reader.GetString(2),
+                    Title = reader.GetString(3),
+                    Language = reader.GetString(4),
+                    UploadDate = reader.GetDateTime(5),
+                    PublicAccess = reader.GetBoolean(6),
+                    DocumentLocation = reader.GetString(7),
+                    FileExtension = reader.GetString(8),
+                    IsFavourite = reader.GetBoolean(9)
+                });
+            }
+            reader.Close();
+            conn.Close();
+
+            return list;
+        }
+
+        public void deleteDocument(int id)
+        {
+            query = @"DELETE FROM DocumentAttributes WHERE DocumentId = " + id + @";
+                      DELETE FROM Favourites WHERE DocumentId = " + id + @";
+                      DELETE FROM Documents WHERE Id = " + id;
+
+            executeCommand();
+        }
+
+        public Documents getDocumentById(int id)
+        {
+            Documents document = new Documents();
+            query = @"SELECT D.[Id], D.[UserId], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], D.[FileExtension], CAST(0 AS BIT) AS IsFavourite  
+                          FROM Documents D
+                          INNER JOIN Categories C ON D.CategoryId = C.Id
+                          INNER JOIN Languages L ON D.LanguageId = L.Id
+                          WHERE D.[Id] = " + id;
+
+            SqlDataReader reader = executeQuery();
+
+            while (reader.Read())
+            {
+                document = new Documents
+                {
+                    Id = reader.GetInt32(0),
+                    UserId = reader.GetInt32(1),
+                    Category = reader.GetString(2),
+                    Title = reader.GetString(3),
+                    Language = reader.GetString(4),
+                    UploadDate = reader.GetDateTime(5),
+                    PublicAccess = reader.GetBoolean(6),
+                    DocumentLocation = reader.GetString(7),
+                    FileExtension = reader.GetString(8),
+                    IsFavourite = reader.GetBoolean(9)
+                };
+            }
+            reader.Close();
+            conn.Close();
+            return document;
         }
     }
 }

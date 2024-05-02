@@ -19,7 +19,7 @@ namespace Backend.Services
         {
             List<Documents> list = new List<Documents>();
 
-            query = @"SELECT D.[Id], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], CASE 
+            query = @"SELECT D.[Id], D.[UserId], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], D.[FileExtension],  CASE 
                       WHEN EXISTS (SELECT 1 FROM Favourites WHERE DocumentId = D.[Id] AND UserId = " + id + @")
                           THEN CAST(1 AS BIT)
                           ELSE CAST(0 AS BIT)
@@ -37,13 +37,15 @@ namespace Backend.Services
                 list.Add(new Documents()
                 {
                     Id = reader.GetInt32(0),
-                    Category = reader.GetString(1),
-                    Title = reader.GetString(2),
-                    Language = reader.GetString(3),
-                    UploadDate = reader.GetDateTime(4),
-                    PublicAccess = reader.GetBoolean(5),
-                    DocumentLocation = reader.GetString(6),
-                    IsFavourite = reader.GetBoolean(7)
+                    UserId = reader.GetInt32(1),
+                    Category = reader.GetString(2),
+                    Title = reader.GetString(3),
+                    Language = reader.GetString(4),
+                    UploadDate = reader.GetDateTime(5),
+                    PublicAccess = reader.GetBoolean(6),
+                    DocumentLocation = reader.GetString(7),
+                    FileExtension = reader.GetString(8),
+                    IsFavourite = reader.GetBoolean(9)
                 });
             }
             reader.Close();
@@ -56,7 +58,7 @@ namespace Backend.Services
         {
             List<Documents> list = new List<Documents>();
 
-            query = @"SELECT D.[Id], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], CASE 
+            query = @"SELECT D.[Id],D.[UserId], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], D.[FileExtension],  CASE 
                       WHEN EXISTS (SELECT 1 FROM Favourites WHERE DocumentId = D.[Id] AND UserId = " + request.UserId + @")
                           THEN CAST(1 AS BIT)
                           ELSE CAST(0 AS BIT)
@@ -74,13 +76,15 @@ namespace Backend.Services
                 list.Add(new Documents()
                 {
                     Id = reader.GetInt32(0),
-                    Category = reader.GetString(1),
-                    Title = reader.GetString(2),
-                    Language = reader.GetString(3),
-                    UploadDate = reader.GetDateTime(4),
-                    PublicAccess = reader.GetBoolean(5),
-                    DocumentLocation = reader.GetString(6),
-                    IsFavourite = reader.GetBoolean(7)
+                    UserId = reader.GetInt32(1),
+                    Category = reader.GetString(2),
+                    Title = reader.GetString(3),
+                    Language = reader.GetString(4),
+                    UploadDate = reader.GetDateTime(5),
+                    PublicAccess = reader.GetBoolean(6),
+                    DocumentLocation = reader.GetString(7),
+                    FileExtension = reader.GetString(8),
+                    IsFavourite = reader.GetBoolean(9)
                 });
             }
             reader.Close();

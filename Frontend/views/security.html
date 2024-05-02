@@ -18,6 +18,9 @@
         <label>Password</label>
         <input placeholder="Enter Password" type="text" ng-model="userSecurity.password" ng-disabled="!editMode" class="{{!editMode ? 'edit-mode-off' : 'edit-mode-on'}}">
 
-        <button ng-click="updateSecurity()"><i class="{{!editMode ? 'fa-solid fa-pencil' : 'fa-solid fa-check'}}" style="margin-right: 10px;"></i><strong>{{!editMode ? 'Edit Account' : 'Save Changes'}}</strong></button>  
-    </form>
+        <div class="button-group">
+          <button style="margin-right: 10px;" ng-click="updateSecurity()"><i class="{{!editMode ? 'fa-solid fa-pencil' : 'fa-solid fa-check'}}" style="margin-right: 10px;"></i><strong>{{!editMode ? 'Edit Account' : 'Save Changes'}}</strong></button>  
+          <button ng-click="deleteAccount()"><i class="fa-solid fa-user-large-slash" style="margin-right: 10px;"></i><strong>Delete Account</strong></button>  
+        </div>
+        </form>
 </div>

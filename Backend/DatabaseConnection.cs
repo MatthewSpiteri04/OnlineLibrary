@@ -36,7 +36,7 @@ namespace Backend
 
 
 
-        protected void executeCommand()
+        protected int executeCommand()
         {
             if (query == "")
             {
@@ -47,8 +47,9 @@ namespace Backend
             else
             {
                 conn.Open();
-                new SqlCommand(query, conn).ExecuteNonQuery();
+                int rows = new SqlCommand(query, conn).ExecuteNonQuery();
                 conn.Close();
+                return rows;
             }
         }
     }

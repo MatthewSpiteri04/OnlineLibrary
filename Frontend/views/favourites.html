@@ -38,10 +38,12 @@
         <p>{{favourite.category}}</p>
       </div>
       <div class="icons">
+        <i class="fa-solid fa-download fa-2x" ng-click="downloadDocument(favourite)" download="{{document.title}}"></i>
         <i
           class="{{favourite.isFavourite ? 'fa-solid fa-heart fa-2x' : 'fa-regular fa-heart fa-2x'}}"
           ng-click="toggleFavourite(favourite, $index)"
         ></i>
+        <i class="fa-solid fa-trash-can fa-2x" ng-if="user.Roles.includes('Delete Documents')" ng-click="deleteDocument(favourite)"></i>
       </div>
     </div>
   </div>

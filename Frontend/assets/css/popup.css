@@ -37,6 +37,7 @@
     cursor: pointer;
     border-radius: 5px;
     font-weight: bold;
+    width: fit-content;
 }
 .popup-content button:hover {
     background-color: #BA0C2F;

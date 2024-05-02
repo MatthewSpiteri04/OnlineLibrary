@@ -69,3 +69,14 @@ label {
     cursor: not-allowed;
     
 }
+
+.button-group {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+button {
+    
+    width: 100%;
+}

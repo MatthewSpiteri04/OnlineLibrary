@@ -42,6 +42,7 @@
       <div class="icons">
         <i class="fa-solid fa-download fa-2x" ng-click="downloadDocument(document)" download="{{document.title}}"></i>
         <i class="{{document.isFavourite ? 'fa-solid fa-heart fa-2x' : 'fa-regular fa-heart fa-2x'}}" ng-click="toggleFavourite(document)"></i>
+        <i class="fa-solid fa-trash-can fa-2x" ng-if="user.Roles.includes('Delete Documents')" ng-click="deleteDocument(document)"></i>
       </div>
     </div>
   </div>
