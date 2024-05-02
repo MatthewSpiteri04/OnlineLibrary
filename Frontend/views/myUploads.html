@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="assets/css/favourites.css" type="text/css" />
+<div ng-include="'assets/elements/sidebar.html'"></div>
+<div class="home">
+  <h1>My Uploads</h1>
+  <div class="Search-bar">
+    <div class="InputContainer">
+      <input
+        type="text"
+        name="text"
+        class="input"
+        id="input"
+        ng-model="searchString"
+        placeholder="Search"
+      />
+      <i
+        ng-click="searchForDocuments(searchString)"
+        class="fa-solid fa-magnifying-glass magnifying-glass-icon"
+      ></i>
+    </div>
+    <div class="filter-button" ng-click="filterOn = !filterOn">
+      Filter
+      <i
+        style="padding-left: 3px; padding-bottom: 5px; font-size: 12px"
+        class="{{filterOn ? 'fa-solid fa-caret-up' :' fa-solid fa-caret-down'}}"
+      ></i>
+    </div>
+  </div>
+  <div ng-if="filterOn" class="filter-container">
+    <h4>Advanced Filter</h4>
+  </div>
+
+  <div class="documents-container">
+    <div class="document" ng-repeat="document in documents track by $index" ng-if="documents.length > 0">
+      <p style="margin: 0px">{{$index + 1}}</p>
+      <i class="fa-solid fa-book fa-4x"></i>
+      <div class="text-group">
+        <p id="title">{{document.title}}</p> 
+        <p>{{document.category}}</p>
+      </div>
+      <div class="icons">
+        <i class="fa-solid fa-download fa-2x" ng-click="downloadDocument(document)" download="{{document.title}}"></i>
+        <i class="{{document.isFavourite ? 'fa-solid fa-heart fa-2x' : 'fa-regular fa-heart fa-2x'}}" ng-click="toggleFavourite(document, $index)"></i>
+        <i class="fa-solid fa-trash-can fa-2x" ng-click="deleteDocument(document)"></i>
+      </div>
+    </div>
+  </div>
+</div>

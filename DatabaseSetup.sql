@@ -112,8 +112,8 @@ CREATE TABLE HelpDetails (
 
 
 INSERT INTO Roles VALUES ('Public'), ('AcademicUser'), ('Librarian'), ('Headmaster');
-INSERT INTO Privileges VALUES ('Manage Categories'), ('Academic User'), ('Handle No ID Documents');
-INSERT INTO RolesToPrivileges VALUES (2, 2), (3, 2), (3, 1), (4, 1), (4,2), (4,3);
+INSERT INTO Privileges VALUES ('Manage Categories'), ('Academic User'), ('Handle No ID Documents'), ('Delete Documents');
+INSERT INTO RolesToPrivileges VALUES (2, 2), (3, 2), (3, 1), (4, 1), (4,2), (4,3), (4,4);
 
 INSERT INTO Languages VALUES  ('Malti'), ('English'), ('Italiano'), ('Español'), ('Français'), ('Deutsch'), ('Português');
 INSERT INTO AttributeTypes VALUES ('Number', 'number'), ('Text', 'text'), ('True/False', 'checkbox'), ('Date', 'date');

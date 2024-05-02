@@ -23,25 +23,21 @@ namespace Backend.Controllers
         public IActionResult DeleteUser(int id)
         {
             bool userHaveDocuments = _securityService.getUserDocuments(id);
+            User headmaster = _securityService.searchForFileHandler(id);
 
-            if (userHaveDocuments)
+            if (userHaveDocuments && headmaster.Id > 0)
             {
-                User headmaster = _securityService.searchForFileHandler(id);
-
-                if (headmaster.Id <= 0)
-                {
-                    return BadRequest(new { Title = "User Cannot Be Deleted", Message = "No other eligible user can handle your documents" });
-                }
-                else
-                {
-                    _securityService.updateDocumentsAndDeleteUser(headmaster, id);
-                    return Ok();
-                }
+                _securityService.updateDocumentsAndDeleteUser(headmaster, id);
+                return Ok();
             }
-            else
+            else if (!userHaveDocuments && headmaster.Id > 0)
             {
                 _securityService.deleteUser(id);
                 return Ok();
+            }
+            else
+            {
+                return BadRequest(new { Title = "User Cannot Be Deleted", Message = "No other eligible user can handle your documents" });
             }
         }
     }

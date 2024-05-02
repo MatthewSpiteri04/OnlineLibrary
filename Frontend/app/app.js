@@ -42,6 +42,10 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
         templateUrl:'views/security.html',
         controller: 'security-controller'
     })
+    .when('/my-uploads', {
+        templateUrl:'views/myUploads.html',
+        controller: 'my-uploads-controller'
+    })
     .otherwise({
         redirectTo: '/home'
     });
@@ -119,7 +123,7 @@ OnlineLibrary.service('favouriteService', function($http) {
     };
 });
 
-OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favouriteService', 'userService', '$uibModal', function($scope, $http, favouriteService, userService, $uibModal) {
+OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favouriteService', 'userService', '$uibModal', 'myUploadsService', function($scope, $http, favouriteService, userService, $uibModal, myUploadsService) {
     $scope.user = userService.getCurrentUser();
     $scope.filterOn = false;
     $scope.searchString = null;
@@ -132,6 +136,15 @@ OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favourite
         .then(data => { 
             $scope.favourites = data;
         });
+
+        $scope.deleteDocument = function(document) {
+            myUploadsService.deleteDocument(document).then(response => {
+                favouriteService.getFavourites($scope.user.id, $scope.searchString)
+                .then(data => { 
+                    $scope.favourites = data;
+                });
+            });
+        }
 
         $scope.toggleFavourite = function(favourite, i){
             $uibModal.open({
@@ -160,7 +173,33 @@ OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favourite
             }); 
         };
 
-        
+        $scope.downloadDocument = function(document){
+            $http.post('https://localhost:44311/api/Download/Document', document, { responseType: 'arraybuffer' }).then(function(response) {
+                var blob = new Blob([response.data]);
+                var url = window.URL.createObjectURL(blob);
+                
+                // Create anchor element
+                var a = angular.element('<a></a>');
+                a.attr({
+                    href: url,
+                    download: document.title + document.fileExtension
+                });
+    
+                // Append anchor element to document body
+                angular.element(document.body).append(a);
+    
+                // Simulate click event
+                a[0].click();
+                
+                // Clean up
+                window.URL.revokeObjectURL(url);
+                a.remove();
+            })
+            .catch(function(error) {
+                console.error('Error downloading document:', error);
+            });
+        };
+
         $scope.searchForFavourites = function(searchString){
             var id = null;
             if($scope.user != null){
@@ -235,9 +274,7 @@ OnlineLibrary.service('homeService', function($http) {
                     attributeList.push({id: attr.id, value: temp});
                 });
                 event.preventDefault();
-                console.log(event);
-                debugger;
-                
+
                 formData.set("publicAccess", $scope.publicAccess);
                 formData.set("userId", $scope.user.id);
                 formData.set("attributesListJSON", JSON.stringify(attributeList));
@@ -307,7 +344,7 @@ OnlineLibrary.service('homeService', function($http) {
     }
   }]);
 
-  OnlineLibrary.controller('home-controller', ['$scope', '$http', '$uibModal', 'homeService', 'userService', 'uploadService', function($scope, $http, $uibModal,homeService, userService, uploadService){
+  OnlineLibrary.controller('home-controller', ['$scope', '$http', '$uibModal', 'homeService', 'userService', 'uploadService', 'myUploadsService', function($scope, $http, $uibModal,homeService, userService, uploadService, myUploadsService){
     $scope.user = userService.getCurrentUser();
     $scope.filterOn = false;
     $scope.documents = null;
@@ -318,7 +355,6 @@ OnlineLibrary.service('homeService', function($http) {
     });
 
     $scope.downloadDocument = function(document){
-        console.log(document);
         $http.post('https://localhost:44311/api/Download/Document', document, { responseType: 'arraybuffer' }).then(function(response) {
             var blob = new Blob([response.data]);
             var url = window.URL.createObjectURL(blob);
@@ -344,6 +380,12 @@ OnlineLibrary.service('homeService', function($http) {
             console.error('Error downloading document:', error);
         });
     };
+
+    $scope.deleteDocument = function(document) {
+        myUploadsService.deleteDocument(document).then(response => {
+            $scope.searchForDocuments($scope.searchString);
+        });
+    }
 
     $scope.toggleFavourite = function(document) {
         if($scope.user == null || $scope.user == ''){
@@ -439,6 +481,10 @@ OnlineLibrary.service('homeService', function($http) {
 
     $scope.Logout = function(){
         userService.logout();
+    }
+
+    $scope.MyUploads = function(){
+        window.location.href = "#!/my-uploads"
     }
   }]);
 
@@ -603,6 +649,93 @@ OnlineLibrary.controller('security-controller', ['$scope', 'userService', 'secur
 
 }]);
 
+OnlineLibrary.service('myUploadsService', function($http) {
+    this.getMyUploads = function(request) {
+        return $http.post('https://localhost:44311/api/Get/MyUploads', request).then(response => {
+            return response.data;
+        });
+    };
+
+    this.deleteDocument = function(document){
+        return $http.delete('https://localhost:44311/api/Delete/Document/' + document.id)
+    }
+}); 
+
+
+OnlineLibrary.controller('my-uploads-controller', ['$scope', 'userService', 'myUploadsService', '$uibModal', '$http', function($scope, userService, myUploadsService, $uibModal, $http){
+    $scope.user = userService.getCurrentUser();
+    $scope.$on('dataChanged', function(event, data) {
+        $scope.user = data;
+    });
+    $scope.documents = []
+    $scope.searchString = null;
+
+    if($scope.user != null) {
+
+        $scope.deleteDocument = function(document) {
+            myUploadsService.deleteDocument(document).then(response => {
+                $scope.searchForDocuments($scope.searchString);
+            });
+        }
+        
+        $scope.downloadDocument = function(document){
+            $http.post('https://localhost:44311/api/Download/Document', document, { responseType: 'arraybuffer' }).then(function(response) {
+                var blob = new Blob([response.data]);
+                var url = window.URL.createObjectURL(blob);
+                
+                // Create anchor element
+                var a = angular.element('<a></a>');
+                a.attr({
+                    href: url,
+                    download: document.title + document.fileExtension
+                });
+    
+                // Append anchor element to document body
+                angular.element(document.body).append(a);
+    
+                // Simulate click event
+                a[0].click();
+                
+                // Clean up
+                window.URL.revokeObjectURL(url);
+                a.remove();
+            })
+            .catch(function(error) {
+                console.error('Error downloading document:', error);
+            });
+        };
+
+        $scope.toggleFavourite = function(document) {
+            var request = {
+                documentId: document.id,
+                userId: $scope.user.id,
+                isFavourite: document.isFavourite
+            };
+            $http.post('https://localhost:44311/api/Toggle/Favourite', request).then(function() {
+                $scope.searchForDocuments($scope.searchString);
+            });
+        }
+
+        $scope.searchForDocuments = function(searchString){
+            var response = {
+                search: searchString,
+                userId: $scope.user.id
+            };
+    
+            return myUploadsService.getMyUploads(response)
+            .then(data => {
+                $scope.documents = data;
+            })
+        };
+
+        $scope.searchForDocuments($scope.searchString);
+
+    }
+    else{ 
+        window.location.href = "#!/home";
+    }
+}]);
+
 OnlineLibrary.controller('elements-controller', ['$scope', 'userService', '$uibModal', function($scope, userService, $uibModal){
     $scope.user = userService.getCurrentUser();
 
@@ -671,7 +804,6 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
             uploadService.getCategories()
             .then(data => {
                 $scope.categories = data;
-                console.log($scope.categories);
             });
 
             categoryService.getAttributeTypes()
@@ -684,9 +816,7 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
 
             categoryService.getAttributes()
             .then(response => {
-                
                 $scope.attributes = response.data;
-                console.log($scope.attributes);
             })
             .catch(error => {
                 console.error('Failed to fetch attributes:', error);
@@ -731,7 +861,6 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
                     Name: '',
                     listView: true 
                 });
-                console.log($scope.inputFields);
             };
             
             $scope.removeInputField = function(index) {
@@ -740,9 +869,6 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
 
             $scope.changeOption = function(id, type){
                 id.TypeId = parseInt(id.TypeId);
-                console.log(id);
-                console.log(type);
-                console.log($scope.attributeTypes)
             }
 
         
@@ -767,9 +893,6 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
                     Attributes: inputFields,
                     UserId: id
                 };
-                console.log($scope.attributeTypes);
-                console.log(categoryRequest);
-                
 
                 $http.post('https://localhost:44311/api/Categories/AddCategory', categoryRequest)
                     .then(function(response) {
