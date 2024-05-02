@@ -178,6 +178,7 @@
     padding-top: 15px;
     font-size: 22px;
     font-weight: bold;
+    width: 100%;
   }
 
   .text-group p{
@@ -190,17 +191,11 @@
   }
 
   .icons {
-    width: 100%;
+    width: fit-content;
     text-align: right;
     display: flex;
     justify-content: end;
     align-items: center;
-  }
-
-  .icons {
-    width: 100%;
-    text-align: right;
-    display: flex;
-    justify-content: end;
-    align-items: center;
+    margin-left: auto;
+    padding-left: 50px;
   }

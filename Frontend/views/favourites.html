@@ -30,7 +30,7 @@
   </div>
 
   <div class="documents-container">
-    <div class="document" ng-repeat="favourite in favourites track by $index" ng-if="favourites.length > 0">
+    <div class="document" ng-repeat="favourite in favourites track by $index" ng-if="favourite.publicAccess || (!favourite.publicAccess && user.Roles.includes('Academic User'))">
       <p style="margin: 0px">{{$index + 1}}</p>
       <i class="fa-solid fa-book fa-4x"></i>
       <div class="text-group">

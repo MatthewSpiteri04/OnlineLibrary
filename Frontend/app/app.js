@@ -428,6 +428,8 @@ OnlineLibrary.service('homeService', function($http) {
         return homeService.getDocuments(response)
         .then(data => {
             $scope.documents = data;
+            console.log($scope.documents);
+            console.log($scope.user);
         })
     };
 
