@@ -112,5 +112,26 @@ namespace Backend.Services
             query = @"DELETE FROM Users WHERE [Id] = " + id;
             return executeCommand();
         }
+
+        public void deleteUserAndDocuments(int id)
+        {
+            DocumentsService _documentsService = new DocumentsService();
+            List<Documents> myUploads = _documentsService.getMyUploads(id);
+
+            foreach (Documents document in myUploads)
+            {
+                query = @"DELETE FROM DocumentAttributes WHERE DocumentId = " + document.Id + @";
+                          DELETE FROM Favourites WHERE DocumentId = " + document.Id + @";
+                          DELETE FROM Documents WHERE Id = " + document.Id;
+
+                executeCommand();
+            }
+
+            query = @"DELETE FROM Favourites WHERE UserId = " + id + @";
+                      DELETE FROM Users WHERE [Id] = " + id;
+
+
+            executeCommand();
+        }
     }
 }

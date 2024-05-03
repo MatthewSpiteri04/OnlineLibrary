@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="assets/css/home.css" type="text/css"/>
 <div ng-include="'assets/elements/sidebar.html'"></div>
-<div class="home">
+<div class="home" style="margin-bottom: 50px;">
   <h1>What are you looking for?</h1>
   <div class="Search-bar">
     <div class="InputContainer">
@@ -10,19 +10,47 @@
         class="input"
         id="input"
         ng-model="searchString"
-        placeholder="Search"
+        placeholder="Search Title"
       />
-      <i ng-click="searchForDocuments(searchString)" class="fa-solid fa-magnifying-glass magnifying-glass-icon"></i>
+      <i ng-click="searchForDocuments()" ng-if="!filterOn" class="fa-solid fa-magnifying-glass magnifying-glass-icon"></i>
     </div>
     <div class="filter-button" ng-click="filterOn = !filterOn">
-      Filter
+      <strong>Filter</strong>
       <i style="padding-left: 3px; padding-bottom: 5px; font-size: 12px;" class="{{filterOn ? 'fa-solid fa-caret-up' :' fa-solid fa-caret-down'}}"></i>
     </div>
   </div>
   <div ng-if="filterOn" class="filter-container">
-      <h4>Advanced Filter</h4>
+      <h4 class="filter-container-h4">Advanced Filter</h4>
+      
+      <div class="filter-form-container">
+        <label class="filter-container-label">Author</label><br>
+        <input class="filter-search-text-input" style="width: 100%;" type="text" placeholder="Search Author" ng-model="filterData.author"><br>
+
+        <div style="display: flex; flex-direction: row;">
+          <div>
+            <label class="filter-container-label">Language</label><br>
+            <select style="margin-right: 46px;" class="filter-search-search-input" required name="languageId" ng-model="filterData.language">
+                <option value="" selected>Search Language</option>
+                <option ng-repeat="language in languages" value="{{language.language}}">
+                  {{language.language}}
+                </option>
+            </select><br>
+          </div>
+          <div>
+            <label class="filter-container-label">Category</label><br>
+            <select class="filter-search-search-input" name="categoryId" ng-model="filterData.category" ng-change="loadAttributes(selectedCategoryId)">
+                <option value="" selected>Search Category</option>
+                <option ng-repeat="category in categories"  value="{{category.type}}">
+                  {{category.type}}
+                </option>
+            </select>
+          </div>
+        </div>
+        <button style="align-self: flex-end;" class="filter-search-button" ng-click="submitFilterData()"><strong><i style="padding-right: 8px;" class="fa-solid fa-magnifying-glass"></i>Advanced Search</strong></strong></button>
+      </div>
+      
   </div>
-  <div class="grid-container" ng-if="documents == null">
+  <div class="grid-container" ng-if="filteredItems == null">
     <div class="grid-item"><i class="fa-solid fa-book-open fa-6x"></i>Books</div>
     <div class="grid-item"><i class="fa-solid fa-inbox fa-6x"></i>FYPs</div>
     <div class="grid-item"><i class="fa-solid fa-newspaper fa-6x"></i>Articles</div>
@@ -32,7 +60,7 @@
   </div>
 
   <div class="documents-container">
-    <div class="document" ng-repeat="document in documents track by $index" ng-if="document.publicAccess || (!document.publicAccess && user.Roles.includes('Academic User'))">
+    <div class="document" ng-repeat="document in filteredItems track by $index" ng-if="document.publicAccess || (!document.publicAccess && user.Roles.includes('Academic User'))">
       <i class="fa-solid fa-book fa-4x"></i>
       <div class="text-group">
         <p id="title">{{document.title}}</p>
