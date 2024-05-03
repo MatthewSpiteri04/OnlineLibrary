@@ -123,7 +123,7 @@ OnlineLibrary.service('favouriteService', function($http) {
     };
 });
 
-OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favouriteService', 'userService', '$uibModal', 'myUploadsService', function($scope, $http, favouriteService, userService, $uibModal, myUploadsService) {
+OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favouriteService', 'userService', '$uibModal', 'myUploadsService', 'uploadService', function($scope, $http, favouriteService, userService, $uibModal, myUploadsService, uploadService) {
     $scope.user = userService.getCurrentUser();
     $scope.filterOn = false;
     $scope.searchString = null;
@@ -131,10 +131,18 @@ OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favourite
         $scope.user = data;
     });
 
+    $scope.filteredItems = null;
+
+    $scope.filterData = {
+        category: null,
+        author: null,
+        language: null
+    };
+
     if($scope.user != null) {
         favouriteService.getFavourites($scope.user.id, $scope.searchString)
         .then(data => { 
-            $scope.favourites = data;
+            $scope.filteredItems = data;
         });
 
         $scope.deleteDocument = function(document) {
@@ -145,6 +153,19 @@ OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favourite
                 });
             });
         }
+
+        $scope.submitFilterData = function() {
+            $scope.searchForFavourites( $scope.searchString ).then(function(){
+                $scope.favourites = angular.copy($scope.filteredItems);
+                $scope.filteredItems = $scope.favourites.filter(function(document) {
+                    var categoryMatch = !$scope.filterData.category || document.category === $scope.filterData.category;
+                    var authorMatch = !$scope.filterData.author || document.author.toLowerCase().includes($scope.filterData.author.toLowerCase());                           
+                    var languageMatch = !$scope.filterData.language || document.language === $scope.filterData.language;
+                    return categoryMatch && authorMatch && languageMatch;
+                });
+                console.log($scope.filteredItems);
+            });
+        };
 
         $scope.toggleFavourite = function(favourite, i){
             $uibModal.open({
@@ -159,17 +180,19 @@ OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favourite
                     }
                 }
             }).result.then(function() { }, function(reason) {
-                var request = {
-                    documentId: favourite.id,
-                    userId: $scope.user.id,
-                    isFavourite: favourite.isFavourite
-                };
-                $http.post('https://localhost:44311/api/Toggle/Favourite', request).then(function() {
-                    favouriteService.getFavourites($scope.user.id)
-                    .then(data => { 
-                        $scope.favourites = data;
-                    });    
-                });
+                if(reason == 'ok'){
+                    var request = {
+                        documentId: favourite.id,
+                        userId: $scope.user.id,
+                        isFavourite: favourite.isFavourite
+                    };
+                    $http.post('https://localhost:44311/api/Toggle/Favourite', request).then(function() {
+                        favouriteService.getFavourites($scope.user.id)
+                        .then(data => { 
+                            $scope.filteredItems = data;
+                        });    
+                    });
+                }
             }); 
         };
 
@@ -208,7 +231,7 @@ OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favourite
 
             return favouriteService.getFavourites(id, searchString)
             .then(data => {
-                $scope.favourites = data;
+                $scope.filteredItems = data;
             })
         };
 
@@ -216,6 +239,12 @@ OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favourite
         window.location.href = "#!/home";
     }
 
+    uploadService.getLanguages()
+    .then(data => { 
+        $scope.languages = data});
+    uploadService.getCategories()
+    .then(data => {
+        $scope.categories = data});
 }]);
 
 
@@ -349,6 +378,25 @@ OnlineLibrary.service('homeService', function($http) {
     $scope.filterOn = false;
     $scope.documents = null;
     $scope.searchString = null;
+    $scope.filteredItems = null;
+    $scope.filterData = {
+        category: null,
+        author: null,
+        language: null
+    };
+
+    $scope.submitFilterData = function() {
+        $scope.searchForDocuments( $scope.searchString ).then(function(){
+            $scope.documents = angular.copy($scope.filteredItems);
+            $scope.filteredItems = $scope.documents.filter(function(document) {
+                var categoryMatch = !$scope.filterData.category || document.category === $scope.filterData.category;
+                var authorMatch = !$scope.filterData.author || document.author.toLowerCase().includes($scope.filterData.author.toLowerCase());                
+                var languageMatch = !$scope.filterData.language || document.language === $scope.filterData.language;
+                return categoryMatch && authorMatch && languageMatch;
+            });
+            console.log($scope.filteredItems);
+        });
+    };
 
     $scope.$on('dataChanged', function(event, data) {
         $scope.user = data;
@@ -427,7 +475,7 @@ OnlineLibrary.service('homeService', function($http) {
 
         return homeService.getDocuments(response)
         .then(data => {
-            $scope.documents = data;
+            $scope.filteredItems = data;
         })
     };
 
@@ -574,6 +622,9 @@ OnlineLibrary.service('securityService', function($http) {
     this.deleteAccount = function(id) {
         return $http.delete('https://localhost:44311/api/Delete/User/' + id);
     };
+    this.deleteAccountAndDocuments = function(id) {
+        return $http.delete('https://localhost:44311/api/Delete/UserDocuments/' + id);
+    };
 }); 
 
 OnlineLibrary.controller('security-controller', ['$scope', 'userService', 'securityService', '$uibModal', function($scope, userService, securityService, $uibModal){
@@ -612,35 +663,86 @@ OnlineLibrary.controller('security-controller', ['$scope', 'userService', 'secur
         };
 
         $scope.deleteAccount = function(){
-            securityService.deleteAccount($scope.user.id)
-            .then(response => {
-                userService.logout();
-                $uibModal.open({
-                    templateUrl: 'assets/elements/popup.html',
-                    controller: 'popup-controller',
-                    resolve: {
-                        title: function(){
-                            return "User Account Deleted";
-                        },
-                        message: function(){
-                            return "User account has been removed successfully";
-                        }
+            $uibModal.open({
+                templateUrl: 'assets/elements/deleteUserModal.html',
+                controller: 'delete-user-modal-controller',
+                resolve: {
+                    title: function(){
+                        return 'Deleting User';
+                    },
+                    message: function(){
+                        return "Do you want to remove all documents you've uploaded?";
                     }
-                  }).result.then(function() {}, function(reason) {});
-            }).catch(error => {
-                $uibModal.open({
-                    templateUrl: 'assets/elements/popup.html',
-                    controller: 'popup-controller',
-                    resolve: {
-                        title: function(){
-                            return error.data.title;
-                        },
-                        message: function(){
-                            return error.data.message;
-                        }
-                    }
-                  }).result.then(function() {}, function(reason) {});
+                }
+            }).result.then(function() { }, function(reason) {
+                if(reason == "yes"){
+                    securityService.deleteAccountAndDocuments($scope.user.id)
+                    .then(response => {
+                        userService.logout();
+                        $uibModal.open({
+                            templateUrl: 'assets/elements/popup.html',
+                            controller: 'popup-controller',
+                            resolve: {
+                                title: function(){
+                                    return "User Account Deleted";
+                                },
+                                message: function(){
+                                    return "User account has been removed successfully";
+                                }
+                            }
+                        }).result.then(function() {}, function(reason) {});
+                    }).catch(error => {
+                        $uibModal.open({
+                            templateUrl: 'assets/elements/popup.html',
+                            controller: 'popup-controller',
+                            resolve: {
+                                title: function(){
+                                    return error.data.title;
+                                },
+                                message: function(){
+                                    return error.data.message;
+                                }
+                            }
+                        }).result.then(function() {}, function(reason) {});
+                    });
+                }
+                if(reason == "no") {
+                    securityService.deleteAccount($scope.user.id)
+                    .then(response => {
+                        userService.logout();
+                        $uibModal.open({
+                            templateUrl: 'assets/elements/popup.html',
+                            controller: 'popup-controller',
+                            resolve: {
+                                title: function(){
+                                    return "User Account Deleted";
+                                },
+                                message: function(){
+                                    return "User account has been removed successfully";
+                                }
+                            }
+                        }).result.then(function() {}, function(reason) {});
+                    }).catch(error => {
+                        $uibModal.open({
+                            templateUrl: 'assets/elements/popup.html',
+                            controller: 'popup-controller',
+                            resolve: {
+                                title: function(){
+                                    return error.data.title;
+                                },
+                                message: function(){
+                                    return error.data.message;
+                                }
+                            }
+                        }).result.then(function() {}, function(reason) {});
+                    });
+                }
             });
+
+
+
+
+            
         };
 
     } else {
@@ -648,6 +750,17 @@ OnlineLibrary.controller('security-controller', ['$scope', 'userService', 'secur
     };
 
 }]);
+
+OnlineLibrary.controller('delete-user-modal-controller', ['$scope', '$uibModalInstance', 'title', 'message', function($scope, $uibModalInstance, title, message){
+    $scope.title = title;
+    $scope.message = message;
+    $scope.yes = function(){
+        $uibModalInstance.dismiss('yes');
+    }
+    $scope.no = function(){
+        $uibModalInstance.dismiss('no');
+    }
+  }]);
 
 OnlineLibrary.service('myUploadsService', function($http) {
     this.getMyUploads = function(request) {
@@ -662,13 +775,20 @@ OnlineLibrary.service('myUploadsService', function($http) {
 }); 
 
 
-OnlineLibrary.controller('my-uploads-controller', ['$scope', 'userService', 'myUploadsService', '$uibModal', '$http', function($scope, userService, myUploadsService, $uibModal, $http){
+OnlineLibrary.controller('my-uploads-controller', ['$scope', 'userService', 'myUploadsService', '$uibModal', '$http', 'uploadService', function($scope, userService, myUploadsService, $uibModal, $http, uploadService){
     $scope.user = userService.getCurrentUser();
     $scope.$on('dataChanged', function(event, data) {
         $scope.user = data;
     });
     $scope.documents = []
     $scope.searchString = null;
+
+    $scope.filterData = {
+        category: null,
+        language: null
+    };
+
+    $scope.filteredItems = null;
 
     if($scope.user != null) {
 
@@ -677,6 +797,18 @@ OnlineLibrary.controller('my-uploads-controller', ['$scope', 'userService', 'myU
                 $scope.searchForDocuments($scope.searchString);
             });
         }
+
+        $scope.submitFilterData = function() {
+            $scope.searchForDocuments( $scope.searchString ).then(function(){
+                $scope.documents = angular.copy($scope.filteredItems);
+                $scope.filteredItems = $scope.documents.filter(function(document) {
+                    var categoryMatch = !$scope.filterData.category || document.category === $scope.filterData.category;
+                    var languageMatch = !$scope.filterData.language || document.language === $scope.filterData.language;
+                    return categoryMatch && languageMatch;
+                });
+                console.log($scope.filteredItems);
+            });
+        };
         
         $scope.downloadDocument = function(document){
             $http.post('https://localhost:44311/api/Download/Document', document, { responseType: 'arraybuffer' }).then(function(response) {
@@ -724,7 +856,7 @@ OnlineLibrary.controller('my-uploads-controller', ['$scope', 'userService', 'myU
     
             return myUploadsService.getMyUploads(response)
             .then(data => {
-                $scope.documents = data;
+                $scope.filteredItems = data;
             })
         };
 
@@ -734,6 +866,13 @@ OnlineLibrary.controller('my-uploads-controller', ['$scope', 'userService', 'myU
     else{ 
         window.location.href = "#!/home";
     }
+
+    uploadService.getLanguages()
+    .then(data => { 
+        $scope.languages = data});
+    uploadService.getCategories()
+    .then(data => {
+        $scope.categories = data});
 }]);
 
 OnlineLibrary.controller('elements-controller', ['$scope', 'userService', '$uibModal', function($scope, userService, $uibModal){

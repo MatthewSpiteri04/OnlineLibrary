@@ -23,7 +23,7 @@ namespace Backend.Controllers
                 var fileExtension = Path.GetExtension(request.File.FileName).ToLower();
                 if (!allowedExtensions.Contains(fileExtension))
                 {
-                    return BadRequest(new {Title="File Not Supported", Message="This file type is not recognised. Upload has been halted."});
+                    return BadRequest(new {Title="File Not Supported", Message="This file type is not recognised. Upload has been stopped."});
                 }
 
                 var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");

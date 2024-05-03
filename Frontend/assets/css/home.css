@@ -2,28 +2,32 @@
     font-family: "Lato";
 }
 
-.filter-container > h4 {
+.filter-container-h4 {
     color: #BA0C2F;
+    font-size: 26px;
     margin: 0;
+    padding: 0 10px 0 20px;
 }
 
 .filter-container {
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.075);
-    font-family: "Lato";
-    width: 896px;
-    border-radius: 10px;
-    padding: 20px;
-    margin-top: 20px;
-    border: 2px solid #BA0C2F;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 8px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  font-family: "Lato";
+  width: 896px;
+  border-radius: 10px;
+  padding: 22.83px;
+  margin-top: 20px;
+  border: 2px solid #BA0C2F;
 }
 
 .filter-button {
     background-color: #BA0C2F;
     color: white;
     font-family: "Lato";
-    padding: 10px;
+    padding: 15px 15px 10px 15px;
     border-radius: 10px;
     cursor: pointer;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 8px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    height: 25px;
 }
 
 .grid-container {
@@ -178,6 +182,7 @@
     padding-top: 15px;
     font-size: 22px;
     font-weight: bold;
+    width: 100%;
   }
 
   .text-group p{
@@ -190,17 +195,55 @@
   }
 
   .icons {
-    width: 100%;
+    width: fit-content;
     text-align: right;
     display: flex;
     justify-content: end;
     align-items: center;
+    margin-left: auto;
+    padding-left: 50px;
   }
 
-  .icons {
-    width: 100%;
-    text-align: right;
-    display: flex;
-    justify-content: end;
-    align-items: center;
+  .filter-container-label {
+    align-self: start;
+    color: #BA0C2F;
+    font-weight: bold;
+    padding-bottom: 5px;
+    margin-top: 10px;
   }
+
+  .filter-search-button {
+    margin-top: 15px !important;
+    background-color: #BA0C2F;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: fit-content !important;
+    margin-bottom: 10px !important;
+    margin-left: 687px !important;
+}
+
+.filter-search-search-input,
+.filter-search-text-input,
+.filter-search-button {
+  margin-top: 5px;
+  font-family: 'Lato';
+  margin-bottom: 30px;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 405px;
+  box-sizing: border-box;
+  border: 2px solid #BA0C2F;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+.filter-search-button:hover {
+    background-color: #950924;
+    border: 2px solid #950924;
+}
+
+.filter-form-container {
+  padding: 20px 20px 0 20px;
+}

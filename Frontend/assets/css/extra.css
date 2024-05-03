@@ -40,8 +40,6 @@
 
 }
 
-/*-------------------------------------------------------------*/
-
 .search-box{
     width: 850px;
     background: #FFFFFF;
@@ -129,9 +127,6 @@ button .fa-solid{
     align-self: right;
 }
 
-
-/*-----------------------------------------------------*/
-
 h2{
     font-size: 25px;
     margin-left: auto;
@@ -143,9 +138,6 @@ h2{
     justify-content: center;
     display: flex;
 }
-
-/*-----------------------------------------------------*/
-
 
 .answer-content{
     font-size: 18px;
