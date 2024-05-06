@@ -46,6 +46,10 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
         templateUrl:'views/myUploads.html',
         controller: 'my-uploads-controller'
     })
+    .when('/categoryEditor/:id', {
+        templateUrl:'views/categoryEditor.html',
+        controller: 'categoryEditor-controller'
+    })
     .otherwise({
         redirectTo: '/home'
     });
@@ -922,7 +926,7 @@ OnlineLibrary.service('categoryService', function($http) {
     };
 }); 
 
-OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryService', 'userService', 'uploadService', '$uibModal', function($scope, $http, categoryService, userService, uploadService, $uibModal){
+OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryService', 'userService', 'uploadService', '$uibModal', '$routeParams', function($scope, $http, categoryService, userService, uploadService, $uibModal, $routeParams){
     $scope.user = userService.getCurrentUser();
     $scope.$on('dataChanged', function(event, data) {
         $scope.user = data;
@@ -993,6 +997,10 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
                       }).result.then(function() {}, function(reason) {});
                 });
             }
+
+            $scope.editCategory = function(category){
+                window.location.href='#!/categoryEditor/' + category.id
+            }
             
 
             $scope.addInputField = function() {
@@ -1051,4 +1059,112 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
     } else {
         window.location.href = '#!/home';
     };
+
+   
+}]);
+
+
+OnlineLibrary.service('categoryEditorService', function($http) {
+    this.updateCategoryDetails = function(request) {
+        return $http.put('https://localhost:44311/api/Update/Category', request);
+    };
+});
+
+
+OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categoryService', 'categoryEditorService',  '$uibModal', '$routeParams', function($scope, $http, categoryService, categoryEditorService, $uibModal, $routeParams){
+    $scope.categoryId = $routeParams.id;
+    $scope.editMode = false;
+
+    $scope.inputFields = [];
+    $scope.attributeTypes = [];
+    $scope.attributeList = [];
+
+    categoryService.getAttributeTypes()
+    .then(response => {
+        $scope.attributeTypes = response.data;
+    })
+    .catch(error => {
+        console.error('Failed to fetch attribute types:', error);
+    });
+
+    categoryService.getAttributes()
+    .then(response => {
+        $scope.attributeList = response.data;
+    })
+    .catch(error => {
+        console.error('Failed to fetch attributes:', error);
+    });
+           
+    $scope.toggleView = function(inputField) {
+        // Toggle the listView property to switch between select and input views
+        inputField.listView = !inputField.listView;
+    
+        // Clear the inputField.Name when switching to the input view
+        if (!inputField.listView) {
+            inputField.Name = ''; // Clear the input field value
+        }
+    };
+
+    $scope.addInputField = function() {
+        $scope.categoryResponse.attributes.push({ 
+            Name: '',
+            listView: true,
+            new: true
+        });
+        console.log( $scope.categoryResponse.attributes)
+    };
+    
+    $scope.removeInputField = function(index) {
+        $scope.categoryResponse.attributes.splice(index, 1);
+    };
+
+    $http.get('https://localhost:44311/api/Categories/GetCategories/' + $scope.categoryId)
+    .then(response => {
+        $scope.categoryResponse = response.data;
+        console.log($scope.categoryResponse)
+
+    })    
+
+    $scope.updateCategory = function(inputFields){
+        if($scope.editMode == false){
+            $scope.editMode = true;
+        }
+        else{
+            
+            $scope.editMode = false;
+            
+           
+            
+            categoryEditorService.updateCategoryDetails($scope.categoryResponse)
+            .then(response => {
+                $scope.categoryResponse = response.data;
+                console.log($scope.categoryResponse)
+        
+            });
+     }
+    }
+    
+   
+    
+    $scope.deleteCategory = function() {
+        $http.delete('https://localhost:44311/api/Delete/Category/'+ $scope.categoryId).then(response => {
+        window.location.href = "#!/catgory"
+        }).catch(error => {
+            $uibModal.open({
+                templateUrl: 'assets/elements/popup.html',
+                controller: 'popup-controller',
+                resolve: {
+                    title: function(){
+                        return error.data.title;
+                    },
+                    message: function(){
+                        return error.data.message;
+                    }
+                }
+              }).result.then(function() {}, function(reason) {});
+        });
+    }
+
+   
+   
 }]);
