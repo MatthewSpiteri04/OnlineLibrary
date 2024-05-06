@@ -348,29 +348,29 @@ namespace Backend.Services
 
             executeCommand();
 
-            foreach (Attributes attr in request.Attributes)
+			foreach (Attributes attr in request.Attributes)
 			{
-				query = @"  IF EXISTS (SELECT 1 FROM Attributes WHERE Id != " + attr.Id + @" )
-							BEGIN 
-							SET IDENTITY_INSERT Attributes ON;
-								INSERT INTO Attributes ([Id], [Name], [TypeId]) VALUES (" + attr.Id + @", '" + attr.Name + @"', " + attr.TypeId + @");
-								SET IDENTITY_INSERT Attributes OFF;
-								INSERT INTO CategoryAttributes ([CategoryId], [AttributeId])
-								VALUES ("+request.Category.Id + @"," + attr.Id + @");
-							END
+				if (attr.Id == null)
+				{
+					query = @"INSERT INTO Attributes ([Name], [TypeId]) VALUES ('" + attr.Name + @"', " + attr.TypeId + @");
+						      INSERT INTO CategoryAttributes ([CategoryId], [AttributeId])
+						      VALUES (" + request.Category.Id + @", SCOPE_IDENTITY()  )";
+                }
+				else
+				{
+                    query = @"INSERT INTO CategoryAttributes ([CategoryId], [AttributeId])
+						      VALUES (" + request.Category.Id + @"," + attr.Id + @")";
+                }
 
-						
+				executeCommand();
 
-                      SELECT A.* FROM Attributes A
-					  INNER JOIN CategoryAttributes CA ON A.Id = CA.AttributeId
-					  INNER JOIN Categories C ON C.Id = CA.CategoryId
-					  WHERE C.Id = " + request.Category.Id;
+			}
+			query  = @" SELECT A.* FROM Attributes A
+							  INNER JOIN CategoryAttributes CA ON A.Id = CA.AttributeId
+							  INNER JOIN Categories C ON C.Id = CA.CategoryId
+							  WHERE C.Id = " + request.Category.Id;
 
-
-			
-
-
-			reader = executeQuery();
+            reader = executeQuery();
 			while (reader.Read())
 			{
 				attribute.Add(new Attributes
@@ -378,14 +378,11 @@ namespace Backend.Services
                     Id = reader.GetInt32(0),
                     Name = reader.GetString(1),
                     TypeId = reader.GetInt32(2)
-                   
-                   
                 });
 			}
            
             reader.Close();
             conn.Close();
-            }
             EditCategoryAttributeRequest categoryAttributeUpdate = new EditCategoryAttributeRequest
             {
                 Category = category,

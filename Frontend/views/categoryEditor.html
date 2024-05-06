@@ -48,9 +48,7 @@
               <h2>Attribute Name</h2>
               <div ng-show="attribute.listView">
                 <select ng-model="attribute.Id">
-                  <option value="" disabled selected>
-                    Select Existing Attribute
-                  </option>
+                  <option value="" disabled selected>Select Existing Attribute</option>
                   <option
                     ng-repeat="attrList in attributeList"
                     value="{{ attrList.id }}"

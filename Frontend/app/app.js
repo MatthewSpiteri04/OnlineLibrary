@@ -1013,11 +1013,6 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
             $scope.removeInputField = function(index) {
                 $scope.inputFields.splice(index, 1);
             };
-
-            $scope.changeOption = function(id, type){
-                id.TypeId = parseInt(id.TypeId);
-            }
-
         
         
             $scope.createCategoryAndAttributes = function(categoryForm, inputFields) {
@@ -1040,6 +1035,8 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
                     Attributes: inputFields,
                     UserId: id
                 };
+
+                console.log(categoryRequest);
 
                 $http.post('https://localhost:44311/api/Categories/AddCategory', categoryRequest)
                     .then(function(response) {
@@ -1125,15 +1122,23 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
 
     })    
 
-    $scope.updateCategory = function(inputFields){
+    $scope.updateCategory = function(){
         if($scope.editMode == false){
             $scope.editMode = true;
         }
         else{
+            $scope.categoryResponse.attributes.forEach(element => {
+                if(!element.listView && element.new){
+                    element.TypeId = parseInt(element.TypeId)
+                }
+                if(element.listView && element.new){
+                    element.Id = parseInt(element.Id)
+                }
+            });
             
             $scope.editMode = false;
             
-           
+           console.log($scope.categoryResponse.attributes);
             
             categoryEditorService.updateCategoryDetails($scope.categoryResponse)
             .then(response => {
