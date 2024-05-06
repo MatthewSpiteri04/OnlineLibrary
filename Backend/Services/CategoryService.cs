@@ -6,6 +6,8 @@ using System.Diagnostics;
 using Backend.Services;
 using System.Data;
 using System.Collections.Generic;
+using System.Xml.Linq;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace Backend.Services
@@ -42,13 +44,59 @@ namespace Backend.Services
 				Attributes attributeList = new Attributes() { Id = reader.GetInt32(0), Name = reader.GetString(1), TypeId = reader.GetInt32(2) };
 				attributes.Add(attributeList);
 			}
-
-			return attributes;
+            reader.Close();
+            conn.Close();
+            return attributes;
 		}
 
+        public EditCategoryAttributeRequest getCategories(int categoryId)
+        {
+            Categories category = new Categories();
+
+            query = @"SELECT * FROM Categories WHERE [Id] = " + categoryId;
+
+            SqlDataReader reader = executeQuery();
+
+            while (reader.Read())
+            {
+                category = new Categories { Id = reader.GetInt32(0), Name = reader.GetString(1)};
+            }
+
+			reader.Close();
+            conn.Close();
+
+			query = @"SELECT A.* FROM Attributes A
+					  INNER JOIN CategoryAttributes CA ON A.Id = CA.AttributeId
+					  INNER JOIN Categories C ON C.Id = CA.CategoryId
+					  WHERE C.Id = " + categoryId;
+			List<Attributes> attributes = new List<Attributes>();
+
+			reader = executeQuery();
+
+			while(reader.Read()) {
+				attributes.Add(new Attributes
+				{
+					Id = reader.GetInt32(0),
+					Name = reader.GetString(1),
+					TypeId = reader.GetInt32(2),
+			
+				});
+			}
+            reader.Close();
+            conn.Close();
+
+			EditCategoryAttributeRequest categoryAttributeRequest = new EditCategoryAttributeRequest
+			{
+				Category = category,
+				Attributes = attributes
+			};
+			
+            return categoryAttributeRequest;
+        }
 
 
-		public int createCategory(string category)
+
+        public int createCategory(string category)
 		{
 			query = @"DECLARE @Result AS INT = -1;
 
@@ -134,7 +182,7 @@ namespace Backend.Services
 				while (reader.Read())
 				{
 					
-					if (reader.GetInt32(0) == 1)
+					if (reader.GetInt32(0) == 1 && !attr.ListView)
 					{
 						valid = 1;
 					}
@@ -248,6 +296,104 @@ namespace Backend.Services
 			}
 
 			
+        }
+
+        public bool deleteAttribute(int id)
+        {
+            try
+            {
+				query = @"	DELETE FROM CategoryAttributes WHERE AttributeId = " + id; 
+						
+
+                executeCommand();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+
+        }
+
+        public EditCategoryAttributeRequest updateCategory(EditCategoryAttributeRequest request)
+        {
+           
+            query = @"UPDATE Categories
+                      SET [Name] = '" + request.Category.Name  + @"'
+                      WHERE Categories.Id =" + request.Category.Id + @";
+
+                      SELECT * FROM Categories WHERE [Id] = " + request.Category.Id;
+
+            Categories category = new Categories();
+
+
+            SqlDataReader reader = executeQuery();
+               
+
+
+            while (reader.Read())
+            {
+                category = new Categories { Id = reader.GetInt32(0), Name = reader.GetString(1) };
+            }
+
+            reader.Close();
+            conn.Close();
+
+			List<Attributes> attribute = new List<Attributes>();
+			query = @"	DELETE FROM CategoryAttributes WHERE CategoryId = " + request.Category.Id;
+
+
+
+            executeCommand();
+
+            foreach (Attributes attr in request.Attributes)
+			{
+				query = @"  IF EXISTS (SELECT 1 FROM Attributes WHERE Id != " + attr.Id + @" )
+							BEGIN 
+							SET IDENTITY_INSERT Attributes ON;
+								INSERT INTO Attributes ([Id], [Name], [TypeId]) VALUES (" + attr.Id + @", '" + attr.Name + @"', " + attr.TypeId + @");
+								SET IDENTITY_INSERT Attributes OFF;
+								INSERT INTO CategoryAttributes ([CategoryId], [AttributeId])
+								VALUES ("+request.Category.Id + @"," + attr.Id + @");
+							END
+
+						
+
+                      SELECT A.* FROM Attributes A
+					  INNER JOIN CategoryAttributes CA ON A.Id = CA.AttributeId
+					  INNER JOIN Categories C ON C.Id = CA.CategoryId
+					  WHERE C.Id = " + request.Category.Id;
+
+
+			
+
+
+			reader = executeQuery();
+			while (reader.Read())
+			{
+				attribute.Add(new Attributes
+				{
+                    Id = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    TypeId = reader.GetInt32(2)
+                   
+                   
+                });
+			}
+           
+            reader.Close();
+            conn.Close();
+            }
+            EditCategoryAttributeRequest categoryAttributeUpdate = new EditCategoryAttributeRequest
+            {
+                Category = category,
+                Attributes = attribute
+            };
+
+            return categoryAttributeUpdate;
+        
         }
     }
 }
