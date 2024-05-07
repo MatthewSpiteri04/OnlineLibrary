@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="assets/css/document.css" type="text/css"/>
+<div ng-include="'assets/elements/sidebar.html'"></div>
+
+<div class="document-Container">
+    <form name="DocumentForm">
+
+            <div class="title">
+                <h2>{{ Document.document.title }}</h2>
+            </div>
+
+
+            <div class="attributes" ng-repeat="attribute in Document.attributes">
+                <label>{{ attribute.name}}</label>
+                <h3>{{ attribute.value}}</h3><br>
+            </div>
+
+
+            <div class="attributes2">
+                <label>Category</label>
+                <h3>{{ Document.document.category }}</h3><br>
+            </div>
+
+            <div class="attributes2">
+                <label>Language</label>
+                <h3>{{ Document.document.language }}</h3><br>
+            </div>
+
+            <div class="attributes2">
+                <label>Uploaded By</label>
+                <h3>{{ Document.document.author }}</h3><br>
+            </div>
+    </form>
+</div>

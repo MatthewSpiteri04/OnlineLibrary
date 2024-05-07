@@ -46,6 +46,10 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
         templateUrl:'views/myUploads.html',
         controller: 'my-uploads-controller'
     })
+    .when('/viewDocument/:id', {
+        templateUrl:'views/viewDocument.html',
+        controller: 'viewDocumentController'
+    })
     .otherwise({
         redirectTo: '/home'
     });
@@ -385,6 +389,10 @@ OnlineLibrary.service('homeService', function($http) {
         language: null
     };
 
+    $scope.viewDocument = function(document){
+        window.location.href="#!/viewDocument/"+document.id;
+    }
+
     $scope.submitFilterData = function() {
         $scope.searchForDocuments( $scope.searchString ).then(function(){
             $scope.documents = angular.copy($scope.filteredItems);
@@ -513,6 +521,17 @@ OnlineLibrary.service('homeService', function($http) {
     $http.get('https://localhost:44311/api/help/answer/' + $scope.questionId)
         .then(response => {
             $scope.helpDetails = response.data;
+        })    
+  }]);
+
+  OnlineLibrary.controller('viewDocumentController', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
+    $scope.documentId = $routeParams.id;
+    console.log($routeParams.id);
+
+    $http.get('https://localhost:44311/api/getDocument/' + $scope.documentId)
+        .then(response => {
+            $scope.Document = response.data;
+            console.log($scope.Document);
         })    
   }]);
 

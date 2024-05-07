@@ -79,5 +79,13 @@ namespace Backend.Controllers
 
 
         }
+
+        [HttpGet]
+        [Route("api/getDocument/{id}")]
+        public DocumentWithAttribute GetDocument(int id)
+        {
+            return _documentsService.getDocumentsandAttributes(id);
+        }
+
     }
 }

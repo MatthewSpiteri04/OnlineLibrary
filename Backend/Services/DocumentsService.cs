@@ -284,5 +284,65 @@ namespace Backend.Services
             conn.Close();
             return document;
         }
+
+        public DocumentWithAttribute getDocumentsandAttributes(int id)
+        {
+            Documents document = new Documents();
+            query = @"SELECT D.[Id], D.[UserId], U.[FirstName] + ' ' + U.[LastName], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], D.[FileExtension], CAST(0 AS BIT) AS IsFavourite  
+                          FROM Documents D
+                          INNER JOIN Users U ON D.UserId = U.Id
+                          INNER JOIN Categories C ON D.CategoryId = C.Id
+                          INNER JOIN Languages L ON D.LanguageId = L.Id
+                          WHERE D.[Id] = " + id;
+
+            SqlDataReader reader = executeQuery();
+
+            while (reader.Read())
+            {
+                document = new Documents
+                {
+                    Id = reader.GetInt32(0),
+                    UserId = reader.GetInt32(1),
+                    Author = reader.GetString(2),
+                    Category = reader.GetString(3),
+                    Title = reader.GetString(4),
+                    Language = reader.GetString(5),
+                    UploadDate = reader.GetDateTime(6),
+                    PublicAccess = reader.GetBoolean(7),
+                    DocumentLocation = reader.GetString(8),
+                    FileExtension = reader.GetString(9),
+                    IsFavourite = reader.GetBoolean(10)
+                };
+            }
+            reader.Close();
+            conn.Close();
+            query = @"SELECT A.[Name], DA.[Value] FROM Documents D
+                        INNER JOIN [DocumentAttributes] DA ON DA. DocumentID = D.Id
+                        INNER JOIN Attributes A ON DA.AttributeID = A.ID
+                        WHERE D.Id =" + id;
+            List<DocumentAttributeValues> attributes = new List<DocumentAttributeValues>();
+            SqlDataReader reader2 = executeQuery();
+
+            while (reader2.Read())
+            {
+                attributes.Add(new DocumentAttributeValues
+                {
+                    Name = reader2.GetString(0),
+                    Value = reader2.GetString(1),
+                }
+            );
+            }
+
+            reader2.Close();
+            conn.Close();
+
+            DocumentWithAttribute result = new DocumentWithAttribute
+            {
+                Document = document,
+                Attributes = attributes
+            };
+
+            return result;
+        }
     }
 }

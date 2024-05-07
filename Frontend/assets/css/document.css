@@ -1,0 +1,72 @@
+
+.document-Container {
+    margin-top: 8%;
+    display: flex;
+    justify-content: center;
+    
+}
+
+.title > h2 {
+    color: #BA0C2F;
+    font-size: 40px;
+    margin-bottom: 35px;
+    margin-top: 20px;
+}
+
+.document-Container form {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Lato';
+    align-items: flex-start;
+    border: 4px solid #BA0C2F;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px 120px 50px 120px;
+    border-radius: 15px;
+}
+
+.attributes {
+    display: flex;
+    flex-direction: column; 
+    margin-left: 0px;
+}
+.attributes2 {
+    display: flex;
+    flex-direction: column; 
+    margin-left: 0px;
+}
+
+.attributes label {
+    cursor: text;
+    color: #BA0C2F;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    margin-left: -110px;    
+} 
+
+.attributes > h3 {
+    font-size: 20px;
+    cursor: text;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    margin-left: -110px;
+}
+
+.attributes2 label {
+    cursor: text;
+    color: #BA0C2F;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    margin-left: -80px;    
+} 
+
+.attributes2 > h3 {
+    font-size: 20px;
+    cursor: text;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    margin-left: -80px;
+}
