@@ -515,6 +515,31 @@ OnlineLibrary.service('homeService', function($http) {
     }
   }]);
 
+  OnlineLibrary.service('documentService', function($http) {
+    this.updateDocument = function(document, id) {
+        
+        attr = [];
+
+        document.attributes.forEach(element => {
+            var x = angular.copy(element);
+            x.value = x.value.toString();
+            attr.push(x);
+        });
+        
+        
+        doc = document.document;
+
+        docTemp = {
+            document: doc,
+            attributes: attr,
+            userId: id
+        };
+        console.log(docTemp)
+
+        return $http.put('https://localhost:44311/api/UpdateDocument', docTemp);
+    };
+});
+
   OnlineLibrary.controller('helpAnswerController', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
     $scope.questionId = $routeParams.id;
 
@@ -524,15 +549,90 @@ OnlineLibrary.service('homeService', function($http) {
         })    
   }]);
 
-  OnlineLibrary.controller('viewDocumentController', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
+  OnlineLibrary.controller('viewDocumentController', ['$scope', '$http', '$routeParams', 'userService', '$uibModal', 'uploadService', 'documentService', function($scope, $http, $routeParams, userService, $uibModal, uploadService, documentService) {
     $scope.documentId = $routeParams.id;
-    console.log($routeParams.id);
+    $scope.user = userService.getCurrentUser();
 
-    $http.get('https://localhost:44311/api/getDocument/' + $scope.documentId)
-        .then(response => {
-            $scope.Document = response.data;
-            console.log($scope.Document);
-        })    
+    $scope.editMode = false;
+
+    $scope.$on('dataChanged', function(event, data) {
+        $scope.user = data;
+        });
+
+    $scope.loadDetails = function(){
+        var id = 0
+        if ($scope.user != null) {
+            id = $scope.user.id
+        }
+        $http.get('https://localhost:44311/api/getDocument/' + $scope.documentId + '/' + id)
+            .then(response => {
+                $scope.Document = response.data;
+                $scope.Document.attributes.forEach(element => {
+                    if(element.tag == "number"){
+                        element.value = parseInt(element.value);
+                    }
+                    if(element.tag == "date"){
+                        element.value = new Date(element.value);
+                    }
+                })
+                console.log($scope.Document);
+        });
+    }
+
+    $scope.toggleEdit = function() {
+        if($scope.user != null){
+            if ($scope.editMode) {
+                
+                $scope.editMode = false;
+
+
+                documentService.updateDocument($scope.Document, $scope.user.id)
+                .then(response => {
+                    $scope.loadDetails();
+                });
+            }
+            else {
+                $scope.editMode = true;
+            }
+        }
+        else {
+
+        }
+    }
+
+    $scope.toggleFavourite = function(document) {
+        if($scope.user == null || $scope.user == ''){
+            $uibModal.open({
+                templateUrl: 'assets/elements/popup.html',
+                controller: 'popup-controller',
+                resolve: {
+                    title: function(){
+                        return 'User Not Logged In';
+                    },
+                    message: function(){
+                        return 'This feature requires the user to be logged in.';
+                    }
+                }
+              }).result.then(function() {}, function(reason) {}); // Handling the modal return
+        } else {
+            var request = {
+                documentId: document.id,
+                userId: $scope.user.id,
+                isFavourite: document.isFavourite
+            };
+            $http.post('https://localhost:44311/api/Toggle/Favourite', request).then(function() {
+                $scope.loadDetails();
+            });
+            
+        }
+    }
+
+    uploadService.getLanguages()
+    .then(data => { 
+        $scope.languages = data});
+
+    $scope.loadDetails();
+
   }]);
 
   OnlineLibrary.controller('myInfo-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){

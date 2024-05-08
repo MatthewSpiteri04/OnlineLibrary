@@ -4,30 +4,32 @@
 <div class="document-Container">
     <form name="DocumentForm">
 
-            <div class="title">
+            <div style="margin-left: 0; margin-right: 0; flex-direction: row;" class="title">
                 <h2>{{ Document.document.title }}</h2>
-            </div>
-
-
-            <div class="attributes" ng-repeat="attribute in Document.attributes">
-                <label>{{ attribute.name}}</label>
-                <h3>{{ attribute.value}}</h3><br>
-            </div>
-
-
-            <div class="attributes2">
-                <label>Category</label>
-                <h3>{{ Document.document.category }}</h3><br>
-            </div>
-
-            <div class="attributes2">
-                <label>Language</label>
-                <h3>{{ Document.document.language }}</h3><br>
+                <div class="icon-group-doc">
+                    <i class="{{!editMode ? 'fa-solid fa-pencil' : 'fa-solid fa-check'}}" ng-if="user.id == Document.document.userId" ng-click="toggleEdit()" style="margin-right: 10px;"></i>
+                    <i class="{{Document.document.isFavourite ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}}" ng-click="toggleFavourite( Document.document)"></i>
+                </div>
             </div>
 
             <div class="attributes2">
                 <label>Uploaded By</label>
-                <h3>{{ Document.document.author }}</h3><br>
+                <input type="text" ng-disabled="true" ng-model="Document.document.author">
             </div>
+
+            <div class="attributes2">
+                <label>Category</label>
+                <input type="text" ng-disabled="true" ng-model="Document.document.category">
+            </div>
+
+            <div class="attributes2">
+                <label>Language</label>
+                <input type="text" ng-disabled="true" ng-model="Document.document.language">
+            </div>
+
+            <div class="attributes" ng-repeat="attribute in Document.attributes">
+                <label>{{ attribute.name}}</label>
+                <input ng-disabled="!editMode" type="{{attribute.tag}}" ng-model="attribute.value">
+            </div>  
     </form>
 </div>

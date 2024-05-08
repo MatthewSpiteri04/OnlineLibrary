@@ -3,6 +3,7 @@ using System.Reflection.Metadata;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Backend.Controllers
 {
@@ -46,14 +47,15 @@ namespace Backend.Controllers
         {
             if (request.Search == null || request.Search == "")
             {
-                return _documentsService.getMyUploads((int) request.UserId);
+                return _documentsService.getMyUploads((int)request.UserId);
             }
             else
             {
-                return _documentsService.getMyUploadsBySearch((int) request.UserId, request.Search);
+                return _documentsService.getMyUploadsBySearch((int)request.UserId, request.Search);
             }
         }
 
+         
         [HttpDelete]
         [Route("api/Delete/Document/{id}")]
         public IActionResult DeleteDocument(int id)
@@ -81,10 +83,17 @@ namespace Backend.Controllers
         }
 
         [HttpGet]
-        [Route("api/getDocument/{id}")]
-        public DocumentWithAttribute GetDocument(int id)
+        [Route("api/getDocument/{id}/{userId}")]
+        public DocumentWithAttribute GetDocument(int id, int userId)
         {
-            return _documentsService.getDocumentsandAttributes(id);
+            return _documentsService.getDocumentsandAttributes(id, userId);
+        }
+
+        [HttpPut]
+        [Route("api/UpdateDocument")]
+        public void UpdateDocument([FromBody] DocumentUpdateRequest request)
+        {
+            _documentsService.updateDocument(request);
         }
 
     }

@@ -285,15 +285,29 @@ namespace Backend.Services
             return document;
         }
 
-        public DocumentWithAttribute getDocumentsandAttributes(int id)
+        public DocumentWithAttribute getDocumentsandAttributes(int id, int UserId)
         {
             Documents document = new Documents();
-            query = @"SELECT D.[Id], D.[UserId], U.[FirstName] + ' ' + U.[LastName], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], D.[FileExtension], CAST(0 AS BIT) AS IsFavourite  
-                          FROM Documents D
+
+            if (UserId <= 0)
+            {
+                query = @"SELECT D.[Id], D.[UserId], U.[FirstName] + ' ' + U.[LastName], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], D.[FileExtension], CAST(0 AS BIT) AS IsFavourite FROM Documents D
+                          INNER JOIN Categories C ON D.CategoryId = C.Id
                           INNER JOIN Users U ON D.UserId = U.Id
+                          INNER JOIN Languages L ON D.LanguageId = L.Id;";
+            }
+            else
+            {
+                query = @"SELECT D.[Id], D.[UserId], U.[FirstName] + ' ' + U.[LastName], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], D.[FileExtension], CASE 
+                          WHEN EXISTS (SELECT 1 FROM Favourites WHERE DocumentId = D.[Id] AND UserId = " + UserId + @")
+                              THEN CAST(1 AS BIT)
+                              ELSE CAST(0 AS BIT)
+                              END AS IsFavourite  
+                          FROM Documents D
                           INNER JOIN Categories C ON D.CategoryId = C.Id
                           INNER JOIN Languages L ON D.LanguageId = L.Id
-                          WHERE D.[Id] = " + id;
+                          INNER JOIN Users U ON D.UserId = U.Id;";
+            }
 
             SqlDataReader reader = executeQuery();
 
@@ -316,9 +330,10 @@ namespace Backend.Services
             }
             reader.Close();
             conn.Close();
-            query = @"SELECT A.[Name], DA.[Value] FROM Documents D
+            query = @"SELECT A.[Id], A.[Name], DA.[Value], [AT].TagName FROM Documents D
                         INNER JOIN [DocumentAttributes] DA ON DA. DocumentID = D.Id
                         INNER JOIN Attributes A ON DA.AttributeID = A.ID
+                        INNER JOIN AttributeTypes [AT] ON [AT].Id = A.TypeId
                         WHERE D.Id =" + id;
             List<DocumentAttributeValues> attributes = new List<DocumentAttributeValues>();
             SqlDataReader reader2 = executeQuery();
@@ -327,8 +342,10 @@ namespace Backend.Services
             {
                 attributes.Add(new DocumentAttributeValues
                 {
-                    Name = reader2.GetString(0),
-                    Value = reader2.GetString(1),
+                    Id = reader2.GetInt32(0),
+                    Name = reader2.GetString(1),
+                    Value = reader2.GetString(2),
+                    Tag = reader2.GetString(3)
                 }
             );
             }
@@ -343,6 +360,21 @@ namespace Backend.Services
             };
 
             return result;
+        }
+
+        public DocumentWithAttribute updateDocument(DocumentUpdateRequest request)
+        {
+            foreach (DocumentAttributeValues attr in request.Attributes)
+            {
+                query = @"UPDATE DocumentAttributes SET
+                            [Value] = '" + attr.Value + @"'
+                            WHERE AttributeID = " + attr.Id;
+
+                executeCommand();
+            }
+
+            return getDocumentsandAttributes(request.Document.Id, request.UserId);
+
         }
     }
 }
