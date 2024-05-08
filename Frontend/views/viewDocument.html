@@ -30,6 +30,7 @@
             <div class="attributes" ng-repeat="attribute in Document.attributes">
                 <label>{{ attribute.name}}</label>
                 <input ng-disabled="!editMode" type="{{attribute.tag}}" ng-model="attribute.value">
-            </div>  
+            </div> 
+            <button ng-click="deleteItem()"><i class="fa-solid fa-trash"></i>Delete</button>
     </form>
 </div>

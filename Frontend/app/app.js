@@ -549,7 +549,7 @@ OnlineLibrary.service('homeService', function($http) {
         })    
   }]);
 
-  OnlineLibrary.controller('viewDocumentController', ['$scope', '$http', '$routeParams', 'userService', '$uibModal', 'uploadService', 'documentService', function($scope, $http, $routeParams, userService, $uibModal, uploadService, documentService) {
+  OnlineLibrary.controller('viewDocumentController', ['$scope', '$http', '$routeParams', 'userService', '$uibModal', 'uploadService', 'documentService', 'myUploadsService', function($scope, $http, $routeParams, userService, $uibModal, uploadService, documentService, myUploadsService) {
     $scope.documentId = $routeParams.id;
     $scope.user = userService.getCurrentUser();
 
@@ -625,6 +625,30 @@ OnlineLibrary.service('homeService', function($http) {
             });
             
         }
+    }
+
+    $scope.deleteItem = function(){
+
+        $uibModal.open({
+            templateUrl: 'assets/elements/confirmation.html',
+            controller: 'confirmation-controller',
+            resolve: {
+                title: function(){
+                    return 'Removing from Favourites';
+                },
+                message: function(){
+                    return 'Are you sure you want to remove this item from favourites';
+                }
+            }
+        }).result.then(function() { }, function(reason) { 
+            if(reason == 'ok'){
+                myUploadsService.deleteDocument($scope.Document.document).then(response => {
+                    window.location.href = '#!/home'
+                });
+            }
+        });
+
+        
     }
 
     uploadService.getLanguages()
