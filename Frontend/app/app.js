@@ -1056,7 +1056,16 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
     } else {
         window.location.href = '#!/home';
     };
+    $scope.selectedAttributeTypeName = "Select Type Name";
 
+    $scope.updateSelectedAttributeTypeName = function(attributeId) {
+           
+        if (selectedAttribute) {
+            $scope.selectedAttributeTypeName = selectedAttribute.typeName;
+        } else {
+            $scope.selectedAttributeTypeName = "Select Type Name";
+        }
+    };
    
 }]);
 

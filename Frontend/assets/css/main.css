@@ -496,13 +496,14 @@ html {
 .Attribute-Name, .Attribute-Type{
     display: flex;
     flex-direction: column;
-    margin-left: 25px;
+    margin-left: 20px;
    
     
 }
 
 .Attribute-Name{
     font-size: 10px;
+    
 }
 
 

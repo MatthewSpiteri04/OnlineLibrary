@@ -56,7 +56,7 @@
         <div class="Add-Attribute">
           <button type="button" ng-click="addInputField()">
             <i class="fa-solid fa-plus"></i>
-            Add Attribute
+            Add Fields
           </button>
         </div>
       </div>
@@ -64,24 +64,34 @@
       <div class="Attributes" ng-repeat="inputField in inputFields">
         <div class="Attribute-Input">
           <div class="Attribute-Name">
-            <h2>Attribute Name</h2>
-            <div ng-show="inputField.listView">
-              <select ng-model="inputField.Id">
-                <option value="" disabled selected>
-                  Select Existing Attribute
-                </option>
-                <option
-                  ng-repeat="attribute in attributes"
-                  value="{{ attribute.id }}"
+            <div class="nameAndTypeDisabled" ng-show="inputField.listView">
+              <div class="name">
+                <h2>Attribute Name</h2>
+                <select
+                  ng-model="inputField.Id"
+                  ng-change="updateSelectedAttributeTypeName(inputField.Id)"
                 >
-                  {{ attribute.name }}
-                </option>
-              </select>
+                  <option value="" disabled selected>
+                    Select Existing Attribute
+                  </option>
+                  <option
+                    ng-repeat="attribute in attributes"
+                    value="{{ attribute.id }}"
+                  >
+                    {{ attribute.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="typeDisabled">
+                <h2>Select Attribute Type</h2>
+                <input disabled placeholder="{{selectedAttributeTypeName}}" />
+              </div>
             </div>
 
             <div ng-hide="inputField.listView">
               <div class="Type">
                 <div class="TypeName">
+                  <h2>Attribute Name</h2>
                   <input
                     placeholder="Enter Attribute Name"
                     type="text"
@@ -106,7 +116,7 @@
         </div>
         <div class="Buttons">
           <div class="View" ng-click="toggleView(inputField)">
-            {{ inputField.listView ? 'Manual Input' : 'Show List' }}
+            {{ inputField.listView ? 'Add Attribute' : 'Show List' }}
           </div>
           <div class="Remove" type="button" ng-click="removeInputField($index)">
             <i class="fa-solid fa-circle-xmark"></i>
