@@ -4,33 +4,47 @@
 <div class="document-Container">
     <form name="DocumentForm">
 
-            <div style="margin-left: 0; margin-right: 0; flex-direction: row;" class="title">
+            <div class="document-title title">
                 <h2>{{ Document.document.title }}</h2>
                 <div class="icon-group-doc">
-                    <i class="{{!editMode ? 'fa-solid fa-pencil' : 'fa-solid fa-check'}}" ng-if="user.id == Document.document.userId" ng-click="toggleEdit()" style="margin-right: 10px;"></i>
                     <i class="{{Document.document.isFavourite ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}}" ng-click="toggleFavourite( Document.document)"></i>
                 </div>
             </div>
 
             <div class="attributes2">
                 <label>Uploaded By</label>
-                <input type="text" ng-disabled="true" ng-model="Document.document.author">
+                <input type="text" ng-disabled="true" class="edit-mode-off" ng-model="Document.document.author">
+            </div>
+
+            <div class="attributes2">
+                <label>Upload Date</label>
+                <input type="text" ng-disabled="true" class="edit-mode-off" ng-model="docUploadDate">
             </div>
 
             <div class="attributes2">
                 <label>Category</label>
-                <input type="text" ng-disabled="true" ng-model="Document.document.category">
+                <input type="text" ng-disabled="true" class="edit-mode-off" ng-model="Document.document.category">
             </div>
 
             <div class="attributes2">
                 <label>Language</label>
-                <input type="text" ng-disabled="true" ng-model="Document.document.language">
+                <input type="text" ng-disabled="true" class="edit-mode-off" ng-model="Document.document.language">
             </div>
 
-            <div class="attributes" ng-repeat="attribute in Document.attributes">
-                <label>{{ attribute.name}}</label>
-                <input ng-disabled="!editMode" type="{{attribute.tag}}" ng-model="attribute.value">
-            </div> 
-            <button ng-click="deleteItem()"><i class="fa-solid fa-trash"></i>Delete</button>
+            <div style="width: 100%" ng-repeat="attribute in Document.attributes">
+                <div class="attributes" ng-if="attribute.tag != 'checkbox'">
+                    <label>{{attribute.name}}</label>
+                    <input ng-disabled="!editMode" class="{{!editMode ? 'edit-mode-off' : 'edit-mode-on'}}" type="{{attribute.tag}}" ng-model="attribute.value">
+                </div>
+                <div ng-if="attribute.tag == 'checkbox'">
+                    <p class="checkbox-text">{{attribute.name}}<input ng-model="attribute.value" ng-disabled="!editMode" style="margin-left: 8px;" type="checkbox" name="{{attribute.name}}"></p>
+                </div>
+                
+            </div>
+            <div class="button-group">
+                <button style="margin-right: 10px;" ng-click="toggleEdit()" ><i class="{{!editMode ? 'fa-solid fa-pencil' : 'fa-solid fa-check'}}" ng-if="user.id == Document.document.userId" style="margin-right: 10px;"></i>{{!editMode ? 'Edit' : 'Save'}}</button>
+                <button style="margin-right: 10px;" ng-click="downloadItem(Document.document)"><i style="margin-right: 10px;" class="fa-solid fa-download"></i>Download</button>
+                <button ng-click="deleteItem()"><i style="margin-right: 10px;" class="fa-solid fa-trash"></i>Delete</button>
+            </div>
     </form>
 </div>

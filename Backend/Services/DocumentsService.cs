@@ -294,7 +294,8 @@ namespace Backend.Services
                 query = @"SELECT D.[Id], D.[UserId], U.[FirstName] + ' ' + U.[LastName], C.[Name], D.[Title], L.[Language], D.[UploadDate], D.[PublicAccess], D.[DocumentLocation], D.[FileExtension], CAST(0 AS BIT) AS IsFavourite FROM Documents D
                           INNER JOIN Categories C ON D.CategoryId = C.Id
                           INNER JOIN Users U ON D.UserId = U.Id
-                          INNER JOIN Languages L ON D.LanguageId = L.Id;";
+                          INNER JOIN Languages L ON D.LanguageId = L.Id
+                          WHERE D.[Id] = " + id;
             }
             else
             {
@@ -306,7 +307,8 @@ namespace Backend.Services
                           FROM Documents D
                           INNER JOIN Categories C ON D.CategoryId = C.Id
                           INNER JOIN Languages L ON D.LanguageId = L.Id
-                          INNER JOIN Users U ON D.UserId = U.Id;";
+                          INNER JOIN Users U ON D.UserId = U.Id
+                          WHERE D.[Id] = " + id;
             }
 
             SqlDataReader reader = executeQuery();

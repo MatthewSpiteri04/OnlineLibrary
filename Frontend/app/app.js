@@ -171,6 +171,11 @@ OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favourite
             });
         };
 
+        $scope.viewDocument = function(document){
+            console.log(document.id);
+            window.location.href="#!/viewDocument/"+document.id;
+        }
+
         $scope.toggleFavourite = function(favourite, i){
             $uibModal.open({
                 templateUrl: 'assets/elements/confirmation.html',
@@ -299,6 +304,7 @@ OnlineLibrary.service('homeService', function($http) {
             form.addEventListener('submit', handleSubmit);
         
             function handleSubmit(event) {
+                console.log('pressed');
                 var attributeList = [];
                 const formData = new FormData(event.currentTarget);
         
@@ -344,7 +350,8 @@ OnlineLibrary.service('homeService', function($http) {
                             }
                         }).result.then(function() { }, function(reason) {});
                     }
-                    window.location.href = "#!/home"
+                    window.location.href = "#!/home";
+                    location.reload();
                 })        
             }
         
@@ -574,8 +581,44 @@ OnlineLibrary.service('homeService', function($http) {
                     if(element.tag == "date"){
                         element.value = new Date(element.value);
                     }
-                })
+                });
+                $scope.docUploadDate = new Date($scope.Document.document.uploadDate).toLocaleString();
+                $scope.Document.attributes.forEach(element => {
+                    if(element.value == 'on' && element.tag == 'checkbox'){
+                        element.value = true;
+                    }
+                    else if (element.value != 'on' && element.tag == 'checkbox') {
+                        element.value = false;
+                    }
+                });
                 console.log($scope.Document);
+        });
+    }
+
+    $scope.downloadItem = function(document) {
+        $http.post('https://localhost:44311/api/Download/Document', document, { responseType: 'arraybuffer' }).then(function(response) {
+            var blob = new Blob([response.data]);
+            var url = window.URL.createObjectURL(blob);
+            
+            // Create anchor element
+            var a = angular.element('<a></a>');
+            a.attr({
+                href: url,
+                download: document.title + document.fileExtension
+            });
+
+            // Append anchor element to document body
+            angular.element(document.body).append(a);
+
+            // Simulate click event
+            a[0].click();
+            
+            // Clean up
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        })
+        .catch(function(error) {
+            console.error('Error downloading document:', error);
         });
     }
 
@@ -585,6 +628,14 @@ OnlineLibrary.service('homeService', function($http) {
                 
                 $scope.editMode = false;
 
+                $scope.Document.attributes.forEach(element => {
+                    if(element.value == true && element.tag == 'checkbox'){
+                        element.value = 'on';
+                    }
+                    if (element.value == false && element.tag == 'checkbox') {
+                        element.value = '';
+                    }
+                });
 
                 documentService.updateDocument($scope.Document, $scope.user.id)
                 .then(response => {
@@ -939,6 +990,11 @@ OnlineLibrary.controller('my-uploads-controller', ['$scope', 'userService', 'myU
             myUploadsService.deleteDocument(document).then(response => {
                 $scope.searchForDocuments($scope.searchString);
             });
+        }
+
+        $scope.viewDocument = function(document){
+            console.log(document.id)
+            window.location.href="#!/viewDocument/"+document.id;
         }
 
         $scope.submitFilterData = function() {

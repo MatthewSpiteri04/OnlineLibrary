@@ -36,7 +36,7 @@
           <div>
             <label class="filter-container-label">Language</label><br>
             <select style="margin-right: 46px;" class="filter-search-search-input" required name="languageId" ng-model="filterData.language">
-                <option value="" selected>Search Language</option>
+                <option value="" selected>All Languages</option>
                 <option ng-repeat="language in languages" value="{{language.language}}">
                   {{language.language}}
                 </option>
@@ -45,7 +45,7 @@
           <div>
             <label class="filter-container-label">Category</label><br>
             <select class="filter-search-search-input" name="categoryId" ng-model="filterData.category" ng-change="loadAttributes(selectedCategoryId)">
-                <option value="" selected>Search Category</option>
+                <option value="" selected>All Categories</option>
                 <option ng-repeat="category in categories"  value="{{category.type}}">
                   {{category.type}}
                 </option>
@@ -65,6 +65,7 @@
         <p>{{favourite.category}}</p>
       </div>
       <div class="icons">
+        <i style="font-size: 26px" class="fa-solid fa-up-right-from-square" ng-click="viewDocument(favourite)"></i>
         <i class="fa-solid fa-download fa-2x" ng-click="downloadDocument(favourite)" download="{{document.title}}"></i>
         <i
           class="{{favourite.isFavourite ? 'fa-solid fa-heart fa-2x' : 'fa-regular fa-heart fa-2x'}}"
