@@ -4,6 +4,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Backend.Models;
+using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Cms;
 
 namespace Backend.Services
 {
@@ -143,7 +145,15 @@ namespace Backend.Services
             return user;
         }
 
+        public void UpdateUserRole(int userId)
+        {
+            query = @"UPDATE Users SET[RoleId] = 2 WHERE [Id] = " + userId;
+            executeCommand();
+           
+        }
 
-
+        // public IActionResult updateRole(string userId, string newRole)
+        //{
+        //      }
     }
 }

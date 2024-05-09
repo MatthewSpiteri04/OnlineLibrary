@@ -729,6 +729,25 @@ OnlineLibrary.service('homeService', function($http) {
     $scope.MyUploads = function(){
         window.location.href = "#!/my-uploads"
     }
+
+    $scope.requestAcademicAccess = function() {
+        var currentUser = userService.getCurrentUser();
+        var userId = currentUser.id;
+        var email = "chriscalleja04@gmail.com";
+        var subject = "Request for Academic User Access";
+        var message = "New request to grant academic user access has been requested from user with ID: " + userId + " . Grant at your own discretion";
+
+        // Send HTTP request to API to send the email
+        $http.post('https://localhost:44311/api/User/Send', { userId: userId, email: email, subject: subject, message: message })
+            .then(function(response) {
+                // Handle success
+                console.log("Email sent successfully.");
+            })
+            .catch(function(error) {
+                // Handle error
+                console.error("Error sending email:", error);
+            });
+    };
   }]);
 
   // USERS CONTROLLER
