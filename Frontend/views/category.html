@@ -61,7 +61,7 @@
         </div>
       </div>
 
-      <div class="Attributes" ng-repeat="inputField in inputFields">
+      <div class="Attributes" ng-repeat="inputField in inputFields track by $index">
         <div class="Attribute-Input">
           <div class="Attribute-Name">
             <div class="nameAndTypeDisabled" ng-show="inputField.listView">
@@ -69,7 +69,7 @@
                 <h2>Attribute Name</h2>
                 <select
                   ng-model="inputField.Id"
-                  ng-change="updateSelectedAttributeTypeName(inputField.Id)"
+                  ng-change="changeType(inputField.Id, inputField)"
                 >
                   <option value="" disabled selected>
                     Select Existing Attribute
@@ -84,7 +84,7 @@
               </div>
               <div class="typeDisabled">
                 <h2>Select Attribute Type</h2>
-                <input disabled placeholder="{{selectedAttributeTypeName}}" />
+                <input disabled type="text" ng-model="inputField.placeholder" />
               </div>
             </div>
 

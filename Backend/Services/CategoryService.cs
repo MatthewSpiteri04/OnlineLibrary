@@ -31,17 +31,18 @@ namespace Backend.Services
             return attribute_types;
 		}
 
-		public List<Attributes> getAttributes()
+		public List<AttributesWithTypeName> getAttributes()
 		{
-			List<Attributes> attributes = new List<Attributes>();
+			List<AttributesWithTypeName> attributes = new List<AttributesWithTypeName>();
 
-			query = @"SELECT * FROM Attributes";
+			query = @"SELECT A.*, [AT].TypeName FROM Attributes A
+					  INNER JOIN AttributeTypes [AT] ON A.TypeId = [AT].Id";
 					
 			SqlDataReader reader = executeQuery();
 
 			while (reader.Read())
 			{
-				Attributes attributeList = new Attributes() { Id = reader.GetInt32(0), Name = reader.GetString(1), TypeId = reader.GetInt32(2) };
+                AttributesWithTypeName attributeList = new AttributesWithTypeName() { Id = reader.GetInt32(0), Name = reader.GetString(1), TypeId = reader.GetInt32(2), TypeName = reader.GetString(3) };
 				attributes.Add(attributeList);
 			}
             reader.Close();

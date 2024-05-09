@@ -21,7 +21,7 @@ namespace Backend.Controllers
 		[HttpGet]
 		[Route("api/Categories/GetAttributes")]
 
-		public List<Attributes> GetAttributes()
+		public List<AttributesWithTypeName> GetAttributes()
 		{
 			return _categoryService.getAttributes();
 		}

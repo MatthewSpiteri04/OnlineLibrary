@@ -1006,12 +1006,21 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
             $scope.addInputField = function() {
                 $scope.inputFields.push({ 
                     Name: '',
-                    listView: true 
+                    listView: true,
+                    placeholder: 'Select Type Name'
                 });
             };
             
             $scope.removeInputField = function(index) {
                 $scope.inputFields.splice(index, 1);
+            };
+
+            $scope.changeType = function(id, i) {
+                $scope.attributes.forEach(element => {
+                    if(element.id == id){
+                        i.placeholder = element.typeName;
+                    }
+                });
             };
         
         
@@ -1056,16 +1065,7 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
     } else {
         window.location.href = '#!/home';
     };
-    $scope.selectedAttributeTypeName = "Select Type Name";
-
-    $scope.updateSelectedAttributeTypeName = function(attributeId) {
-           
-        if (selectedAttribute) {
-            $scope.selectedAttributeTypeName = selectedAttribute.typeName;
-        } else {
-            $scope.selectedAttributeTypeName = "Select Type Name";
-        }
-    };
+    
    
 }]);
 
