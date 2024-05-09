@@ -21,12 +21,20 @@ namespace Backend.Controllers
 		[HttpGet]
 		[Route("api/Categories/GetAttributes")]
 
-		public List<Attributes> GetAttributes()
+		public List<AttributesWithTypeName> GetAttributes()
 		{
 			return _categoryService.getAttributes();
 		}
 
-		[HttpDelete]
+        [HttpGet]
+        [Route("api/Categories/GetCategories/{categoryId}")]
+
+        public EditCategoryAttributeRequest GetCategories(int categoryId)
+        {
+            return _categoryService.getCategories(categoryId);
+        }
+
+        [HttpDelete]
         [Route("api/Delete/Category/{id}")]
         public IActionResult DeleteCategory(int id)
 		{
@@ -39,6 +47,20 @@ namespace Backend.Controllers
 				return BadRequest(new { Title = "Delete Failed", Message = "This category has documents related to it. Make sure this category isn't being used first."});
 			}
 		}
+
+        [HttpDelete]
+        [Route("api/Delete/Attribute/{id}")]
+        public IActionResult DeleteAttribute(int id)
+        {
+            if (_categoryService.deleteAttribute(id))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(new { Title = "Delete Failed", Message = "This attribute has documents related to it. Make sure this attribute isn't being used first." });
+            }
+        }
 
 
         [HttpPost]
@@ -113,7 +135,13 @@ namespace Backend.Controllers
 			return response;
 
 		}
+        [HttpPut]
+        [Route("api/Update/Category")]
+        public EditCategoryAttributeRequest UpdateCategory([FromBody] EditCategoryAttributeRequest request)
+        {
+            return _categoryService.updateCategory(request);
 
+        }
 
-	}
+    }
 }

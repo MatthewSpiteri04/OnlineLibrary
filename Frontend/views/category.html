@@ -3,8 +3,14 @@
 
 <div ng-if="screen == 'choice'" class="page">
   <div class="grid-container">
-    <div ng-click="changeScreen('add')" class="grid-item"><i class="fa-solid fa-folder-plus fa-6x"></i><div class="text-item-category">Add Category</div></div>
-    <div ng-click="changeScreen('manage')" class="grid-item"><i class="fa-solid fa-screwdriver-wrench fa-6x"></i><div class="text-item-category">Manage Category</div></div>
+    <div ng-click="changeScreen('add')" class="grid-item">
+      <i class="fa-solid fa-folder-plus fa-6x"></i>
+      <div class="text-item-category">Add Category</div>
+    </div>
+    <div ng-click="changeScreen('manage')" class="grid-item">
+      <i class="fa-solid fa-screwdriver-wrench fa-6x"></i>
+      <div class="text-item-category">Manage Category</div>
+    </div>
   </div>
 </div>
 
@@ -19,9 +25,15 @@
       <tr ng-repeat="category in categories track by $index">
         <td>{{$index + 1}}</td>
         <td>{{category.type}}</td>
-        <td style="text-align: center;">
-          <i class="fa-solid fa-pencil table-icon"></i>
-          <i ng-click="deleteCategory(category, $index)" class="fa-solid fa-trash table-icon"></i>
+        <td style="text-align: center">
+          <i
+            ng-click="editCategory(category)"
+            class="fa-solid fa-pencil table-icon"
+          ></i>
+          <i
+            ng-click="deleteCategory(category, $index)"
+            class="fa-solid fa-trash table-icon"
+          ></i>
         </td>
       </tr>
     </table>
@@ -35,36 +47,56 @@
       <div class="Category-Section">
         <div class="Category-input">
           <h2>Category Name</h2>
-          <input placeholder="Enter Category Name" type="text" ng-model="categoryForm.Name" />
+          <input
+            placeholder="Enter Category Name"
+            type="text"
+            ng-model="categoryForm.Name"
+          />
         </div>
         <div class="Add-Attribute">
           <button type="button" ng-click="addInputField()">
             <i class="fa-solid fa-plus"></i>
-            Add Attribute
+            Add Fields
           </button>
         </div>
       </div>
-      
-      <div class="Attributes" ng-repeat="inputField in inputFields">
+
+      <div class="Attributes" ng-repeat="inputField in inputFields track by $index">
         <div class="Attribute-Input">
           <div class="Attribute-Name">
-            <h2>Attribute Name</h2>
-            <div ng-show="inputField.listView">
-              <select ng-model="inputField.Id">
-                <option value="" disabled selected>Select Existing Attribute</option>
-                <option
-                  ng-repeat="attribute in attributes"
-                  value="{{ attribute.id }}"
+            <div class="nameAndTypeDisabled" ng-show="inputField.listView">
+              <div class="name">
+                <h2>Attribute Name</h2>
+                <select
+                  ng-model="inputField.Id"
+                  ng-change="changeType(inputField.Id, inputField)"
                 >
-                  {{ attribute.name }}
-                </option>
-              </select>
+                  <option value="" disabled selected>
+                    Select Existing Attribute
+                  </option>
+                  <option
+                    ng-repeat="attribute in attributes"
+                    value="{{ attribute.id }}"
+                  >
+                    {{ attribute.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="typeDisabled">
+                <h2>Select Attribute Type</h2>
+                <input disabled type="text" ng-model="inputField.placeholder" />
+              </div>
             </div>
 
             <div ng-hide="inputField.listView">
               <div class="Type">
                 <div class="TypeName">
-                  <input placeholder="Enter Attribute Name" type="text" ng-model="inputField.Name" />
+                  <h2>Attribute Name</h2>
+                  <input
+                    placeholder="Enter Attribute Name"
+                    type="text"
+                    ng-model="inputField.Name"
+                  />
                 </div>
                 <div class="Attribute-Type">
                   <h2>Select Attribute Type</h2>
@@ -84,7 +116,7 @@
         </div>
         <div class="Buttons">
           <div class="View" ng-click="toggleView(inputField)">
-            {{ inputField.listView ? 'Manual Input' : 'Show List' }}
+            {{ inputField.listView ? 'Add Attribute' : 'Show List' }}
           </div>
           <div class="Remove" type="button" ng-click="removeInputField($index)">
             <i class="fa-solid fa-circle-xmark"></i>

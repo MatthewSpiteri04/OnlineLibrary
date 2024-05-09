@@ -1,0 +1,114 @@
+<link rel="stylesheet" href="assets/css/categoryEditor.css" type="text/css" />
+<div ng-include="'assets/elements/sidebar.html'"></div>
+<div class="security-form">
+  <form>
+    <h2>
+      <i style="padding-right: 10px" class="fa-solid fa-user-lock"></i> Category
+      Manager
+    </h2>
+    <div class="category">
+      <label>Category Name</label>
+      <div class="categoryAddAttribute">
+        <input
+          placeholder="Enter Category Name"
+          type="text"
+          ng-model="categoryResponse.category.name"
+          ng-disabled="!editMode"
+          class="{{!editMode ? 'edit-mode-off' : 'edit-mode-on'}}"
+        />
+
+        <button
+          ng-show="editMode"
+          ng-disabled="!editMode"
+          ng-click="addInputField()"
+        >
+          <i class="fa-solid fa-plus" style="color: #ffffff"></i>
+          <strong>Add Attribute</strong>
+        </button>
+      </div>
+    </div>
+    <label>Attributes</label>
+    <div
+      class="attributeFields"
+      ng-repeat="attribute in categoryResponse.attributes"
+    >
+      <div ng-if="attribute.new != true">
+        <input
+          placeholder="Enter Last Name"
+          type="text"
+          ng-model="attribute.name"
+          ng-disabled="true"
+          class="edit-mode-off"
+        />
+      </div>
+      <div ng-if="attribute.new == true">
+        <div class="Attributes">
+          <div class="Attribute-Input">
+            <div class="Attribute-Name">
+              <h2>Attribute Name</h2>
+              <div ng-show="attribute.listView">
+                <select ng-model="attribute.Id">
+                  <option value="" disabled selected>Select Existing Attribute</option>
+                  <option
+                    ng-repeat="attrList in attributeList"
+                    value="{{ attrList.id }}"
+                  >
+                    {{ attrList.name }}
+                  </option>
+                </select>
+              </div>
+
+              <div ng-hide="attribute.listView">
+                <div class="Type">
+                  <div class="TypeName">
+                    <input
+                      placeholder="Enter Attribute Name"
+                      type="text"
+                      ng-model="attribute.Name"
+                    />
+                  </div>
+                  <div class="Attribute-Type">
+                    <h2>Select Attribute Type</h2>
+                    <select ng-model="attribute.TypeId">
+                      <option value="" disabled selected>
+                        Select Type Name
+                      </option>
+                      <option
+                        ng-repeat="type in attributeTypes"
+                        value="{{ type.id }}"
+                      >
+                        {{ type.typeName }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="Buttons">
+            <div class="View" ng-click="toggleView(attribute)">
+              {{ attribute.listView ? 'Manual Input' : 'Show List' }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <button ng-show="editMode" ng-click="removeInputField($index)">
+        <i class="fa-solid fa-trash" style="color: #ba0c2f"></i>
+      </button>
+    </div>
+
+    <div class="button-group">
+      <button style="margin-right: 10px" ng-click="updateCategory()">
+        <i
+          class="{{!editMode ? 'fa-solid fa-pencil' : 'fa-solid fa-check'}}"
+          style="margin-right: 10px"
+        ></i
+        ><strong>{{!editMode ? 'Edit Category' : 'Save Changes'}}</strong>
+      </button>
+      <button ng-click="deleteCategory()">
+        <i class="fa-solid fa-trash" style="margin-right: 10px"></i
+        ><strong>Delete Category</strong>
+      </button>
+    </div>
+  </form>
+</div>

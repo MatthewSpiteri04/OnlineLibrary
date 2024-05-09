@@ -1,0 +1,157 @@
+.security-form {
+    margin-top: 8%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.security-form form > h2 {
+    color: #BA0C2F;
+    font-size: 40px;
+    margin-bottom: 35px;
+    margin-top: 20px;
+}
+
+.security-form form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Lato';
+    border: 4px solid #BA0C2F;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px 120px 50px 120px;
+    border-radius: 15px;
+}
+
+label {
+    align-self: start;
+    cursor: text;
+    color: #BA0C2F;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.security-form input[type="text"],
+.security-form button {
+    font-family: 'Lato';
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    border: 2px solid #BA0C2F;
+}
+
+.security-form button {
+    margin-top: 10px;
+    background-color: #BA0C2F;
+    color: white;
+    cursor: pointer;
+    border: 2px solid #BA0C2F;
+    transition: background-color 0.3s ease;
+}
+
+.security-form button:hover {
+    background-color: #950924;
+    border: 2px solid #950924;
+}
+
+.edit-mode-on {
+    background-color: white;
+    cursor: text;
+}
+
+.edit-mode-off {
+    background-color: rgb(242, 242, 242);
+    cursor: not-allowed;
+    
+}
+
+.button-group {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+button {
+    
+    width: 100%;
+}
+
+.attributeFields{
+    width: 100%
+}
+
+.category{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+ 
+}
+
+.categoryAddAttribute{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+   
+}
+
+.categoryAddAttribute > input{
+    
+    height: fit-content;
+    padding: 10px;
+}
+
+
+
+.categoryAddAttribute > button{
+    margin-top: 0;
+    width: 100%;
+    justify-content: center;
+    margin-left: 5px;
+     
+    
+     background-color: #BA0C2F;
+     padding: 2px;
+     border-radius: 5px;
+     font-size: medium;
+     font-weight: bold;
+     color: white;
+}
+
+.attributeBin{
+    display: flex;
+    flex-direction: row;
+}
+.categoryAddAttribute > button > i{
+    margin-top: 0;
+    margin-right: 5px;
+}
+
+.attributeFields > button{
+    margin-top: 2.5px;
+    box-shadow: none;
+    margin-left: 15px;
+    background-color: transparent;
+    border: 2px solid white;
+    width: fit-content;
+    height: fit-content;
+}
+
+.attributeFields > button:hover{
+    background-color: #BA0C2F;
+    border: 2px solid #BA0C2F;
+   
+}
+
+.attributeFields > button:hover .fa-trash{
+    color: white !important;
+}
+
+.attributeFields{
+    display: flex;
+    flex-direction: row;
+}
