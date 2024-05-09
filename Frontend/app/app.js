@@ -690,10 +690,10 @@ OnlineLibrary.service('homeService', function($http) {
             controller: 'confirmation-controller',
             resolve: {
                 title: function(){
-                    return 'Removing from Favourites';
+                    return 'Deleting Document';
                 },
                 message: function(){
-                    return 'Are you sure you want to remove this item from favourites';
+                    return 'Are you sure you want to delete this item?';
                 }
             }
         }).result.then(function() { }, function(reason) { 
