@@ -1,0 +1,147 @@
+
+.document-Container {
+    margin-top: 8%;
+    display: flex;
+    justify-content: center;
+    
+}
+
+.title > h2 {
+    color: #BA0C2F;
+    font-size: 40px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    margin-right: auto;
+}
+
+.icon-group-doc {
+    display: flex;
+    flex-direction: row;
+    margin-left: 20px;
+    align-items: center;
+}
+
+.icon-group-doc > i {
+    color: #BA0C2F;
+    cursor: pointer;
+}
+
+.document-Container form {
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Lato';
+    align-items: flex-start;
+    border: 4px solid #BA0C2F;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    padding: 40px 40px 40px 40px;
+    border-radius: 15px;
+}
+
+.attributes {
+    align-items: start;
+    display: flex;
+    flex-direction: column; 
+    margin-left: 0px;
+    width: 100%;
+}
+.attributes2 {
+    display: flex;
+    flex-direction: column; 
+    margin-left: 0px;
+    width: 100%;
+}
+
+.attributes label {
+    cursor: text;
+    color: #BA0C2F;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 10px;
+} 
+
+.attributes > h3 {
+    font-size: 20px;
+    cursor: text;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.attributes2 label {
+    cursor: text;
+    color: #BA0C2F;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 10px;   
+} 
+
+.document-title {
+    margin: 0;
+    flex-direction: row;
+    width: 100%;
+    justify-content: start;
+    margin-bottom: 20px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"] {
+    width:100%;
+    margin-left: 0 !important;
+    font-family: 'Lato';
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    border: 2px solid #BA0C2F;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+button {
+    font-family: 'Lato';
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    background-color: #BA0C2F;
+    color: white;
+    cursor: pointer;
+    border: 2px solid #BA0C2F;
+    transition: background-color 0.3s ease;
+}
+
+.button-group {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.edit-mode-on {
+    background-color: white;
+    cursor: text;
+}
+
+.edit-mode-off {
+    background-color: rgb(242, 242, 242);
+    cursor: not-allowed;
+}
+
+.checkbox-text {
+    color: #BA0C2F;
+    font-weight: bold;
+}
+
+h3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #BA0C2F;
+    font-size: 28px;
+    align-self: center;
+}

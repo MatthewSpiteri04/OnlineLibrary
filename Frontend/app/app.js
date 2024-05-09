@@ -46,6 +46,10 @@ OnlineLibrary.config(['$routeProvider', function($routeProvider) {
         templateUrl:'views/myUploads.html',
         controller: 'my-uploads-controller'
     })
+    .when('/viewDocument/:id', {
+        templateUrl:'views/viewDocument.html',
+        controller: 'viewDocumentController'
+    })
     .otherwise({
         redirectTo: '/home'
     });
@@ -166,6 +170,11 @@ OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favourite
                 console.log($scope.filteredItems);
             });
         };
+
+        $scope.viewDocument = function(document){
+            console.log(document.id);
+            window.location.href="#!/viewDocument/"+document.id;
+        }
 
         $scope.toggleFavourite = function(favourite, i){
             $uibModal.open({
@@ -295,6 +304,7 @@ OnlineLibrary.service('homeService', function($http) {
             form.addEventListener('submit', handleSubmit);
         
             function handleSubmit(event) {
+                console.log('pressed');
                 var attributeList = [];
                 const formData = new FormData(event.currentTarget);
         
@@ -338,9 +348,11 @@ OnlineLibrary.service('homeService', function($http) {
                                     return "Your file has been successfully uploaded.";
                                 }
                             }
-                        }).result.then(function() { }, function(reason) {});
+                        }).result.then(function() { }, function(reason) {
+                            location.reload();
+                        });
                     }
-                    window.location.href = "#!/home"
+                    window.location.href = "#!/home";
                 })        
             }
         
@@ -384,6 +396,10 @@ OnlineLibrary.service('homeService', function($http) {
         author: null,
         language: null
     };
+
+    $scope.viewDocument = function(document){
+        window.location.href="#!/viewDocument/"+document.id;
+    }
 
     $scope.submitFilterData = function() {
         $scope.searchForDocuments( $scope.searchString ).then(function(){
@@ -507,6 +523,31 @@ OnlineLibrary.service('homeService', function($http) {
     }
   }]);
 
+  OnlineLibrary.service('documentService', function($http) {
+    this.updateDocument = function(document, id) {
+        
+        attr = [];
+
+        document.attributes.forEach(element => {
+            var x = angular.copy(element);
+            x.value = x.value.toString();
+            attr.push(x);
+        });
+        
+        
+        doc = document.document;
+
+        docTemp = {
+            document: doc,
+            attributes: attr,
+            userId: id
+        };
+        console.log(docTemp)
+
+        return $http.put('https://localhost:44311/api/UpdateDocument', docTemp);
+    };
+});
+
   OnlineLibrary.controller('helpAnswerController', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
     $scope.questionId = $routeParams.id;
 
@@ -514,6 +555,160 @@ OnlineLibrary.service('homeService', function($http) {
         .then(response => {
             $scope.helpDetails = response.data;
         })    
+  }]);
+
+  OnlineLibrary.controller('viewDocumentController', ['$scope', '$http', '$routeParams', 'userService', '$uibModal', 'uploadService', 'documentService', 'myUploadsService', function($scope, $http, $routeParams, userService, $uibModal, uploadService, documentService, myUploadsService) {
+    $scope.documentId = $routeParams.id;
+    $scope.user = userService.getCurrentUser();
+
+    $scope.editMode = false;
+
+    $scope.$on('dataChanged', function(event, data) {
+        $scope.user = data;
+        });
+
+    $scope.loadDetails = function(){
+        var id = 0
+        if ($scope.user != null) {
+            id = $scope.user.id
+        }
+        $http.get('https://localhost:44311/api/getDocument/' + $scope.documentId + '/' + id)
+            .then(response => {
+                $scope.Document = response.data;
+                $scope.Document.attributes.forEach(element => {
+                    if(element.tag == "number"){
+                        element.value = parseInt(element.value);
+                    }
+                    if(element.tag == "date"){
+                        element.value = new Date(element.value);
+                    }
+                });
+                $scope.docUploadDate = new Date($scope.Document.document.uploadDate).toLocaleString();
+                $scope.Document.attributes.forEach(element => {
+                    if(element.value == 'on' && element.tag == 'checkbox'){
+                        element.value = true;
+                    }
+                    else if (element.value != 'on' && element.tag == 'checkbox') {
+                        element.value = false;
+                    }
+                });
+                console.log($scope.Document);
+        });
+    }
+
+    $scope.downloadItem = function(document) {
+        $http.post('https://localhost:44311/api/Download/Document', document, { responseType: 'arraybuffer' }).then(function(response) {
+            var blob = new Blob([response.data]);
+            var url = window.URL.createObjectURL(blob);
+            
+            // Create anchor element
+            var a = angular.element('<a></a>');
+            a.attr({
+                href: url,
+                download: document.title + document.fileExtension
+            });
+
+            // Append anchor element to document body
+            angular.element(document.body).append(a);
+
+            // Simulate click event
+            a[0].click();
+            
+            // Clean up
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        })
+        .catch(function(error) {
+            console.error('Error downloading document:', error);
+        });
+    }
+
+    $scope.toggleEdit = function() {
+        if($scope.user != null){
+            if ($scope.editMode) {
+                
+                $scope.editMode = false;
+
+                $scope.Document.attributes.forEach(element => {
+                    if(element.value == true && element.tag == 'checkbox'){
+                        element.value = 'on';
+                    }
+                    if (element.value == false && element.tag == 'checkbox') {
+                        element.value = '';
+                    }
+                });
+
+                documentService.updateDocument($scope.Document, $scope.user.id)
+                .then(response => {
+                    $scope.loadDetails();
+                });
+            }
+            else {
+                $scope.editMode = true;
+            }
+        }
+        else {
+
+        }
+    }
+
+    $scope.toggleFavourite = function(document) {
+        if($scope.user == null || $scope.user == ''){
+            $uibModal.open({
+                templateUrl: 'assets/elements/popup.html',
+                controller: 'popup-controller',
+                resolve: {
+                    title: function(){
+                        return 'User Not Logged In';
+                    },
+                    message: function(){
+                        return 'This feature requires the user to be logged in.';
+                    }
+                }
+              }).result.then(function() {}, function(reason) {}); // Handling the modal return
+        } else {
+            var request = {
+                documentId: document.id,
+                userId: $scope.user.id,
+                isFavourite: document.isFavourite
+            };
+            $http.post('https://localhost:44311/api/Toggle/Favourite', request).then(function() {
+                $scope.loadDetails();
+            });
+            
+        }
+    }
+
+    $scope.deleteItem = function(){
+
+        $uibModal.open({
+            templateUrl: 'assets/elements/confirmation.html',
+            controller: 'confirmation-controller',
+            resolve: {
+                title: function(){
+                    return 'Removing from Favourites';
+                },
+                message: function(){
+                    return 'Are you sure you want to remove this item from favourites';
+                }
+            }
+        }).result.then(function() { }, function(reason) { 
+            if(reason == 'ok'){
+                myUploadsService.deleteDocument($scope.Document.document).then(response => {
+                    window.location.href = '#!/home'
+                });
+            }
+        });
+
+        
+    }
+
+    uploadService.getLanguages()
+    .then(data => { 
+        $scope.languages = data});
+
+    $scope.loadDetails();
+
   }]);
 
   OnlineLibrary.controller('myInfo-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
@@ -796,6 +991,11 @@ OnlineLibrary.controller('my-uploads-controller', ['$scope', 'userService', 'myU
             myUploadsService.deleteDocument(document).then(response => {
                 $scope.searchForDocuments($scope.searchString);
             });
+        }
+
+        $scope.viewDocument = function(document){
+            console.log(document.id)
+            window.location.href="#!/viewDocument/"+document.id;
         }
 
         $scope.submitFilterData = function() {
