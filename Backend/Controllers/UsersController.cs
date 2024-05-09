@@ -2,10 +2,12 @@
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
+using MailKit.Net.Smtp;
 
 namespace Backend.Controllers
 {
-    public class UsersController : ControllerBase
+    public class UsersController : Controller
     {
         UserService _userService = new UserService();
 
@@ -23,6 +25,15 @@ namespace Backend.Controllers
             return _userService.doesUserExist(login);
         }
 
+        [HttpGet]
+        [Route("api/User/UpdateRoles/{userId}/{newRole}")]
+
+        //public IActionResult UpdateRole(string userId, string newRole)
+       // {
+            
+
+        //}
+
         [HttpPost]
         [Route("api/User/Login")]
         public User Login([FromBody] LoginData loginInfo)
@@ -39,6 +50,48 @@ namespace Backend.Controllers
             return _userService.createUser(user);
         }
 
-       
+        private readonly IEmailSender emailSender;
+
+        public UsersController(IEmailSender emailSender)
+        {
+            this.emailSender = emailSender;
+        }
+
+        [HttpPost]
+        [Route("api/User/Send")]
+        public async Task<IActionResult> Index([FromBody] EmailRequestModel model)
+        {
+            var userId = model.UserId;
+            var email = model.Email;
+            var subject = model.Subject;
+            var message = model.Message;
+
+            var localhostUrl = "https://localhost:44311";
+            var link = $"{localhostUrl}/api/User/UpdateRole?userId={userId}";
+
+           
+            var htmlMessageContent = $"Click <a href=\"{link}\">here</a> to update user roles";
+
+            
+            message += $"\n\n{htmlMessageContent}";
+            await emailSender.SendEmailAsync(email,subject, message);
+            return View();
+          
+        }
+
+        [HttpGet]
+        [Route("api/User/UpdateRole")]
+        public IActionResult UpdateUserRole([FromQuery] int userId)
+        {
+            
+            _userService.UpdateUserRole(userId);
+            return Ok(); 
+        }
+
+
+
+
     }
 }
+    
+
