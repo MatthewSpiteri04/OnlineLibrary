@@ -31,6 +31,9 @@
                 <input type="text" ng-disabled="true" class="edit-mode-off" ng-model="Document.document.language">
             </div>
 
+            <hr style="border: 1px solid lightgrey; margin: 30px 0 10px; width: 100%;">
+            <h3> Additional {{Document.document.category}} Fields</h3>
+
             <div style="width: 100%" ng-repeat="attribute in Document.attributes">
                 <div class="attributes" ng-if="attribute.tag != 'checkbox'">
                     <label>{{attribute.name}}</label>
@@ -41,6 +44,10 @@
                 </div>
                 
             </div>
+
+            
+
+
             <div class="button-group">
                 <button style="margin-right: 10px;" ng-click="toggleEdit()" ><i class="{{!editMode ? 'fa-solid fa-pencil' : 'fa-solid fa-check'}}" ng-if="user.id == Document.document.userId" style="margin-right: 10px;"></i>{{!editMode ? 'Edit' : 'Save'}}</button>
                 <button style="margin-right: 10px;" ng-click="downloadItem(Document.document)"><i style="margin-right: 10px;" class="fa-solid fa-download"></i>Download</button>

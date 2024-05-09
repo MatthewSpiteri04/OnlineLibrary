@@ -348,10 +348,11 @@ OnlineLibrary.service('homeService', function($http) {
                                     return "Your file has been successfully uploaded.";
                                 }
                             }
-                        }).result.then(function() { }, function(reason) {});
+                        }).result.then(function() { }, function(reason) {
+                            location.reload();
+                        });
                     }
                     window.location.href = "#!/home";
-                    location.reload();
                 })        
             }
         

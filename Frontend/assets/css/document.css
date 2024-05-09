@@ -76,14 +76,6 @@
     margin-top: 10px;   
 } 
 
-.attributes2 > h3 {
-    font-size: 20px;
-    cursor: text;
-    font-weight: bold;
-    margin-bottom: 5px;
-    margin-top: 5px;
-}
-
 .document-title {
     margin: 0;
     flex-direction: row;
@@ -124,6 +116,7 @@ button {
 }
 
 .button-group {
+    margin-top: 30px;
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -142,4 +135,13 @@ button {
 .checkbox-text {
     color: #BA0C2F;
     font-weight: bold;
+}
+
+h3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #BA0C2F;
+    font-size: 28px;
+    align-self: center;
 }
