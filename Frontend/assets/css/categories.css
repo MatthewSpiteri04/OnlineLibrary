@@ -6,6 +6,7 @@
     padding-left: 50px;
 }
 
+
 .table-wrap {
     border-radius: 5px; /* Adjust the value to your preference */
     overflow: hidden;
@@ -102,16 +103,11 @@ tr {
 .nameAndtypeDisabled{
     display: flex;
     flex-direction: row;
-}
-
-.name{
-    margin-left: 25px;
-    margin-right: -37px;
+    flex-direction: column;
 }
 
 .typeDisabled{
     margin-top: 0;
-    margin-left: 87px;
 }
 
 .typeDisabled > input{
@@ -134,3 +130,89 @@ tr {
 }
 
 
+/* The switch - the box around the slider */
+.switch {
+    font-size: 17px;
+    position: relative;
+    display: inline-block;
+    width: 3.5em;
+    height: 2em;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff;
+    border: 1px solid #adb5bd;
+    transition: .4s;
+    border-radius: 30px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 1.4em;
+    width: 1.4em;
+    border-radius: 20px;
+    left: 0.27em;
+    bottom: 0.25em;
+    background-color: #adb5bd;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #BA0C2F;
+    border: 1px solid #BA0C2F;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #BA0C2F;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(1.4em);
+    background-color: #fff;
+  }
+
+  .custom-attribute {
+    flex-direction: row;
+    display: flex;
+  }
+
+  .button-att-container {
+    flex-direction: column;
+    display: flex;
+    margin-left: 20px;
+  }
+
+  .add-attrbt-btn {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    background-color: #BA0C2F;
+    color: white;
+    cursor: pointer;
+    border: 2px solid #BA0C2F;
+    transition: background-color 0.3s ease;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 5px;
+    height: fit-content;
+    width: fit-content;
+}
+
+.add-attrbt-btn:hover {
+    background-color: #950924;
+    border: 2px solid #950924;
+}

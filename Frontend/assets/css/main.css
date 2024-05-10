@@ -337,8 +337,10 @@ html {
     margin-left: auto;
     margin-right: auto;
     margin-top: 120px;
-    width: 1000px;
-    padding-right: 60px;
+    padding: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
+    width: fit-content;
     border-style: solid;
     border-color: #BA0C2F;
     border-radius: 7px;
@@ -355,10 +357,6 @@ html {
 .Categories > h1{
     display: flex;
     justify-content: center;
-}
-
-.Category-input > h2{
-    margin-bottom: 5px;
 }
 
 .Category-Section{
@@ -443,7 +441,7 @@ html {
 
 .Attributes {
     display: flex;
-    
+    flex-direction: row;
     justify-content: center;
     align-items: center;
    
@@ -451,8 +449,6 @@ html {
 
 .Attribute-Input{
     display: flex;
-    
-   
 }
 
 
@@ -467,7 +463,6 @@ html {
     font-size:small;
     font-weight: bolder;
     margin-left: 5px;
-    
 }
 
 
@@ -495,9 +490,7 @@ html {
 
 .Attribute-Name, .Attribute-Type{
     display: flex;
-    flex-direction: column;
-    margin-left: 20px;
-   
+    flex-direction: column; 
     
 }
 
@@ -507,7 +500,7 @@ html {
 }
 
 
-.Attribute-Input  select, .Attribute-Name > input, .TypeName > input{
+select, .Attribute-Name > input, .TypeName > input{
     font-family: 'Lato';
     margin-bottom: 15px;
     padding: 10px;
@@ -521,7 +514,7 @@ html {
 
 .Type{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 
 .TypeName, .Attribute-Type{
@@ -529,10 +522,6 @@ html {
     flex-direction: column;
 }
 
-.Attribute-Type{
-    margin-left: 50px;
-    margin-top: -44px;
-}
 
 .Buttons{
     display: flex;
@@ -545,9 +534,10 @@ html {
 .View{
     background-color: #BA0C2F;
     color: white;
-    padding: 5px;
+    padding: 10px;
     border: none;
-    width: fit-content;
+    width: max-content;
+    height: max-content;
     border-radius: 7px;
     font-size:medium;
     font-weight: bolder;

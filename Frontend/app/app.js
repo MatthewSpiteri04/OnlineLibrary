@@ -1156,6 +1156,9 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
     $scope.attributeTypes = [];
     $scope.attributes = [];
     $scope.categories = [];
+
+    $scope.tempItem = null;
+    $scope.showList = false;
     
     if ($scope.user != null) {
         if($scope.user.Roles.includes('Manage Categories')) {
@@ -1223,11 +1226,11 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
             
 
             $scope.addInputField = function() {
-                $scope.inputFields.push({ 
+                $scope.tempItem ={ 
                     Name: '',
                     listView: true,
                     placeholder: 'Select Type Name'
-                });
+                };
             };
             
             $scope.removeInputField = function(index) {
