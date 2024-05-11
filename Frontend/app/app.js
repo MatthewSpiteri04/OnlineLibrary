@@ -1232,15 +1232,24 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
                     placeholder: 'Select Type Name'
                 };
             };
+
+            $scope.assignToList = function(){
+                $scope.inputFields.push($scope.tempItem);
+                $scope.tempItem = null;
+            };
             
             $scope.removeInputField = function(index) {
                 $scope.inputFields.splice(index, 1);
             };
 
-            $scope.changeType = function(id, i) {
+            $scope.removeTempField = function() {
+                $scope.tempItem = null;
+            };
+
+            $scope.changeType = function(temp) {
                 $scope.attributes.forEach(element => {
-                    if(element.id == id){
-                        i.placeholder = element.typeName;
+                    if(element.id == temp.Id){
+                        temp.placeholder = element.typeName;
                     }
                 });
             };
