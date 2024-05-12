@@ -87,6 +87,7 @@ OnlineLibrary.service('userService', function($rootScope, $http) {
                 sessionStorage.setItem('loginData', JSON.stringify(newValue));
                 $rootScope.$broadcast('dataChanged', newValue);
             });
+            console.log(newValue)
         }
         else {
             sessionStorage.setItem('loginData', JSON.stringify(null));
@@ -270,7 +271,7 @@ OnlineLibrary.service('homeService', function($http) {
     };
 });
 
-  OnlineLibrary.controller('upload-controller', ['$scope', 'userService', 'uploadService', '$uibModal', function($scope, userService, uploadService, $uibModal){
+  OnlineLibrary.controller('upload-controller', ['$scope', 'userService', 'uploadService', '$uibModal', 'categoryService', function($scope, userService, uploadService, $uibModal, categoryService){
     $scope.user = userService.getCurrentUser();
     $scope.publicAccess = false;
     $scope.attributes = [];
@@ -285,13 +286,33 @@ OnlineLibrary.service('homeService', function($http) {
             uploadService.getCategories()
             .then(data => {
                 $scope.categories = data;
+                console.log($scope.categories);
+            });
+
+            categoryService.getAccessLevels().then(response => {
+                $scope.AccessLevels = response.data;
+                console.log(response.data);
             });
             
             $scope.$on('dataChanged', function(event, data) {
                 $scope.user = data;
             });
+
+            function selectOption(value            ) {
+                var selectElement = document.getElementById("mySelect");
+                selectElement.selectedIndex = value;
+              }
+
+            $scope.getCategoryAccessLevels = function(id){
+                $scope.categories.forEach(element => {
+                    if(element.id == id) {
+                        selectOption(element.publicAccess);
+                    }
+                });           
+             }
         
             $scope.loadAttributes = function(id){
+                $scope.getCategoryAccessLevels(id)
                 uploadService.getAttributes(id)
                 .then(data => {
                     $scope.attributes = data;
@@ -317,8 +338,6 @@ OnlineLibrary.service('homeService', function($http) {
                     attributeList.push({id: attr.id, value: temp});
                 });
                 event.preventDefault();
-
-                formData.set("publicAccess", $scope.publicAccess);
                 formData.set("userId", $scope.user.id);
                 formData.set("attributesListJSON", JSON.stringify(attributeList));
         
@@ -1143,6 +1162,9 @@ OnlineLibrary.service('categoryService', function($http) {
     this.getAttributes = function(){
         return $http.get('https://localhost:44311/api/Categories/GetAttributes');
     };
+    this.getAccessLevels = function() {
+        return $http.get('https://localhost:44311/api/Get/AccessLevels');
+    };
 }); 
 
 OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryService', 'userService', 'uploadService', '$uibModal', '$routeParams', function($scope, $http, categoryService, userService, uploadService, $uibModal, $routeParams){
@@ -1153,6 +1175,7 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
 
     $scope.screen = 'choice';
 
+    $scope.AccessLevels = []
     $scope.attributeTypes = [];
     $scope.attributes = [];
     $scope.categories = [];
@@ -1165,6 +1188,10 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
             $scope.changeScreen = function(value) {
                 $scope.screen = value;
             }
+
+            categoryService.getAccessLevels().then(response => {
+                $scope.AccessLevels = response.data;
+            });
 
             uploadService.getCategories()
             .then(data => {
@@ -1182,14 +1209,35 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
             categoryService.getAttributes()
             .then(response => {
                 $scope.attributes = response.data;
+                $scope.updateAttributes([]);
             })
             .catch(error => {
                 console.error('Failed to fetch attributes:', error);
             });
 
-        
+            $scope.availableAttributes = [];
             $scope.inputFields = [];
 
+            $scope.updateAttributes = function(inputs){
+                var temp = angular.copy($scope.attributes)
+                var list = []
+                var indexes = []
+                inputs.forEach(element => {
+                    if(element.Id) {
+                        list.push(parseInt(element.Id));
+                    }
+                });
+                temp.forEach(function(element, index) {
+                    if(list.includes(element.id)){
+                        indexes.push(index);
+                    }
+                });
+                indexes.forEach(id => {
+                    temp.splice(id, 1);
+                });
+                $scope.availableAttributes = angular.copy(temp);
+                console.log($scope.availableAttributes);
+            }
         
             $scope.toggleView = function(inputField) {
                 // Toggle the listView property to switch between select and input views
@@ -1234,12 +1282,17 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
             };
 
             $scope.assignToList = function(){
+                console.log($scope.tempItem);
                 $scope.inputFields.push($scope.tempItem);
                 $scope.tempItem = null;
+                $scope.updateAttributes($scope.inputFields);
+                
+                
             };
             
             $scope.removeInputField = function(index) {
                 $scope.inputFields.splice(index, 1);
+                $scope.updateAttributes($scope.inputFields);                
             };
 
             $scope.removeTempField = function() {
@@ -1271,6 +1324,7 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
                 }
                 
                 var categoryRequest = {
+                    AccessLevel: parseInt(categoryForm.accessLevel),
                     CategoryName: categoryForm.Name,
                     Attributes: inputFields,
                     UserId: id

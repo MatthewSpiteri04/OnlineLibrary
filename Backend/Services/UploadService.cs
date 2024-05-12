@@ -57,17 +57,8 @@ namespace Backend.Services
         public int SaveUploadedFile(UploadDatabaseRequest request)
         {
             int documentId = -1;
-            int var = -1;
-            if (request.PublicAccess == true)
-            {
-                var = 1;
-            }
-            else
-            {
-                var = 0;
-            }
 
-            query = @"INSERT INTO Documents VALUES (" + request.UserId + @", " + request.CategoryId + @", '" + request.Title + @"', '" + request.LanguageId + @"', GETDATE(), " + var + @", '" + request.DocumentLocation + @"' , '" + request.FileExtension + @"');
+            query = @"INSERT INTO Documents VALUES (" + request.UserId + @", " + request.CategoryId + @", '" + request.Title + @"', '" + request.LanguageId + @"', GETDATE(), " + request.PublicAccess + @", '" + request.DocumentLocation + @"' , '" + request.FileExtension + @"');
                       SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
             SqlDataReader reader = executeQuery();

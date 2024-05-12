@@ -110,10 +110,27 @@ tr {
     margin-top: 0;
 }
 
-.typeDisabled > input{
+.select-disabled {
+    cursor: not-allowed;
+    background-color: light-dark(rgba(239, 239, 239, 0.3), rgba(59, 59, 59, 0.3));
+    color: black;
+    font-family: 'Lato';
+    margin-bottom: 15px;
+    padding: 10px 10px 10px 6px;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 350px;
+    box-sizing: border-box;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    border: 2px solid #BA0C2F;
+}
+
+.typeDisabled > input {
+    cursor: not-allowed;
     font-family: 'Lato';
     margin-bottom: 15px;
     padding: 10px;
+    height: 45px;
     border-radius: 5px;
     font-size: 16px;
     width: 350px;
@@ -158,6 +175,17 @@ tr {
     border: 1px solid #adb5bd;
     transition: .4s;
     border-radius: 30px;
+  }
+
+  #showAttr:hover {
+    text-decoration: underline;
+  }
+
+  .footer-component {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
   }
   
   .slider:before {
@@ -209,11 +237,17 @@ tr {
     font-size: 14px;
     border-radius: 5px;
     height: fit-content;
-    width: 140px;
+    width: 100%;
     text-align: center;
 }
 
-.add-attrbt-btn:hover {
+.add-attrbt-btn:hover:not([disabled]) {
     background-color: #950924;
     border: 2px solid #950924;
+}
+
+.add-attrbt-btn[disabled]{
+    background-color: #c56a7c;
+    border: 2px solid #c56a7c;
+    cursor: default;
 }

@@ -93,7 +93,7 @@ namespace Backend.Controllers
 
 			if (validAttributes && validCategory && validUser && validAttributeList)
 			{
-				int categoryId = _categoryService.createCategory(request.CategoryName);
+				int categoryId = _categoryService.createCategory(request.CategoryName, request.AccessLevel);
 
 				List<int> attributeId = new List<int>();
 
@@ -142,6 +142,13 @@ namespace Backend.Controllers
             return _categoryService.updateCategory(request);
 
         }
+
+		[HttpGet]
+		[Route("api/Get/AccessLevels")]
+		public List<AccessLevels> GetAccessLevels()
+		{
+			return _categoryService.getAccessLevels();
+		}
 
     }
 }

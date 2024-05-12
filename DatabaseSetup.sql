@@ -28,6 +28,7 @@ CREATE TABLE Users(
 
 CREATE TABLE Categories(
 	Id INT IDENTITY(1,1) PRIMARY KEY,
+	PublicAccess INT,
 	[Name] VARCHAR(50)
 );
 
@@ -65,7 +66,7 @@ CREATE TABLE Documents(
 	Title NVARCHAR(100),
 	LanguageId INT,
 	UploadDate DATETIME,
-	PublicAccess BIT,
+	PublicAccess INT,
 	DocumentLocation NVARCHAR(MAX),
 	FileExtension NVARCHAR(10),
 	FOREIGN KEY (UserId) REFERENCES Users(Id),
@@ -108,7 +109,6 @@ CREATE TABLE HelpDetails (
 	Question Nvarchar(500),
 	AnswerText Nvarchar(500)
 );
-
 
 
 INSERT INTO Roles VALUES ('Public'), ('Student'), ('Lecturer'), ('Librarian'), ('Master Librarian');

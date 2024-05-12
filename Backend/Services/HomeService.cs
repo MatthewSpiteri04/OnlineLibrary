@@ -28,7 +28,8 @@ namespace Backend.Services
                 list.Add(new CategoryRequest()
                 {
                     Id = reader.GetInt32(0),
-                    Type = reader.GetString(1)
+                    PublicAccess = reader.GetInt32(1),
+                    Type = reader.GetString(2)
                 });
             }
             reader.Close();

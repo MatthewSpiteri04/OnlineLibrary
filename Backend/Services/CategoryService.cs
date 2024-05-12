@@ -60,7 +60,7 @@ namespace Backend.Services
 
             while (reader.Read())
             {
-                category = new Categories { Id = reader.GetInt32(0), Name = reader.GetString(1)};
+                category = new Categories { Id = reader.GetInt32(0), PublicAccess = reader.GetInt32(1), Name = reader.GetString(2)};
             }
 
 			reader.Close();
@@ -97,7 +97,7 @@ namespace Backend.Services
 
 
 
-        public int createCategory(string category)
+        public int createCategory(string category, int accessLevel)
 		{
 			query = @"DECLARE @Result AS INT = -1;
 
@@ -109,8 +109,8 @@ namespace Backend.Services
 
 					IF @Result = 0
 					BEGIN
-						INSERT INTO Categories ([Name]) 
-						VALUES ('" + category + @"');
+						INSERT INTO Categories ([Name], [PublicAccess]) 
+						VALUES ('" + category + @"', " + accessLevel + @");
 
 						SELECT CAST(SCOPE_IDENTITY() AS INT);
 
@@ -336,7 +336,7 @@ namespace Backend.Services
 
             while (reader.Read())
             {
-                category = new Categories { Id = reader.GetInt32(0), Name = reader.GetString(1) };
+                category = new Categories { Id = reader.GetInt32(0), PublicAccess = reader.GetInt32(1), Name = reader.GetString(2) };
             }
 
             reader.Close();
@@ -392,6 +392,23 @@ namespace Backend.Services
 
             return categoryAttributeUpdate;
         
+        }
+
+        public List<AccessLevels> getAccessLevels()
+        {
+			query = @"SELECT * FROM Roles";
+			List<AccessLevels> list = new List<AccessLevels>();
+			SqlDataReader reader = executeQuery();
+			while(reader.Read()) 
+			{
+				list.Add(new AccessLevels
+				{
+					Id = reader.GetInt32(0),
+					Description = reader.GetString(1),
+				});
+			}
+
+			return list;
         }
     }
 }
