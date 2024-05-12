@@ -1,4 +1,6 @@
 <link rel="stylesheet" href="assets/css/categoryEditor.css" type="text/css" />
+<link rel="stylesheet" href="assets/css/categories.css" type="text/css" />
+
 <div ng-include="'assets/elements/sidebar.html'"></div>
 <div class="security-form">
   <form>
@@ -18,7 +20,8 @@
         />
 
         <button
-          ng-show="editMode"
+          style="padding: 10px;"
+          ng-if="editMode"
           ng-disabled="!editMode"
           ng-click="addInputField()"
         >
@@ -27,21 +30,23 @@
         </button>
       </div>
     </div>
-    <label>Attributes</label>
+    <label>Existing Attributes</label>
     <div
       class="attributeFields"
       ng-repeat="attribute in categoryResponse.attributes"
     >
-      <div ng-if="attribute.new != true">
+      <div class="attr-section" ng-if="attribute.new != true">
         <input
-          placeholder="Enter Last Name"
-          type="text"
+          type="text" style="margin-right: 10px;"
           ng-model="attribute.name"
           ng-disabled="true"
           class="edit-mode-off"
         />
+        <input type="text" ng-disabled="true" ng-model="attribute.typeName" class="edit-mode-off">
       </div>
-      <div ng-if="attribute.new == true">
+
+      <!-- old -->
+      <!-- <div ng-if="attribute.new == true">
         <div class="Attributes">
           <div class="Attribute-Input">
             <div class="Attribute-Name">
@@ -91,11 +96,88 @@
             </div>
           </div>
         </div>
-      </div>
-      <button ng-show="editMode" ng-click="removeInputField($index)">
+      </div> -->
+      <!-- <button ng-show="editMode" ng-click="removeInputField($index)">
         <i class="fa-solid fa-trash" style="color: #ba0c2f"></i>
-      </button>
+      </button> -->
     </div>
+
+     <!-- new -->
+     <div>
+      <hr ng-if="tempItem != null" style="border: 1px solid lightgrey; margin: 20px 0 30px;">
+      <div class="custom-attribute"  ng-if="tempItem != null">
+        <div class="Attribute-Name" >
+          <div class="nameAndTypeDisabled" ng-show="tempItem.listView">
+            <div class="name">
+              <h2 style="margin-bottom: 5px;">Attribute Name</h2>
+              <select
+                ng-model="tempItem.Id"
+                ng-change="changeType(tempItem)"
+              >
+                <option value="" disabled selected>
+                  Select Existing Attribute
+                </option>
+                <option
+                  ng-repeat="attribute in availableAttributes"
+                  value="{{ attribute.id }}"
+                >
+                  {{ attribute.name }}
+                </option>
+              </select>
+            </div>
+            <div style="margin-top: 10px;" class="typeDisabled">
+              <h2 style="margin-bottom: 5px;">Select Attribute Type</h2>
+              <input style="margin-bottom: 0;" disabled type="text" ng-model="tempItem.placeholder" />
+            </div>
+          </div>
+
+          <div ng-hide="tempItem.listView">
+            <div class="Type">
+              <div class="TypeName">
+                <h2 style="margin-bottom: 5px;">Attribute Name</h2>
+                <input
+                style="padding: 10px;"
+                  placeholder="Enter Attribute Name"
+                  type="text"
+                  ng-model="tempItem.Name"
+                />
+              </div>
+              <div style="margin-top: 10px;" class="Attribute-Type">
+                <h2 style="margin-bottom: 5px;">Select Attribute Type</h2>
+                <select style="margin-bottom: 0;" ng-model="tempItem.TypeId">
+                  <option value="" disabled selected>Select Type Name</option>
+                  <option
+                    ng-repeat="type in attributeTypes"
+                    value="{{ type.id }}"
+                  >
+                    {{ type.typeName }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 0;" class="button-att-container">
+          <div style="margin-bottom: auto;">
+            <h2 style="margin-bottom: 0px; font-size: 15px;">{{tempItem.listView ? 'Pick Attribute' : 'Create New Attribute'}}</h2>
+            <label class="switch">
+              <input ng-model="tempItem.listView" ng-click="tempItem.listView = !tempItem.listView" type="checkbox">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div style="display: flex; margin-top: 7.5px;">
+            <div ng-click="removeTempField()" class="add-attrbt-btn" style=" margin-bottom: 0px"><i class="fa-solid fa-trash add-icon" style="padding-right: 8px;"></i><strong>Remove Attribute</strong></div>
+          </div>
+          <div style="display: flex; margin-top: auto;">
+            <button ng-click="assignToList()" class="add-attrbt-btn" ng-disabled="(!tempItem.listView && (!tempItem.Name || !tempItem.TypeId)) || (tempItem.listView && !tempItem.Id)"><i class="fa-solid fa-plus add-icon" style="padding-right: 6px;"  ></i><strong>Assign Attribute</strong></button>
+          </div>
+        </div>
+      </div>
+
+      <hr ng-if="tempItem != null" style="border: 1px solid lightgrey; margin: 20px 0 30px;">
+
+    </div>
+
 
     <div class="button-group">
       <button style="margin-right: 10px" ng-click="updateCategory()">

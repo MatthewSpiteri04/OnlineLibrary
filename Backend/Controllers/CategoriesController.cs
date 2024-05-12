@@ -137,7 +137,7 @@ namespace Backend.Controllers
 		}
         [HttpPut]
         [Route("api/Update/Category")]
-        public EditCategoryAttributeRequest UpdateCategory([FromBody] EditCategoryAttributeRequest request)
+        public EditCategoryAttributeRequest UpdateCategory([FromBody] EditCategoryAttributeRequestSubmit request)
         {
             return _categoryService.updateCategory(request);
 

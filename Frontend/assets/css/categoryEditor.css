@@ -12,6 +12,11 @@
     margin-top: 20px;
 }
 
+h2 {
+    color: #BA0C2F;
+    font-size: 15px;
+}
+
 .security-form form {
     display: flex;
     flex-direction: column;
@@ -62,6 +67,7 @@ label {
 .edit-mode-on {
     background-color: white;
     cursor: text;
+    margin-right: 5px!important;
 }
 
 .edit-mode-off {
@@ -152,6 +158,11 @@ button {
 }
 
 .attributeFields{
+    display: flex;
+    flex-direction: row;
+}
+
+.attr-section {
     display: flex;
     flex-direction: row;
 }

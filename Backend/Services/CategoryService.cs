@@ -66,21 +66,22 @@ namespace Backend.Services
 			reader.Close();
             conn.Close();
 
-			query = @"SELECT A.* FROM Attributes A
+			query = @"SELECT A.*, [AT].TypeName FROM Attributes A
 					  INNER JOIN CategoryAttributes CA ON A.Id = CA.AttributeId
 					  INNER JOIN Categories C ON C.Id = CA.CategoryId
+					  INNER JOIN AttributeTypes [AT] ON [AT].Id = A.TypeId
 					  WHERE C.Id = " + categoryId;
-			List<Attributes> attributes = new List<Attributes>();
+			List<AttributesWithTypeName> attributes = new List<AttributesWithTypeName>();
 
 			reader = executeQuery();
 
 			while(reader.Read()) {
-				attributes.Add(new Attributes
+				attributes.Add(new AttributesWithTypeName
 				{
 					Id = reader.GetInt32(0),
 					Name = reader.GetString(1),
 					TypeId = reader.GetInt32(2),
-			
+					TypeName = reader.GetString(3)
 				});
 			}
             reader.Close();
@@ -318,7 +319,7 @@ namespace Backend.Services
 
         }
 
-        public EditCategoryAttributeRequest updateCategory(EditCategoryAttributeRequest request)
+        public EditCategoryAttributeRequest updateCategory(EditCategoryAttributeRequestSubmit request)
         {
            
             query = @"UPDATE Categories
@@ -342,7 +343,7 @@ namespace Backend.Services
             reader.Close();
             conn.Close();
 
-			List<Attributes> attribute = new List<Attributes>();
+			List<AttributesWithTypeName> attribute = new List<AttributesWithTypeName>();
 			query = @"	DELETE FROM CategoryAttributes WHERE CategoryId = " + request.Category.Id;
 
 
@@ -366,19 +367,21 @@ namespace Backend.Services
 				executeCommand();
 
 			}
-			query  = @" SELECT A.* FROM Attributes A
-							  INNER JOIN CategoryAttributes CA ON A.Id = CA.AttributeId
-							  INNER JOIN Categories C ON C.Id = CA.CategoryId
-							  WHERE C.Id = " + request.Category.Id;
+            query = @"SELECT A.*, [AT].TypeName FROM Attributes A
+					  INNER JOIN CategoryAttributes CA ON A.Id = CA.AttributeId
+					  INNER JOIN Categories C ON C.Id = CA.CategoryId
+					  INNER JOIN AttributeTypes [AT] ON [AT].Id = A.TypeId
+					  WHERE C.Id = " + request.Category.Id;
 
             reader = executeQuery();
 			while (reader.Read())
 			{
-				attribute.Add(new Attributes
+				attribute.Add(new AttributesWithTypeName
 				{
                     Id = reader.GetInt32(0),
                     Name = reader.GetString(1),
-                    TypeId = reader.GetInt32(2)
+                    TypeId = reader.GetInt32(2),
+					TypeName = reader.GetString(3)
                 });
 			}
            

@@ -1271,7 +1271,7 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
             $scope.editCategory = function(category){
                 window.location.href='#!/categoryEditor/' + category.id
             }
-            
+            //HERE
 
             $scope.addInputField = function() {
                 $scope.tempItem ={ 
@@ -1286,8 +1286,6 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
                 $scope.inputFields.push($scope.tempItem);
                 $scope.tempItem = null;
                 $scope.updateAttributes($scope.inputFields);
-                
-                
             };
             
             $scope.removeInputField = function(index) {
@@ -1370,6 +1368,8 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
     $scope.attributeTypes = [];
     $scope.attributeList = [];
 
+    $scope.tempItem = null;
+
     categoryService.getAttributeTypes()
     .then(response => {
         $scope.attributeTypes = response.data;
@@ -1396,15 +1396,34 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
         }
     };
 
+    // $scope.addInputField = function() {
+    //     $scope.categoryResponse.attributes.push({ 
+    //         Name: '',
+    //         listView: true,
+    //         new: true
+    //     });
+    //     console.log( $scope.categoryResponse.attributes)
+    // };
+    
     $scope.addInputField = function() {
-        $scope.categoryResponse.attributes.push({ 
+        $scope.tempItem ={ 
             Name: '',
             listView: true,
-            new: true
-        });
-        console.log( $scope.categoryResponse.attributes)
+            placeholder: 'Select Type Name'
+        };
     };
-    
+
+    $scope.removeTempField = function() {
+        $scope.tempItem = null;
+    };
+
+    $scope.assignToList = function(){
+        console.log($scope.tempItem);
+        $scope.inputFields.push($scope.tempItem);
+        $scope.tempItem = null;
+        $scope.updateAttributes($scope.inputFields);
+    };
+
     $scope.removeInputField = function(index) {
         $scope.categoryResponse.attributes.splice(index, 1);
     };
