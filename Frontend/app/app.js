@@ -759,7 +759,7 @@ OnlineLibrary.service('homeService', function($http) {
         var request = {
             userId: currentUser.id,
             subject: "Request for Student Access from " + currentUser.firstName + " " + currentUser.lastName,
-            message: "New request to grant student access has been requested from user " + currentUser.firstName + " " + currentUser.lastName + " with ID " + currentUser.id + ". Grant at your own discretion\n"
+            message: "You have recieved a new request from user " + currentUser.firstName + " " + currentUser.lastName + " with ID " + currentUser.id + " for student access. Grant at your own discretion\n"
         };
 
         $http.post('https://localhost:44311/api/User/Send/Student', request)
@@ -804,7 +804,7 @@ OnlineLibrary.service('homeService', function($http) {
         var request = {
             userId: currentUser.id,
             subject: "Request for Lecturer Access from " + currentUser.firstName + " " + currentUser.lastName,
-            message: "New request to grant Lecturer access has been requested from user with ID: " + currentUser.id + ". Grant at your own discretion"
+            message: "You have recieved a new request from user " + currentUser.firstName + " " + currentUser.lastName + " with ID " + currentUser.id + " for lecturer access. Grant at your own discretion\n"
         };
     
         $http.post('https://localhost:44311/api/User/Send/Lecturer', request)
@@ -847,7 +847,7 @@ $scope.requestLibrarianAccess = function() {
     var request = {
         userId: currentUser.id,
         subject: "Request for Librarian Access from " + currentUser.firstName + " " + currentUser.lastName,
-        message: "New request to grant Librarian access has been requested from user with ID: " + currentUser.id + ". Grant at your own discretion"
+        message: "You have recieved a new request from user " + currentUser.firstName + " " + currentUser.lastName + " with ID " + currentUser.id + " for librarian access. Grant at your own discretion\n"
     };
 
     $http.post('https://localhost:44311/api/User/Send/Librarian', request)
