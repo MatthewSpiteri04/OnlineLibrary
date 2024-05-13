@@ -1421,6 +1421,13 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
         }
     };
 
+    $scope.changeType = function(temp) {
+        $scope.availableAttributes.forEach(element => {
+            if(element.id == temp.Id){
+                temp.placeholder = element.typeName;
+            }
+        });
+    };
     
     $scope.addInputField = function() {
         $scope.tempItem ={ 
@@ -1483,6 +1490,8 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
             });
             
             $scope.editMode = false;
+            inputFields = [];
+            tempItem = null;
             
            console.log($scope.categoryResponse.attributes);
             
@@ -1494,8 +1503,6 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
             });
         }
     }
-    
-   
     
     $scope.deleteCategory = function() {
         $http.delete('https://localhost:44311/api/Delete/Category/'+ $scope.categoryId).then(response => {

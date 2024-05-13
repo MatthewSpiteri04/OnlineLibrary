@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Reflection;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -137,9 +138,40 @@ namespace Backend.Controllers
 		}
         [HttpPut]
         [Route("api/Update/Category")]
-        public EditCategoryAttributeRequest UpdateCategory([FromBody] EditCategoryAttributeRequestSubmit request)
+        public IActionResult UpdateCategory([FromBody] EditCategoryAttributeRequestSubmit request)
         {
-            return _categoryService.updateCategory(request);
+            bool validAttributeList = true;
+            HashSet<string> uniqueAttributesRequest = new HashSet<string>();
+            foreach (Attributes attrb in request.Attributes)
+            {
+                if (uniqueAttributesRequest.Contains(attrb.Name) && (attrb.Name != ""))
+                {
+                    validAttributeList = false;
+                }
+                else
+                {
+                    uniqueAttributesRequest.Add(attrb.Name);
+                }
+            }
+
+
+            if (!_categoryService.categoryNameUnique(request.Category.Name, request.Category.Id))
+			{
+				return BadRequest(new { title = "Category Name Already Exists" });
+			}
+			else if (!validAttributeList)
+			{
+				return BadRequest(new { title = "Given Duplicate Attributes in List" });
+
+            }
+			else if (!_categoryService.attributesAreUnique(request.Attributes))
+			{
+				return BadRequest(new { title = "Attributes Already Exist" });
+            }
+			else
+			{
+                return Ok(new {result = _categoryService.updateCategory(request) , title = "Success"});
+            }
 
         }
 

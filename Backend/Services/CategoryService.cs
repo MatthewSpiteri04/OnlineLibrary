@@ -8,6 +8,7 @@ using System.Data;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using System.ComponentModel.DataAnnotations;
+using System.Collections;
 
 
 namespace Backend.Services
@@ -413,5 +414,62 @@ namespace Backend.Services
 
 			return list;
         }
-    }
+
+        public bool categoryNameUnique(string name, int id)
+        {
+			bool bit = false;
+			query = @"SELECT CAST(
+					 CASE 
+					   WHEN EXISTS (SELECT 1 FROM Categories WHERE Name = '" + name + @"' AND Id != " + id +  @") THEN 0 
+					   ELSE 1 
+					 END AS BIT
+				   ) AS Result;";
+			SqlDataReader reader = executeQuery();
+			while (reader.Read())
+			{
+				bit = reader.GetBoolean(0);
+			}
+			reader.Close();
+			conn.Close();
+			return bit;
+        }
+
+        public bool attributesAreUnique(List<Attributes> attributes)
+        {
+            int valid = 0;
+            foreach (Attributes attr in attributes)
+            {
+                query = @"
+
+					IF EXISTS (SELECT 1 FROM Attributes WHERE [Name] = '" + attr.Name + @"' AND Id != " + attr.Id + @")
+						SELECT 1;
+    
+					ELSE
+						SELECT 0;";
+
+                SqlDataReader reader = executeQuery();
+                while (reader.Read())
+                {
+
+                    if (reader.GetInt32(0) == 1 && !attr.ListView)
+                    {
+                        valid = 1;
+                    }
+                }
+                reader.Close();
+                conn.Close();
+
+
+            }
+
+            if (valid == 1)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+    }    
 }

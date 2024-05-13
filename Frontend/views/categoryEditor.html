@@ -120,7 +120,6 @@
           </div>
         </div>
       </div>
-
       <hr ng-if="tempItem != null" style="border: 1px solid lightgrey; margin: 20px 0 30px;">
     </div>
     <div style="width: 100%;" ng-if="editMode">
@@ -140,7 +139,7 @@
                   Select Existing Attribute
                 </option>
                 <option
-                  ng-repeat="attribute in attributes"
+                  ng-repeat="attribute in attributeList"
                   value="{{ attribute.id }}"
                 >
                   {{ attribute.name }}
