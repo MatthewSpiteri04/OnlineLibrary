@@ -424,6 +424,17 @@ OnlineLibrary.service('homeService', function($http) {
         window.location.href="#!/viewDocument/"+document.id;
     }
 
+    $scope.boxFilterSearch = function(category) {
+        $scope.searchForDocuments(null).then(function(){
+            $scope.documents = angular.copy($scope.filteredItems);
+            $scope.filteredItems = $scope.documents.filter(function(document) {
+                var categoryMatch = document.category === category;
+                return categoryMatch
+            });
+            console.log($scope.filteredItems);
+        });
+    }
+
     $scope.submitFilterData = function() {
         $scope.searchForDocuments( $scope.searchString ).then(function(){
             $scope.documents = angular.copy($scope.filteredItems);
@@ -1784,6 +1795,7 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
                       }).result.then(function() {}, function(reason) {});
                 }) 
                 .catch(error => {
+                
                 $uibModal.open({
                     templateUrl: 'assets/elements/popup.html',
                     controller: 'popup-controller',
@@ -1798,7 +1810,7 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
                   }).result.then(function() {
                     
                   }, function(reason) {
-
+                    location.reload();
                 });
             });
         }

@@ -17,11 +17,11 @@
         <br>
         <button class="my-upload-button" ng-click="MyUploads()" ng-if="user.Roles.includes('Academic User')"><i class="fa-solid fa-file-arrow-up"></i><strong>View Your Uploads</strong></button>  
         <br>
-        <button class="my-upload-button" ng-click="requestStudentAccess()" ng-if="user.roleId!=2 && user.roleId!=4"><i class="fa-solid fa-envelope"></i><strong>Request Student Access</strong></button>  
+        <button class="my-upload-button" ng-click="requestStudentAccess()" ng-if="user.roleId == 1"><i class="fa-solid fa-envelope"></i><strong>Request Student Access</strong></button>  
         <br>
-        <button class="my-upload-button" ng-click="requestLecturerAccess()" ng-if="user.roleId!=3"><i class="fa-solid fa-envelope"></i><strong>Request Lecturer Access</strong></button>  
+        <button class="my-upload-button" ng-click="requestLecturerAccess()" ng-if="3 > user.roleId "><i class="fa-solid fa-envelope"></i><strong>Request Lecturer Access</strong></button>  
         <br>
-        <button class="my-upload-button" ng-click="requestLibrarianAccess()" ng-if="!user.Roles.includes('Manage Categories')"><i class="fa-solid fa-envelope"></i><strong>Request Librarian Access</strong></button>  
+        <button class="my-upload-button" ng-click="requestLibrarianAccess()" ng-if="4 > user.roleId"><i class="fa-solid fa-envelope"></i><strong>Request Librarian Access</strong></button>  
         <br>
         <button ng-click="Logout()"><i class="fa-solid fa-right-from-bracket"></i><strong>Log Out</strong></button>  
     </div>
