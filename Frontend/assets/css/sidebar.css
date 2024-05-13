@@ -46,42 +46,4 @@
 }
 
 
-@media (max-width: 1366px){
 
-    .Sidebar-Container-lib{
-        padding-left: 1%;
-        padding-right: 1%;
-
-    }
-    .Sidebar{
-        margin-top: 80px;
-    }
-   
-    .link{
-        margin-bottom: 17px;
-        
-    }
-
-    .link, .link-lib{
-        margin-bottom: 0;
-        
-    }
-
-
-    .link > i {
-        font-size: 3vw;
-        
-    }
-    .link-lib > i{
-        font-size: 2.8vw;
-
-    }
-
-    .link > h3 {
-        font-size: 15px
-    }
-
-    .link-lib > h3{
-        font-size: 12px;
-    }
-}
