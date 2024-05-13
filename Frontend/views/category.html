@@ -26,7 +26,7 @@
       <tr ng-repeat="category in categories track by $index">
         <td>{{$index + 1}}</td>
         <td>{{category.type}}</td>
-        <td>{{category.publicAccess}}</td>
+        <td>{{getDescriptionForPublicAccess(category.publicAccess)}}</td>
         <td style="text-align: left">
           <i
             ng-click="editCategory(category)"

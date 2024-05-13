@@ -118,9 +118,32 @@ INSERT INTO RolesToPrivileges VALUES (2, 2), (2, 5), (4, 2), (4, 5), (4, 1), (5,
 INSERT INTO Languages VALUES  ('Malti'), ('English'), ('Italiano'), ('Español'), ('Français'), ('Deutsch'), ('Português');
 INSERT INTO AttributeTypes VALUES ('Number', 'number'), ('Text', 'text'), ('True/False', 'checkbox'), ('Date', 'date');
 
-INSERT INTO Users VALUES ('Matthew', 'Spiteri', 'Spim04', 'matthewspiteri@gmail.com', 'matt04', 1);
-INSERT INTO Users VALUES ('Gorg', 'Borg', 'Gborg', 'gorgborg@gmail.com', 'gb05', 2);
-INSERT INTO Users VALUES ('Chris', 'Calleja', 'Cc04', 'chriscalleja@gmail.com', 'chris04', 4);
-INSERT INTO Users VALUES ('Anakin', 'Skywalker', 'dvader', 'vader@gmail.com', 'dv', 5);
+
+INSERT INTO Users VALUES ('Anakin', 'Skywalker', 'dvader', 'matthewspiteri04@gmail.com', '80457CF3A7B15AFB8F491F8AE06680DB', 5);
 
 INSERT INTO HelpDetails VALUES ('What is the client portal and how do I use it', '1234'), ('How do I download resources', 'Test');
+
+
+INSERT INTO Attributes VALUES ('ISBN', 2), ('Author', 2), ('Publish Date', 4), ('Publisher', 2), ('Genre', 2), ('Bestseller', 3), ('Edition', 1), ('Pages', 1), ('Supervisor', 2), ('Faculty', 2), ('Degree Program', 2),  ('ISSN', 2);
+
+
+INSERT INTO Categories VALUES (1, 'Book');
+INSERT INTO CategoryAttributes VALUES (1,1), (1,2), (1,3), (1,4), (1,5), (1,6), (1,7), (1,8);
+
+INSERT INTO Categories VALUES (1, 'FYP');
+INSERT INTO CategoryAttributes VALUES (2,2), (2,3), (2,8), (2,9), (2,10), (2,11);
+
+INSERT INTO Categories VALUES (1, 'Article');
+INSERT INTO CategoryAttributes VALUES (3,2), (3,3), (3,4), (3,5), (3,8);
+
+INSERT INTO Categories VALUES (1, 'Journal');
+INSERT INTO CategoryAttributes VALUES (4,2), (4,3), (4,4), (4,5), (4,8), (4,12);
+
+INSERT INTO Categories VALUES (1, 'Thesis');
+INSERT INTO CategoryAttributes VALUES (5,2), (5,3), (5,4), (5,5), (5,8);
+
+INSERT INTO Categories VALUES (1, 'Thesis');
+INSERT INTO CategoryAttributes VALUES (5,2), (5,3), (5,8), (5,9), (5,10), (5,11);
+
+INSERT INTO Categories VALUES (1, 'Audio Book');
+INSERT INTO CategoryAttributes VALUES (5,2), (5,3), (5,8), (5,9), (5,10), (5,11);

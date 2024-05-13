@@ -1441,6 +1441,7 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
     $scope.categories = [];
 
     $scope.tempItem = null;
+    $scope.description = null;
     $scope.showList = false;
     
     if ($scope.user != null) {
@@ -1451,12 +1452,29 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
 
             categoryService.getAccessLevels().then(response => {
                 $scope.AccessLevels = response.data;
+                console.log($scope.AccessLevels);
+                $scope.AccessLevels.forEach(element => {
+                    if(element.id == response.data.id){
+                        $scope.description = element.description;
+                        
+                    }
+                })
             });
-
+           
             uploadService.getCategories()
             .then(data => {
                 $scope.categories = data;
+                console.log($scope.categories);
+
             });
+
+            $scope.getDescriptionForPublicAccess = function(publicAccess) {
+                var accessLevel = $scope.AccessLevels.find(function(level) {
+                    return level.id === publicAccess;
+                });
+               
+                return accessLevel ? accessLevel.description : 'Access level not found';
+            };
 
             categoryService.getAttributeTypes()
             .then(response => {
