@@ -87,6 +87,7 @@ OnlineLibrary.service('userService', function($rootScope, $http) {
                 sessionStorage.setItem('loginData', JSON.stringify(newValue));
                 $rootScope.$broadcast('dataChanged', newValue);
             });
+            console.log(newValue)
         }
         else {
             sessionStorage.setItem('loginData', JSON.stringify(null));
@@ -270,7 +271,7 @@ OnlineLibrary.service('homeService', function($http) {
     };
 });
 
-  OnlineLibrary.controller('upload-controller', ['$scope', 'userService', 'uploadService', '$uibModal', function($scope, userService, uploadService, $uibModal){
+  OnlineLibrary.controller('upload-controller', ['$scope', 'userService', 'uploadService', '$uibModal', 'categoryService', function($scope, userService, uploadService, $uibModal, categoryService){
     $scope.user = userService.getCurrentUser();
     $scope.publicAccess = false;
     $scope.attributes = [];
@@ -285,13 +286,33 @@ OnlineLibrary.service('homeService', function($http) {
             uploadService.getCategories()
             .then(data => {
                 $scope.categories = data;
+                console.log($scope.categories);
+            });
+
+            categoryService.getAccessLevels().then(response => {
+                $scope.AccessLevels = response.data;
+                console.log(response.data);
             });
             
             $scope.$on('dataChanged', function(event, data) {
                 $scope.user = data;
             });
+
+            function selectOption(value            ) {
+                var selectElement = document.getElementById("mySelect");
+                selectElement.selectedIndex = value;
+              }
+
+            $scope.getCategoryAccessLevels = function(id){
+                $scope.categories.forEach(element => {
+                    if(element.id == id) {
+                        selectOption(element.publicAccess);
+                    }
+                });           
+             }
         
             $scope.loadAttributes = function(id){
+                $scope.getCategoryAccessLevels(id)
                 uploadService.getAttributes(id)
                 .then(data => {
                     $scope.attributes = data;
@@ -317,8 +338,6 @@ OnlineLibrary.service('homeService', function($http) {
                     attributeList.push({id: attr.id, value: temp});
                 });
                 event.preventDefault();
-
-                formData.set("publicAccess", $scope.publicAccess);
                 formData.set("userId", $scope.user.id);
                 formData.set("attributesListJSON", JSON.stringify(attributeList));
         
@@ -1143,6 +1162,9 @@ OnlineLibrary.service('categoryService', function($http) {
     this.getAttributes = function(){
         return $http.get('https://localhost:44311/api/Categories/GetAttributes');
     };
+    this.getAccessLevels = function() {
+        return $http.get('https://localhost:44311/api/Get/AccessLevels');
+    };
 }); 
 
 OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryService', 'userService', 'uploadService', '$uibModal', '$routeParams', function($scope, $http, categoryService, userService, uploadService, $uibModal, $routeParams){
@@ -1153,15 +1175,23 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
 
     $scope.screen = 'choice';
 
+    $scope.AccessLevels = []
     $scope.attributeTypes = [];
     $scope.attributes = [];
     $scope.categories = [];
+
+    $scope.tempItem = null;
+    $scope.showList = false;
     
     if ($scope.user != null) {
         if($scope.user.Roles.includes('Manage Categories')) {
             $scope.changeScreen = function(value) {
                 $scope.screen = value;
             }
+
+            categoryService.getAccessLevels().then(response => {
+                $scope.AccessLevels = response.data;
+            });
 
             uploadService.getCategories()
             .then(data => {
@@ -1179,14 +1209,36 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
             categoryService.getAttributes()
             .then(response => {
                 $scope.attributes = response.data;
+                $scope.updateAttributes([]);
             })
             .catch(error => {
                 console.error('Failed to fetch attributes:', error);
             });
 
-        
+            $scope.availableAttributes = [];
             $scope.inputFields = [];
 
+            $scope.updateAttributes = function(inputs){
+                var counter = 0;
+                var temp = angular.copy($scope.attributes)
+                var list = []
+                var indexes = []
+                inputs.forEach(element => {
+                    if(element.Id) {
+                        list.push(parseInt(element.Id));
+                    }
+                });
+                temp.forEach(function(element, index) {
+                    if(list.includes(element.id)){
+                        indexes.push(index);
+                    }
+                });
+                indexes.forEach(id => {
+                    temp.splice(id - counter, 1);
+                    counter += 1;
+                });
+                $scope.availableAttributes = angular.copy(temp);
+            }
         
             $scope.toggleView = function(inputField) {
                 // Toggle the listView property to switch between select and input views
@@ -1220,24 +1272,36 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
             $scope.editCategory = function(category){
                 window.location.href='#!/categoryEditor/' + category.id
             }
-            
+            //HERE
 
             $scope.addInputField = function() {
-                $scope.inputFields.push({ 
+                $scope.tempItem ={ 
                     Name: '',
                     listView: true,
                     placeholder: 'Select Type Name'
-                });
+                };
+            };
+
+            $scope.assignToList = function(){
+                console.log($scope.tempItem);
+                $scope.inputFields.push($scope.tempItem);
+                $scope.tempItem = null;
+                $scope.updateAttributes($scope.inputFields);
             };
             
             $scope.removeInputField = function(index) {
                 $scope.inputFields.splice(index, 1);
+                $scope.updateAttributes($scope.inputFields);                
             };
 
-            $scope.changeType = function(id, i) {
+            $scope.removeTempField = function() {
+                $scope.tempItem = null;
+            };
+
+            $scope.changeType = function(temp) {
                 $scope.attributes.forEach(element => {
-                    if(element.id == id){
-                        i.placeholder = element.typeName;
+                    if(element.id == temp.Id){
+                        temp.placeholder = element.typeName;
                     }
                 });
             };
@@ -1259,6 +1323,7 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
                 }
                 
                 var categoryRequest = {
+                    AccessLevel: parseInt(categoryForm.accessLevel),
                     CategoryName: categoryForm.Name,
                     Attributes: inputFields,
                     UserId: id
@@ -1304,22 +1369,48 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
     $scope.attributeTypes = [];
     $scope.attributeList = [];
 
+    $scope.showList = false;
+
+    $scope.toggleShowList = function() {
+        $scope.showList = !$scope.showList
+    }
+
+    $scope.updateAttributes = function(inputs){
+        var counter = 0;
+        var temp = angular.copy($scope.attributeList)
+        var list = []
+        var indexes = []
+        inputs.forEach(element => {
+            if(element.Id) {
+                list.push(parseInt(element.Id));
+            }
+        });
+        $scope.categoryResponse.attributes.forEach(element => {
+            if(element.id) {
+                list.push(parseInt(element.id));
+            }
+        });
+       
+        temp.forEach(function(element, index) {
+            if(list.includes(element.id)){
+                indexes.push(index);
+            }
+        });
+        indexes.forEach(id => {
+            temp.splice(id - counter, 1);
+            counter += 1;
+        });
+        $scope.availableAttributes = angular.copy(temp);
+        console.log($scope.availableAttributes);
+    }
+
+    $scope.tempItem = null;
+
     categoryService.getAttributeTypes()
     .then(response => {
         $scope.attributeTypes = response.data;
     })
-    .catch(error => {
-        console.error('Failed to fetch attribute types:', error);
-    });
 
-    categoryService.getAttributes()
-    .then(response => {
-        $scope.attributeList = response.data;
-    })
-    .catch(error => {
-        console.error('Failed to fetch attributes:', error);
-    });
-           
     $scope.toggleView = function(inputField) {
         // Toggle the listView property to switch between select and input views
         inputField.listView = !inputField.listView;
@@ -1330,17 +1421,41 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
         }
     };
 
-    $scope.addInputField = function() {
-        $scope.categoryResponse.attributes.push({ 
-            Name: '',
-            listView: true,
-            new: true
+    $scope.changeType = function(temp) {
+        $scope.availableAttributes.forEach(element => {
+            if(element.id == temp.Id){
+                temp.placeholder = element.typeName;
+            }
         });
-        console.log( $scope.categoryResponse.attributes)
     };
     
+    $scope.addInputField = function() {
+        $scope.tempItem ={ 
+            Name: '',
+            listView: true,
+            placeholder: 'Select Type Name'
+        };
+    };
+
+    $scope.removeTempField = function() {
+        $scope.tempItem = null;
+    };
+
+    $scope.removeInputFieldNew = function(index) {
+        $scope.inputFields.splice(index, 1);
+        $scope.updateAttributes($scope.inputFields);                
+    };
+
+    $scope.assignToList = function(){
+        console.log($scope.tempItem);
+        $scope.inputFields.push($scope.tempItem);
+        $scope.tempItem = null;
+        $scope.updateAttributes($scope.inputFields);
+    };
+
     $scope.removeInputField = function(index) {
         $scope.categoryResponse.attributes.splice(index, 1);
+        $scope.updateAttributes($scope.inputFields);                
     };
 
     $http.get('https://localhost:44311/api/Categories/GetCategories/' + $scope.categoryId)
@@ -1348,13 +1463,24 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
         $scope.categoryResponse = response.data;
         console.log($scope.categoryResponse)
 
-    })    
+    }).then(function(){
+        categoryService.getAttributes()
+        .then(response => {
+            $scope.attributeList = response.data;
+            $scope.updateAttributes([]);
+    })
+    });
 
     $scope.updateCategory = function(){
         if($scope.editMode == false){
             $scope.editMode = true;
         }
         else{
+            var attributesListRequest = [];
+            $scope.inputFields.forEach(element => {
+                attributesListRequest.push(element)
+            });
+
             $scope.categoryResponse.attributes.forEach(element => {
                 if(!element.listView && element.new){
                     element.TypeId = parseInt(element.TypeId)
@@ -1362,22 +1488,58 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
                 if(element.listView && element.new){
                     element.Id = parseInt(element.Id)
                 }
+                attributesListRequest.push(element)
             });
+
+            var request = {
+                category: $scope.categoryResponse.category,
+                attributes: attributesListRequest
+            }
             
             $scope.editMode = false;
+            $scope.inputFields = [];
+            tempItem = null;
             
-           console.log($scope.categoryResponse.attributes);
             
-            categoryEditorService.updateCategoryDetails($scope.categoryResponse)
+            categoryEditorService.updateCategoryDetails(request)
             .then(response => {
-                $scope.categoryResponse = response.data;
-                console.log($scope.categoryResponse)
-        
+                $scope.categoryResponse = response.data.result;
+                return response
+                })
+                .then(function(response){
+                    $uibModal.open({
+                        templateUrl: 'assets/elements/popup.html',
+                        controller: 'popup-controller',
+                        resolve: {
+                            title: function(){
+                                return response.data.title;
+                            },
+                            message: function(){
+                                return response.data.message;
+                            }
+                        }
+                      }).result.then(function() {}, function(reason) {});
+                }) 
+                .catch(error => {
+                $uibModal.open({
+                    templateUrl: 'assets/elements/popup.html',
+                    controller: 'popup-controller',
+                    resolve: {
+                        title: function(){
+                            return error.data.title;
+                        },
+                        message: function(){
+                            return error.data.message;
+                        }
+                    }
+                  }).result.then(function() {
+                    
+                  }, function(reason) {
+
+                });
             });
-     }
+        }
     }
-    
-   
     
     $scope.deleteCategory = function() {
         $http.delete('https://localhost:44311/api/Delete/Category/'+ $scope.categoryId).then(response => {

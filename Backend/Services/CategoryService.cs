@@ -8,6 +8,7 @@ using System.Data;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using System.ComponentModel.DataAnnotations;
+using System.Collections;
 
 
 namespace Backend.Services
@@ -60,27 +61,28 @@ namespace Backend.Services
 
             while (reader.Read())
             {
-                category = new Categories { Id = reader.GetInt32(0), Name = reader.GetString(1)};
+                category = new Categories { Id = reader.GetInt32(0), PublicAccess = reader.GetInt32(1), Name = reader.GetString(2)};
             }
 
 			reader.Close();
             conn.Close();
 
-			query = @"SELECT A.* FROM Attributes A
+			query = @"SELECT A.*, [AT].TypeName FROM Attributes A
 					  INNER JOIN CategoryAttributes CA ON A.Id = CA.AttributeId
 					  INNER JOIN Categories C ON C.Id = CA.CategoryId
+					  INNER JOIN AttributeTypes [AT] ON [AT].Id = A.TypeId
 					  WHERE C.Id = " + categoryId;
-			List<Attributes> attributes = new List<Attributes>();
+			List<AttributesWithTypeName> attributes = new List<AttributesWithTypeName>();
 
 			reader = executeQuery();
 
 			while(reader.Read()) {
-				attributes.Add(new Attributes
+				attributes.Add(new AttributesWithTypeName
 				{
 					Id = reader.GetInt32(0),
 					Name = reader.GetString(1),
 					TypeId = reader.GetInt32(2),
-			
+					TypeName = reader.GetString(3)
 				});
 			}
             reader.Close();
@@ -97,7 +99,7 @@ namespace Backend.Services
 
 
 
-        public int createCategory(string category)
+        public int createCategory(string category, int accessLevel)
 		{
 			query = @"DECLARE @Result AS INT = -1;
 
@@ -109,8 +111,8 @@ namespace Backend.Services
 
 					IF @Result = 0
 					BEGIN
-						INSERT INTO Categories ([Name]) 
-						VALUES ('" + category + @"');
+						INSERT INTO Categories ([Name], [PublicAccess]) 
+						VALUES ('" + category + @"', " + accessLevel + @");
 
 						SELECT CAST(SCOPE_IDENTITY() AS INT);
 
@@ -318,7 +320,7 @@ namespace Backend.Services
 
         }
 
-        public EditCategoryAttributeRequest updateCategory(EditCategoryAttributeRequest request)
+        public EditCategoryAttributeRequest updateCategory(EditCategoryAttributeRequestSubmit request)
         {
            
             query = @"UPDATE Categories
@@ -336,13 +338,13 @@ namespace Backend.Services
 
             while (reader.Read())
             {
-                category = new Categories { Id = reader.GetInt32(0), Name = reader.GetString(1) };
+                category = new Categories { Id = reader.GetInt32(0), PublicAccess = reader.GetInt32(1), Name = reader.GetString(2) };
             }
 
             reader.Close();
             conn.Close();
 
-			List<Attributes> attribute = new List<Attributes>();
+			List<AttributesWithTypeName> attribute = new List<AttributesWithTypeName>();
 			query = @"	DELETE FROM CategoryAttributes WHERE CategoryId = " + request.Category.Id;
 
 
@@ -366,19 +368,21 @@ namespace Backend.Services
 				executeCommand();
 
 			}
-			query  = @" SELECT A.* FROM Attributes A
-							  INNER JOIN CategoryAttributes CA ON A.Id = CA.AttributeId
-							  INNER JOIN Categories C ON C.Id = CA.CategoryId
-							  WHERE C.Id = " + request.Category.Id;
+            query = @"SELECT A.*, [AT].TypeName FROM Attributes A
+					  INNER JOIN CategoryAttributes CA ON A.Id = CA.AttributeId
+					  INNER JOIN Categories C ON C.Id = CA.CategoryId
+					  INNER JOIN AttributeTypes [AT] ON [AT].Id = A.TypeId
+					  WHERE C.Id = " + request.Category.Id;
 
             reader = executeQuery();
 			while (reader.Read())
 			{
-				attribute.Add(new Attributes
+				attribute.Add(new AttributesWithTypeName
 				{
                     Id = reader.GetInt32(0),
                     Name = reader.GetString(1),
-                    TypeId = reader.GetInt32(2)
+                    TypeId = reader.GetInt32(2),
+					TypeName = reader.GetString(3)
                 });
 			}
            
@@ -393,5 +397,114 @@ namespace Backend.Services
             return categoryAttributeUpdate;
         
         }
-    }
+
+        public List<AccessLevels> getAccessLevels()
+        {
+			query = @"SELECT * FROM Roles";
+			List<AccessLevels> list = new List<AccessLevels>();
+			SqlDataReader reader = executeQuery();
+			while(reader.Read()) 
+			{
+				list.Add(new AccessLevels
+				{
+					Id = reader.GetInt32(0),
+					Description = reader.GetString(1),
+				});
+			}
+
+			return list;
+        }
+
+        public bool categoryNameUnique(string name, int id)
+        {
+			bool bit = false;
+			query = @"SELECT CAST(
+					 CASE 
+					   WHEN EXISTS (SELECT 1 FROM Categories WHERE Name = '" + name + @"' AND Id != " + id +  @") THEN 0 
+					   ELSE 1 
+					 END AS BIT
+				   ) AS Result;";
+			SqlDataReader reader = executeQuery();
+			while (reader.Read())
+			{
+				bit = reader.GetBoolean(0);
+			}
+			reader.Close();
+			conn.Close();
+			return bit;
+        }
+
+        public bool attributesAreUnique(List<Attributes> attributes)
+        {
+            int valid = 0;
+            foreach (Attributes attr in attributes)
+            {
+               if(attr.Id != null)
+				{
+                    query = @"
+
+					IF EXISTS (SELECT 1 FROM Attributes WHERE [Name] = '" + attr.Name + @"' AND Id != " + attr.Id + @")
+						SELECT 1;
+    
+					ELSE
+						SELECT 0;";
+
+                    SqlDataReader reader = executeQuery();
+                    while (reader.Read())
+                    {
+
+                        if (reader.GetInt32(0) == 1 && !attr.ListView)
+                        {
+                            valid = 1;
+                        }
+                    }
+                    reader.Close();
+                    conn.Close();
+
+                }
+
+            }
+
+            if (valid == 1)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public bool categoryIsUsed(int id)
+        {
+            int valid = 0;
+
+            query = @"
+
+			IF EXISTS (SELECT 1 FROM Documents WHERE CategoryId = " + id + @")
+				SELECT 1;
+    
+			ELSE
+				SELECT 0;";
+
+            SqlDataReader reader = executeQuery();
+            while (reader.Read())
+            {
+
+                valid = reader.GetInt32(0);
+            }
+            reader.Close();
+            conn.Close();
+
+
+            if (valid == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }    
 }

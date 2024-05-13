@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Reflection;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -93,7 +94,7 @@ namespace Backend.Controllers
 
 			if (validAttributes && validCategory && validUser && validAttributeList)
 			{
-				int categoryId = _categoryService.createCategory(request.CategoryName);
+				int categoryId = _categoryService.createCategory(request.CategoryName, request.AccessLevel);
 
 				List<int> attributeId = new List<int>();
 
@@ -137,11 +138,52 @@ namespace Backend.Controllers
 		}
         [HttpPut]
         [Route("api/Update/Category")]
-        public EditCategoryAttributeRequest UpdateCategory([FromBody] EditCategoryAttributeRequest request)
+        public IActionResult UpdateCategory([FromBody] EditCategoryAttributeRequestSubmit request)
         {
-            return _categoryService.updateCategory(request);
+            bool validAttributeList = true;
+            HashSet<string> uniqueAttributesRequest = new HashSet<string>();
+            foreach (Attributes attrb in request.Attributes)
+            {
+                if (uniqueAttributesRequest.Contains(attrb.Name) && (attrb.Name != ""))
+                {
+                    validAttributeList = false;
+                }
+                else
+                {
+                    uniqueAttributesRequest.Add(attrb.Name);
+                }
+            }
+
+			if (_categoryService.categoryIsUsed(request.Category.Id))
+			{
+                return BadRequest(new { title = "Error", message = "Category is already in use by an existing document" });
+            }
+            if (!_categoryService.categoryNameUnique(request.Category.Name, request.Category.Id))
+			{
+				return BadRequest(new { title="Error", message = "Category Name Already Exists" });
+			}
+			else if (!validAttributeList)
+			{
+				return BadRequest(new { title = "Error", message = "Given Duplicate Attributes in List" });
+
+            }
+			else if (!_categoryService.attributesAreUnique(request.Attributes))
+			{
+				return BadRequest(new { title = "Error", message = "Attributes Already Exist" });
+            }
+			else
+			{
+                return Ok(new {result = _categoryService.updateCategory(request) , title = "Success" , message = "Category Updated Successfully" });
+            }
 
         }
+
+		[HttpGet]
+		[Route("api/Get/AccessLevels")]
+		public List<AccessLevels> GetAccessLevels()
+		{
+			return _categoryService.getAccessLevels();
+		}
 
     }
 }

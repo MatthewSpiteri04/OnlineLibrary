@@ -15,15 +15,24 @@
         </select>
 
       <label>Category</label>
-      <select name="categoryId" ng-model="selectedCategoryId" ng-change="loadAttributes(selectedCategoryId)">
+      <select required name="categoryId" ng-model="selectedCategoryId" ng-change="loadAttributes(selectedCategoryId)">
           <option value="" disabled selected>Select Category</option>
           <option ng-repeat="category in categories" value="{{category.id}}">
             {{category.type}}
           </option>
         </select>
-
-      <p class="checkbox-text">Available To Public<input style="margin-left: 8px;" type="checkbox" ng-click="publicAccess = !publicAccess" name="publicAccess"></p>
       
+      <label>Access Level</label>
+      <select id="mySelect" required name="publicAccess" style=" margin-bottom: 30px;">
+          <option value="" disabled selected>Select Access Level</option>
+          <option
+            ng-repeat="level in AccessLevels"
+            value="{{ level.id }}"
+          >
+            {{ level.description }}
+          </option>
+        </select>
+
       <input required type="file" name="file"><br>
 
         <div  ng-show="attributes.length > 0">

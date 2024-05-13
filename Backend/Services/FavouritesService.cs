@@ -44,7 +44,7 @@ namespace Backend.Services
                     Title = reader.GetString(4),
                     Language = reader.GetString(5),
                     UploadDate = reader.GetDateTime(6),
-                    PublicAccess = reader.GetBoolean(7),
+                    PublicAccess = reader.GetInt32(7),
                     DocumentLocation = reader.GetString(8),
                     FileExtension = reader.GetString(9),
                     IsFavourite = reader.GetBoolean(10)
@@ -85,7 +85,7 @@ namespace Backend.Services
                     Title = reader.GetString(4),
                     Language = reader.GetString(5),
                     UploadDate = reader.GetDateTime(6),
-                    PublicAccess = reader.GetBoolean(7),
+                    PublicAccess = reader.GetInt32(7),
                     DocumentLocation = reader.GetString(8),
                     FileExtension = reader.GetString(9),
                     IsFavourite = reader.GetBoolean(10)
