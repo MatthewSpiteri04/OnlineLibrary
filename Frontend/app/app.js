@@ -293,12 +293,12 @@ OnlineLibrary.service('homeService', function($http) {
                 $scope.AccessLevels = response.data;
                 console.log(response.data);
             });
-            
+             
             $scope.$on('dataChanged', function(event, data) {
                 $scope.user = data;
             });
 
-            function selectOption(value            ) {
+            function selectOption(value) {
                 var selectElement = document.getElementById("mySelect");
                 selectElement.selectedIndex = value;
               }
@@ -1565,7 +1565,8 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
                     }
                 });
             };
-        
+            
+            
         
             $scope.createCategoryAndAttributes = function(categoryForm, inputFields) {
                 inputFields.forEach(element => {
@@ -1634,6 +1635,10 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
     $scope.toggleShowList = function() {
         $scope.showList = !$scope.showList
     }
+
+    categoryService.getAccessLevels().then(response => {
+        $scope.AccessLevels = response.data;
+    });
 
     $scope.updateAttributes = function(inputs){
         var counter = 0;
@@ -1721,8 +1726,6 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
     $http.get('https://localhost:44311/api/Categories/GetCategories/' + $scope.categoryId)
     .then(response => {
         $scope.categoryResponse = response.data;
-        console.log($scope.categoryResponse)
-
     }).then(function(){
         categoryService.getAttributes()
         .then(response => {
@@ -1755,7 +1758,7 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
                 category: $scope.categoryResponse.category,
                 attributes: attributesListRequest
             }
-            
+            console.log(request );
             $scope.editMode = false;
             $scope.inputFields = [];
             tempItem = null;
@@ -1818,8 +1821,5 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
                 }
               }).result.then(function() {}, function(reason) {});
         });
-    }
-
-   
-   
+    }  
 }]);

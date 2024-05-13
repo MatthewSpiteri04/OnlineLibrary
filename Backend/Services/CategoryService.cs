@@ -324,7 +324,7 @@ namespace Backend.Services
         {
            
             query = @"UPDATE Categories
-                      SET [Name] = '" + request.Category.Name  + @"'
+                      SET [Name] = '" + request.Category.Name + @"', [PublicAccess] = " + request.Category.PublicAccess + @"
                       WHERE Categories.Id =" + request.Category.Id + @";
 
                       SELECT * FROM Categories WHERE [Id] = " + request.Category.Id;

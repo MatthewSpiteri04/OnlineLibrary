@@ -29,7 +29,12 @@
           <strong>Add Attribute</strong>
         </button>
       </div>
+      <label>Access Level</label>
+      <select class="{{!editMode ? 'edit-mode-off' : 'edit-mode-on'}}" style="width: 100%;" id="mySelect" ng-disabled="!editMode" ng-model="categoryResponse.category.publicAccess" style=" margin-bottom: 30px;" ng-options="level.id as level.description for level in AccessLevels">
+        <option value="" disabled>Select Access Level</option>
+      </select>
     </div>
+
     <label>Existing Attributes</label>
     <div
       class="attributeFields"
