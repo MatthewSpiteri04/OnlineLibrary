@@ -48,30 +48,109 @@
     <form ng-submit="createCategoryAndAttributes(categoryForm, inputFields)">
       <div class="Category-Section">
         <div class="Category-input">
-          <h2>Category Name</h2>
-          <input
+          <h2 style="margin-bottom: 5px;">Category Name</h2>
+          <input 
+            required
+            style="margin-bottom: 0;"
             placeholder="Enter Category Name"
             type="text"
             ng-model="categoryForm.Name"
           />
         </div>
         <div class="Add-Attribute">
-          <button type="button" ng-click="addInputField()">
+          <button ng-disabled="tempItem != null" type="button" ng-click="addInputField()">
             <i class="fa-solid fa-plus"></i>
             Add Fields
           </button>
         </div>
       </div>
+      <hr ng-if="tempItem != null" style="border: 1px solid lightgrey; margin: 20px 0 30px;">
+      <div class="custom-attribute"  ng-if="tempItem != null">
+        <div class="Attribute-Name" >
+          <div class="nameAndTypeDisabled" ng-show="tempItem.listView">
+            <div class="name">
+              <h2 style="margin-bottom: 5px;">Attribute Name</h2>
+              <select
+                ng-model="tempItem.Id"
+                ng-change="changeType(tempItem)"
+              >
+                <option value="" disabled selected>
+                  Select Existing Attribute
+                </option>
+                <option
+                  ng-repeat="attribute in availableAttributes"
+                  value="{{ attribute.id }}"
+                >
+                  {{ attribute.name }}
+                </option>
+              </select>
+            </div>
+            <div class="typeDisabled">
+              <h2 style="margin-bottom: 5px;">Select Attribute Type</h2>
+              <input disabled type="text" ng-model="tempItem.placeholder" />
+            </div>
+          </div>
 
-      <div class="Attributes" ng-repeat="inputField in inputFields track by $index">
-        <div class="Attribute-Input">
-          <div class="Attribute-Name">
+          <div ng-hide="tempItem.listView">
+            <div class="Type">
+              <div class="TypeName">
+                <h2 style="margin-bottom: 5px;">Attribute Name</h2>
+                <input
+                style="padding: 10px;"
+                  placeholder="Enter Attribute Name"
+                  type="text"
+                  ng-model="tempItem.Name"
+                />
+              </div>
+              <div class="Attribute-Type">
+                <h2 style="margin-bottom: 5px;">Select Attribute Type</h2>
+                <select ng-model="tempItem.TypeId">
+                  <option value="" disabled selected>Select Type Name</option>
+                  <option
+                    ng-repeat="type in attributeTypes"
+                    value="{{ type.id }}"
+                  >
+                    {{ type.typeName }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="button-att-container">
+          <div style="margin-bottom: auto;">
+            <h2 style="margin-bottom: 10px; font-size: 15px;">{{tempItem.listView ? 'Pick Attribute' : 'Create New Attribute'}}</h2>
+            <label class="switch">
+              <input ng-model="tempItem.listView" ng-click="tempItem.listView = !tempItem.listView" type="checkbox">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div style="display: flex; margin-top: 7.5px;">
+            <div ng-click="removeTempField()" class="add-attrbt-btn" style=" margin-bottom: 0px"><i class="fa-solid fa-trash add-icon" style="padding-right: 8px;"></i><strong>Remove Attribute</strong></div>
+          </div>
+          <div style="display: flex; margin-top: auto;">
+            <button ng-click="assignToList()" class="add-attrbt-btn" ng-disabled="(!tempItem.listView && (!tempItem.Name || !tempItem.TypeId)) || (tempItem.listView && !tempItem.Id)"><i class="fa-solid fa-plus add-icon" style="padding-right: 6px;"  ></i><strong>Assign Attribute</strong></button>
+          </div>
+        </div>
+      </div>
+
+      <hr ng-if="tempItem != null" style="border: 1px solid lightgrey; margin: 20px 0 30px;">
+      
+
+      <div>
+        <p style="cursor: pointer;" id="showAttr" ng-click="showList = !showList">{{!showList ? 'Show' : 'Hide'}} Assigned Attributes ({{inputFields.length}})<i style="padding-left: 3px; padding-bottom: 5px; font-size: 12px;" class="{{showList ? 'fa-solid fa-caret-up' :' fa-solid fa-caret-down'}}"></i></p>
+      </div>
+
+      <!-- new -->
+      <div ng-if="showList" ng-repeat="inputField in inputFields track by $index">
+        <div class="custom-attribute">
+          <div class="Attribute-Name" >
             <div class="nameAndTypeDisabled" ng-show="inputField.listView">
               <div class="name">
-                <h2>Attribute Name</h2>
+                <h2 style="margin-bottom: 5px;">Attribute Name</h2>
                 <select
-                  ng-model="inputField.Id"
-                  ng-change="changeType(inputField.Id, inputField)"
+                  disabled class="select-disabled"  ng-model="inputField.Id"
+                  ng-change="changeType(inputField)"
                 >
                   <option value="" disabled selected>
                     Select Existing Attribute
@@ -85,7 +164,7 @@
                 </select>
               </div>
               <div class="typeDisabled">
-                <h2>Select Attribute Type</h2>
+                <h2 style="margin-bottom: 5px;">Select Attribute Type</h2>
                 <input disabled type="text" ng-model="inputField.placeholder" />
               </div>
             </div>
@@ -93,15 +172,16 @@
             <div ng-hide="inputField.listView">
               <div class="Type">
                 <div class="TypeName">
-                  <h2>Attribute Name</h2>
+                  <h2 style="margin-bottom: 5px;">Attribute Name</h2>
                   <input
+                    style="padding: 10px;"
                     placeholder="Enter Attribute Name"
                     type="text"
                     ng-model="inputField.Name"
                   />
                 </div>
                 <div class="Attribute-Type">
-                  <h2>Select Attribute Type</h2>
+                  <h2 style="margin-bottom: 5px;">Select Attribute Type</h2>
                   <select ng-model="inputField.TypeId">
                     <option value="" disabled selected>Select Type Name</option>
                     <option
@@ -115,17 +195,29 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="Buttons">
-          <div class="View" ng-click="toggleView(inputField)">
-            {{ inputField.listView ? 'Add Attribute' : 'Show List' }}
-          </div>
-          <div class="Remove" type="button" ng-click="removeInputField($index)">
-            <i class="fa-solid fa-circle-xmark"></i>
+          <div class="button-att-container">
+            <div style="display: flex; margin-top: auto;">
+              <div ng-click="removeInputField($index)" class="add-attrbt-btn"><i class="fa-solid fa-trash add-icon" style="padding-right: 5px;"></i><strong>Unassign Attribute</strong></div>
+            </div>
+            
           </div>
         </div>
+
+        <hr ng-if="inputFields.length-1 != $index" style="border: 1px solid lightgrey; margin: 20px 0 30px;">
       </div>
-      <button id="Submit" type="submit">Submit</button>
+      <div class="footer-component">
+        <select style="width: 250px; margin-right: 20px; margin-bottom: 0;" ng-model="categoryForm.accessLevel" required>
+          <option value="" disabled selected>Select Access Level</option>
+          <option
+            ng-repeat="level in AccessLevels"
+            value="{{ level.id }}"
+          >
+            {{ level.description }}
+          </option>
+        </select>
+        <button id="Submit" ng-disabled="1 > inputFields.length" type="submit">Submit</button>
+      </div>
+      
     </form>
   </div>
 </div>

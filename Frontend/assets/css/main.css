@@ -31,7 +31,7 @@ html {
     font-weight: 600;
     font-size: clamp(30px, 30px, 45px);
     align-self: center;
-   
+    margin-left: auto;
 
     text-decoration: none;
     
@@ -45,9 +45,10 @@ html {
     text-decoration: none;
     color: white;
     align-self: center;
-    margin-left: 75%;
+    margin-left: auto;
     font-size: 20px;
     transition: color 0.3s ease;
+    margin-right: 20px;
 }
 
 .header > a:hover {
@@ -62,63 +63,6 @@ html {
     vertical-align: middle; 
     
 }
-
-
-
-
-@media (max-width: 1683px){
-
-    
-    .header-element {
-        
-        
-        padding: 10px;
-        margin-left: 0.5%;
-    }
-        
-        .header > a {
-            
-            margin-left: 72%;
-            font-size: 18px;
-            
-        }
-    
-        .um-logo {
-            width: 65px;
-            height: 65px;
-            margin-left: 12px;
-            
-        
-        }
-    }
-
-    @media (max-width: 1466px){
-
-    
-            
-            .header > a {
-                
-                margin-left: 65%;
-               
-                
-            }
-        
-        }
-
-        
-    @media (max-width: 1124px){
-
-    
-            .header > a {
-                
-                margin-left: 50%;
-               
-                
-            }
-        
-          
-        }
-
 
 .Login-Container,.Sign-Up-Container {
     display: flex;
@@ -348,8 +292,10 @@ html {
     margin-left: auto;
     margin-right: auto;
     margin-top: 120px;
-    width: 1000px;
-    padding-right: 60px;
+    padding: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
+    width: 580px;
     border-style: solid;
     border-color: #BA0C2F;
     border-radius: 7px;
@@ -366,10 +312,6 @@ html {
 .Categories > h1{
     display: flex;
     justify-content: center;
-}
-
-.Category-input > h2{
-    margin-bottom: 5px;
 }
 
 .Category-Section{
@@ -409,6 +351,21 @@ html {
     margin-bottom: 10px;
 }
 
+.Add-Attribute button[disabled]{
+   
+    background-color: #c56a7c;
+    color: white;
+    padding: 10px;
+    border: none;
+    width: fit-content;
+    border-radius: 7px;
+    font-size:medium;
+    font-weight: bolder;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    cursor:default;
+}
+
 .Category-input > input{
     font-family: 'Lato';
     margin-bottom: 15px;
@@ -434,27 +391,31 @@ html {
 }
 
 #Submit{
-    display:flex;
-    margin-left: auto;
-    margin-right: auto;
-    justify-content: center;
-    margin-top: 50px;
     background-color: #BA0C2F;
     color: white;
     padding: 10px;
     border: none;
     width: fit-content;
+    height: fit-content;
     border-radius: 7px;
     font-size: 1.17em;
     font-weight: bolder;
     cursor: pointer;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 8px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 
+#Submit[disabled] {
+    background-color: #c56a7c;
+    cursor: default;
+}
 
+#Submit:hover:not([disabled]) {
+    background-color: #950924;
+}
 
 .Attributes {
     display: flex;
-    
+    flex-direction: row;
     justify-content: center;
     align-items: center;
    
@@ -462,8 +423,6 @@ html {
 
 .Attribute-Input{
     display: flex;
-    
-   
 }
 
 
@@ -478,7 +437,6 @@ html {
     font-size:small;
     font-weight: bolder;
     margin-left: 5px;
-    
 }
 
 
@@ -506,9 +464,7 @@ html {
 
 .Attribute-Name, .Attribute-Type{
     display: flex;
-    flex-direction: column;
-    margin-left: 20px;
-   
+    flex-direction: column; 
     
 }
 
@@ -518,13 +474,15 @@ html {
 }
 
 
-.Attribute-Input  select, .Attribute-Name > input, .TypeName > input{
+select, .Attribute-Name > input, .TypeName > input{
     font-family: 'Lato';
     margin-bottom: 15px;
-    padding: 10px;
+    padding: 10px 10px 10px 6px;
     border-radius: 5px;
     font-size: 16px;
     width: 350px;
+    color: black;
+    height: 45px;
     box-sizing: border-box;
     border: 2px solid #BA0C2F;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
@@ -532,7 +490,7 @@ html {
 
 .Type{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 
 .TypeName, .Attribute-Type{
@@ -540,10 +498,6 @@ html {
     flex-direction: column;
 }
 
-.Attribute-Type{
-    margin-left: 50px;
-    margin-top: -44px;
-}
 
 .Buttons{
     display: flex;
@@ -556,9 +510,10 @@ html {
 .View{
     background-color: #BA0C2F;
     color: white;
-    padding: 5px;
+    padding: 10px;
     border: none;
-    width: fit-content;
+    width: max-content;
+    height: max-content;
     border-radius: 7px;
     font-size:medium;
     font-weight: bolder;

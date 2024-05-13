@@ -60,7 +60,7 @@
   </div>
 
   <div class="documents-container">
-    <div class="document" ng-repeat="document in filteredItems track by $index" ng-if="document.publicAccess || (!document.publicAccess && user.Roles.includes('Academic User'))" >
+    <div class="document" ng-repeat="document in filteredItems track by $index" ng-if="user.roleId >= document.publicAccess || !user && document.publicAccess == 1" >
       <i class="fa-solid fa-book fa-4x"></i>
       <div class="text-group">
         <p id="title">{{document.title}}</p>

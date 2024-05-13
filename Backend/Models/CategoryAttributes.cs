@@ -2,6 +2,7 @@
 {
 	public class CategoryAttributes
 	{
+		public int AccessLevel { get; set; }
 		public string CategoryName { get; set; }
 
 		public List <Attributes> Attributes { get; set; }
