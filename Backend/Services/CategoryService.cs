@@ -439,7 +439,9 @@ namespace Backend.Services
             int valid = 0;
             foreach (Attributes attr in attributes)
             {
-                query = @"
+               if(attr.Id != null)
+				{
+                    query = @"
 
 					IF EXISTS (SELECT 1 FROM Attributes WHERE [Name] = '" + attr.Name + @"' AND Id != " + attr.Id + @")
 						SELECT 1;
@@ -447,18 +449,19 @@ namespace Backend.Services
 					ELSE
 						SELECT 0;";
 
-                SqlDataReader reader = executeQuery();
-                while (reader.Read())
-                {
-
-                    if (reader.GetInt32(0) == 1 && !attr.ListView)
+                    SqlDataReader reader = executeQuery();
+                    while (reader.Read())
                     {
-                        valid = 1;
-                    }
-                }
-                reader.Close();
-                conn.Close();
 
+                        if (reader.GetInt32(0) == 1 && !attr.ListView)
+                        {
+                            valid = 1;
+                        }
+                    }
+                    reader.Close();
+                    conn.Close();
+
+                }
 
             }
 
@@ -469,6 +472,38 @@ namespace Backend.Services
             else
             {
                 return true;
+            }
+        }
+
+        public bool categoryIsUsed(int id)
+        {
+            int valid = 0;
+
+            query = @"
+
+			IF EXISTS (SELECT 1 FROM Documents WHERE CategoryId = " + id + @")
+				SELECT 1;
+    
+			ELSE
+				SELECT 0;";
+
+            SqlDataReader reader = executeQuery();
+            while (reader.Read())
+            {
+
+                valid = reader.GetInt32(0);
+            }
+            reader.Close();
+            conn.Close();
+
+
+            if (valid == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }    

@@ -233,7 +233,7 @@ tr {
     cursor: pointer;
     border: 2px solid #BA0C2F;
     transition: background-color 0.3s ease;
-    padding: 8px;
+    padding: 8px !important;
     font-size: 14px;
     border-radius: 5px;
     height: fit-content;

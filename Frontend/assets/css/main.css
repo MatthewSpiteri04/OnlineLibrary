@@ -31,7 +31,7 @@ html {
     font-weight: 600;
     font-size: clamp(30px, 30px, 45px);
     align-self: center;
-   
+    margin-left: auto;
 
     text-decoration: none;
     
@@ -45,9 +45,10 @@ html {
     text-decoration: none;
     color: white;
     align-self: center;
-    margin-left: 75%;
+    margin-left: auto;
     font-size: 20px;
     transition: color 0.3s ease;
+    margin-right: 20px;
 }
 
 .header > a:hover {
@@ -62,61 +63,6 @@ html {
     vertical-align: middle; /* Vertically align image middle */
 }
 
-
-
-
-@media (max-width: 1683px){
-
-    
-    .header-element {
-        
-        
-        padding: 10px;
-        margin-left: 0.5%;
-    }
-        
-        .header > a {
-            
-            margin-left: 72%;
-            font-size: 18px;
-            
-        }
-    
-        .um-logo {
-            width: 65px;
-            height: 65px;
-            margin-left: 12px;
-            
-        
-        }
-    }
-
-    @media (max-width: 1466px){
-
-    
-            
-            .header > a {
-                
-                margin-left: 65%;
-               
-                
-            }
-        
-        }
-
-        
-    @media (max-width: 1124px){
-
-    
-            .header > a {
-                
-                margin-left: 50%;
-               
-                
-            }
-        
-          
-        }
 .Login-Container,.Sign-Up-Container {
     display: flex;
     justify-content: center;
@@ -394,6 +340,21 @@ html {
     font-weight: bolder;
     margin-right: 5px;
     margin-bottom: 10px;
+}
+
+.Add-Attribute button[disabled]{
+   
+    background-color: #c56a7c;
+    color: white;
+    padding: 10px;
+    border: none;
+    width: fit-content;
+    border-radius: 7px;
+    font-size:medium;
+    font-weight: bolder;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    cursor:default;
 }
 
 .Category-input > input{

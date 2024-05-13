@@ -59,7 +59,7 @@ label {
     transition: background-color 0.3s ease;
 }
 
-.security-form button:hover {
+.security-form button:hover:not([disabled]) {
     background-color: #950924;
     border: 2px solid #950924;
 }
@@ -118,14 +118,27 @@ button {
     width: 100%;
     justify-content: center;
     margin-left: 5px;
-     
-    
-     background-color: #BA0C2F;
-     padding: 2px;
-     border-radius: 5px;
-     font-size: medium;
-     font-weight: bold;
-     color: white;
+    background-color: #BA0C2F;
+    padding: 2px;
+    border-radius: 5px;
+    font-size: medium;
+    font-weight: bold;
+    color: white;
+}
+
+.categoryAddAttribute > button[disabled]{
+    margin-top: 0;
+    width: 100%;
+    justify-content: center;
+    margin-left: 5px;
+    background-color: #c56a7c;
+    padding: 2px;
+    border-radius: 5px;
+    font-size: medium;
+    font-weight: bold;
+    color: white;
+    border-color: #c56a7c;
+    cursor: default;
 }
 
 .attributeBin{

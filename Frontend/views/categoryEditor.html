@@ -22,7 +22,7 @@
         <button
           style="padding: 10px;"
           ng-if="editMode"
-          ng-disabled="!editMode"
+          ng-disabled="tempItem != null"
           ng-click="addInputField()"
         >
           <i class="fa-solid fa-plus" style="color: #ffffff"></i>
@@ -115,8 +115,8 @@
           <div style="display: flex; margin-top: 7.5px;">
             <div ng-click="removeTempField()" class="add-attrbt-btn" style=" margin-bottom: 0px"><i class="fa-solid fa-trash add-icon" style="padding-right: 8px;"></i><strong>Remove Attribute</strong></div>
           </div>
-          <div style="display: flex; margin-top: auto;">
-            <button ng-click="assignToList()" class="add-attrbt-btn" ng-disabled="(!tempItem.listView && (!tempItem.Name || !tempItem.TypeId)) || (tempItem.listView && !tempItem.Id)"><i class="fa-solid fa-plus add-icon" style="padding-right: 6px;"  ></i><strong>Assign Attribute</strong></button>
+          <div style="display: flex; margin-top: auto; ">
+            <button ng-click="assignToList()" style="padding-left: 4px !important;" class="add-attrbt-btn" ng-disabled="(!tempItem.listView && (!tempItem.Name || !tempItem.TypeId)) || (tempItem.listView && !tempItem.Id)"><i class="fa-solid fa-plus add-icon" style="padding-right: 6px;"  ></i><strong style="font-size:14px;">Assign Attribute</strong></button>
           </div>
         </div>
       </div>

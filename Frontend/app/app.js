@@ -1476,8 +1476,9 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
             $scope.editMode = true;
         }
         else{
+            var attributesListRequest = [];
             $scope.inputFields.forEach(element => {
-                $scope.categoryResponse.attributes.push(element)
+                attributesListRequest.push(element)
             });
 
             $scope.categoryResponse.attributes.forEach(element => {
@@ -1487,19 +1488,55 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
                 if(element.listView && element.new){
                     element.Id = parseInt(element.Id)
                 }
+                attributesListRequest.push(element)
             });
+
+            var request = {
+                category: $scope.categoryResponse.category,
+                attributes: attributesListRequest
+            }
             
             $scope.editMode = false;
-            inputFields = [];
+            $scope.inputFields = [];
             tempItem = null;
             
-           console.log($scope.categoryResponse.attributes);
             
-            categoryEditorService.updateCategoryDetails($scope.categoryResponse)
+            categoryEditorService.updateCategoryDetails(request)
             .then(response => {
-                $scope.categoryResponse = response.data;
-                console.log($scope.categoryResponse)
-        
+                $scope.categoryResponse = response.data.result;
+                return response
+                })
+                .then(function(response){
+                    $uibModal.open({
+                        templateUrl: 'assets/elements/popup.html',
+                        controller: 'popup-controller',
+                        resolve: {
+                            title: function(){
+                                return response.data.title;
+                            },
+                            message: function(){
+                                return response.data.message;
+                            }
+                        }
+                      }).result.then(function() {}, function(reason) {});
+                }) 
+                .catch(error => {
+                $uibModal.open({
+                    templateUrl: 'assets/elements/popup.html',
+                    controller: 'popup-controller',
+                    resolve: {
+                        title: function(){
+                            return error.data.title;
+                        },
+                        message: function(){
+                            return error.data.message;
+                        }
+                    }
+                  }).result.then(function() {
+                    
+                  }, function(reason) {
+
+                });
             });
         }
     }

@@ -46,16 +46,17 @@
     <form ng-submit="createCategoryAndAttributes(categoryForm, inputFields)">
       <div class="Category-Section">
         <div class="Category-input">
-          <h2>Category Name</h2>
-          <input
+          <h2 style="margin-bottom: 5px;">Category Name</h2>
+          <input 
             required
+            style="margin-bottom: 0;"
             placeholder="Enter Category Name"
             type="text"
             ng-model="categoryForm.Name"
           />
         </div>
         <div class="Add-Attribute">
-          <button type="button" ng-click="addInputField()">
+          <button ng-disabled="tempItem != null" type="button" ng-click="addInputField()">
             <i class="fa-solid fa-plus"></i>
             Add Fields
           </button>

@@ -154,23 +154,26 @@ namespace Backend.Controllers
                 }
             }
 
-
+			if (_categoryService.categoryIsUsed(request.Category.Id))
+			{
+                return BadRequest(new { title = "Error", message = "Category is already in use by an existing document" });
+            }
             if (!_categoryService.categoryNameUnique(request.Category.Name, request.Category.Id))
 			{
-				return BadRequest(new { title = "Category Name Already Exists" });
+				return BadRequest(new { title="Error", message = "Category Name Already Exists" });
 			}
 			else if (!validAttributeList)
 			{
-				return BadRequest(new { title = "Given Duplicate Attributes in List" });
+				return BadRequest(new { title = "Error", message = "Given Duplicate Attributes in List" });
 
             }
 			else if (!_categoryService.attributesAreUnique(request.Attributes))
 			{
-				return BadRequest(new { title = "Attributes Already Exist" });
+				return BadRequest(new { title = "Error", message = "Attributes Already Exist" });
             }
 			else
 			{
-                return Ok(new {result = _categoryService.updateCategory(request) , title = "Success"});
+                return Ok(new {result = _categoryService.updateCategory(request) , title = "Success" , message = "Category Updated Successfully" });
             }
 
         }
