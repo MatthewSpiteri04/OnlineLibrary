@@ -44,62 +44,9 @@
         />
         <input type="text" ng-disabled="true" ng-model="attribute.typeName" class="edit-mode-off">
       </div>
-
-      <!-- old -->
-      <!-- <div ng-if="attribute.new == true">
-        <div class="Attributes">
-          <div class="Attribute-Input">
-            <div class="Attribute-Name">
-              <h2>Attribute Name</h2>
-              <div ng-show="attribute.listView">
-                <select ng-model="attribute.Id">
-                  <option value="" disabled selected>Select Existing Attribute</option>
-                  <option
-                    ng-repeat="attrList in attributeList"
-                    value="{{ attrList.id }}"
-                  >
-                    {{ attrList.name }}
-                  </option>
-                </select>
-              </div>
-
-              <div ng-hide="attribute.listView">
-                <div class="Type">
-                  <div class="TypeName">
-                    <input
-                      placeholder="Enter Attribute Name"
-                      type="text"
-                      ng-model="attribute.Name"
-                    />
-                  </div>
-                  <div class="Attribute-Type">
-                    <h2>Select Attribute Type</h2>
-                    <select ng-model="attribute.TypeId">
-                      <option value="" disabled selected>
-                        Select Type Name
-                      </option>
-                      <option
-                        ng-repeat="type in attributeTypes"
-                        value="{{ type.id }}"
-                      >
-                        {{ type.typeName }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="Buttons">
-            <div class="View" ng-click="toggleView(attribute)">
-              {{ attribute.listView ? 'Manual Input' : 'Show List' }}
-            </div>
-          </div>
-        </div>
-      </div> -->
-      <!-- <button ng-show="editMode" ng-click="removeInputField($index)">
+      <button ng-show="editMode" ng-click="removeInputField($index)">
         <i class="fa-solid fa-trash" style="color: #ba0c2f"></i>
-      </button> -->
+      </button>
     </div>
 
      <!-- new -->
@@ -175,11 +122,75 @@
       </div>
 
       <hr ng-if="tempItem != null" style="border: 1px solid lightgrey; margin: 20px 0 30px;">
+    </div>
+    <div style="width: 100%;" ng-if="editMode">
+      <p style="color: #BA0C2F; cursor: pointer;" id="showAttr" ng-click="toggleShowList()">{{!showList ? 'Show' : 'Hide'}} Assigned Attributes ({{inputFields.length}})<i style="padding-left: 3px; padding-bottom: 5px; font-size: 12px;" class="{{showList ? 'fa-solid fa-caret-up' :' fa-solid fa-caret-down'}}"></i></p>
+    </div>
+    <div ng-if="showList" ng-repeat="inputField in inputFields track by $index">
+      <div class="custom-attribute">
+        <div class="Attribute-Name" >
+          <div class="nameAndTypeDisabled" ng-show="inputField.listView">
+            <div class="name">
+              <h2 style="margin-bottom: 5px;">Attribute Name</h2>
+              <select
+                disabled class="select-disabled"  ng-model="inputField.Id"
+                ng-change="changeType(inputField)"
+              >
+                <option value="" disabled selected>
+                  Select Existing Attribute
+                </option>
+                <option
+                  ng-repeat="attribute in attributes"
+                  value="{{ attribute.id }}"
+                >
+                  {{ attribute.name }}
+                </option>
+              </select>
+            </div>
+            <div class="typeDisabled">
+              <h2 style="margin-bottom: 5px;">Select Attribute Type</h2>
+              <input disabled type="text" ng-model="inputField.placeholder" />
+            </div>
+          </div>
 
+          <div ng-hide="inputField.listView">
+            <div class="Type">
+              <div class="TypeName">
+                <h2 style="margin-bottom: 5px;">Attribute Name</h2>
+                <input
+                  style="padding: 10px;"
+                  placeholder="Enter Attribute Name"
+                  type="text"
+                  ng-model="inputField.Name"
+                />
+              </div>
+              <div class="Attribute-Type">
+                <h2 style="margin-bottom: 5px;">Select Attribute Type</h2>
+                <select ng-model="inputField.TypeId">
+                  <option value="" disabled selected>Select Type Name</option>
+                  <option
+                    ng-repeat="type in attributeTypes"
+                    value="{{ type.id }}"
+                  >
+                    {{ type.typeName }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="button-att-container">
+          <div style="display: flex; margin-top: auto;">
+            <div ng-click="removeInputFieldNew($index)" class="add-attrbt-btn"><i class="fa-solid fa-trash add-icon" style="padding-right: 5px;"></i><strong>Unassign Attribute</strong></div>
+          </div>
+          
+        </div>
+      </div>
+
+      <hr ng-if="inputFields.length-1 != $index" style="border: 1px solid lightgrey; margin: 20px 0 30px;">
     </div>
 
-
-    <div class="button-group">
+    <div style="margin-top: 20px" class="button-group">
       <button style="margin-right: 10px" ng-click="updateCategory()">
         <i
           class="{{!editMode ? 'fa-solid fa-pencil' : 'fa-solid fa-check'}}"

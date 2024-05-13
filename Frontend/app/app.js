@@ -1219,6 +1219,7 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
             $scope.inputFields = [];
 
             $scope.updateAttributes = function(inputs){
+                var counter = 0;
                 var temp = angular.copy($scope.attributes)
                 var list = []
                 var indexes = []
@@ -1233,10 +1234,10 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
                     }
                 });
                 indexes.forEach(id => {
-                    temp.splice(id, 1);
+                    temp.splice(id - counter, 1);
+                    counter += 1;
                 });
                 $scope.availableAttributes = angular.copy(temp);
-                console.log($scope.availableAttributes);
             }
         
             $scope.toggleView = function(inputField) {
@@ -1368,24 +1369,48 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
     $scope.attributeTypes = [];
     $scope.attributeList = [];
 
+    $scope.showList = false;
+
+    $scope.toggleShowList = function() {
+        $scope.showList = !$scope.showList
+    }
+
+    $scope.updateAttributes = function(inputs){
+        var counter = 0;
+        var temp = angular.copy($scope.attributeList)
+        var list = []
+        var indexes = []
+        inputs.forEach(element => {
+            if(element.Id) {
+                list.push(parseInt(element.Id));
+            }
+        });
+        $scope.categoryResponse.attributes.forEach(element => {
+            if(element.id) {
+                list.push(parseInt(element.id));
+            }
+        });
+       
+        temp.forEach(function(element, index) {
+            if(list.includes(element.id)){
+                indexes.push(index);
+            }
+        });
+        indexes.forEach(id => {
+            temp.splice(id - counter, 1);
+            counter += 1;
+        });
+        $scope.availableAttributes = angular.copy(temp);
+        console.log($scope.availableAttributes);
+    }
+
     $scope.tempItem = null;
 
     categoryService.getAttributeTypes()
     .then(response => {
         $scope.attributeTypes = response.data;
     })
-    .catch(error => {
-        console.error('Failed to fetch attribute types:', error);
-    });
 
-    categoryService.getAttributes()
-    .then(response => {
-        $scope.attributeList = response.data;
-    })
-    .catch(error => {
-        console.error('Failed to fetch attributes:', error);
-    });
-           
     $scope.toggleView = function(inputField) {
         // Toggle the listView property to switch between select and input views
         inputField.listView = !inputField.listView;
@@ -1396,14 +1421,6 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
         }
     };
 
-    // $scope.addInputField = function() {
-    //     $scope.categoryResponse.attributes.push({ 
-    //         Name: '',
-    //         listView: true,
-    //         new: true
-    //     });
-    //     console.log( $scope.categoryResponse.attributes)
-    // };
     
     $scope.addInputField = function() {
         $scope.tempItem ={ 
@@ -1417,6 +1434,11 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
         $scope.tempItem = null;
     };
 
+    $scope.removeInputFieldNew = function(index) {
+        $scope.inputFields.splice(index, 1);
+        $scope.updateAttributes($scope.inputFields);                
+    };
+
     $scope.assignToList = function(){
         console.log($scope.tempItem);
         $scope.inputFields.push($scope.tempItem);
@@ -1426,6 +1448,7 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
 
     $scope.removeInputField = function(index) {
         $scope.categoryResponse.attributes.splice(index, 1);
+        $scope.updateAttributes($scope.inputFields);                
     };
 
     $http.get('https://localhost:44311/api/Categories/GetCategories/' + $scope.categoryId)
@@ -1433,13 +1456,23 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
         $scope.categoryResponse = response.data;
         console.log($scope.categoryResponse)
 
-    })    
+    }).then(function(){
+        categoryService.getAttributes()
+        .then(response => {
+            $scope.attributeList = response.data;
+            $scope.updateAttributes([]);
+    })
+    });
 
     $scope.updateCategory = function(){
         if($scope.editMode == false){
             $scope.editMode = true;
         }
         else{
+            $scope.inputFields.forEach(element => {
+                $scope.categoryResponse.attributes.push(element)
+            });
+
             $scope.categoryResponse.attributes.forEach(element => {
                 if(!element.listView && element.new){
                     element.TypeId = parseInt(element.TypeId)
@@ -1459,7 +1492,7 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
                 console.log($scope.categoryResponse)
         
             });
-     }
+        }
     }
     
    
