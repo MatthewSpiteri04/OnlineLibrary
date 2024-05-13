@@ -51,12 +51,12 @@
       
   </div>
   <div class="grid-container" ng-if="filteredItems == null">
-    <div class="grid-item"><i class="fa-solid fa-book-open fa-6x"></i>Books</div>
-    <div class="grid-item"><i class="fa-solid fa-inbox fa-6x"></i>FYPs</div>
-    <div class="grid-item"><i class="fa-solid fa-newspaper fa-6x"></i>Articles</div>
-    <div class="grid-item"><i class="fa-solid fa-book fa-6x"></i>Journals</div>
-    <div class="grid-item"><i class="fa-solid fa-file fa-6x"></i>Theses</div>
-    <div class="grid-item"><i class="fa-solid fa-file-audio fa-6x"></i>Audio Books</div>
+    <div ng-click="boxFilterSearch('Book')" class="grid-item"><i class="fa-solid fa-book-open fa-6x"></i>Books</div>
+    <div ng-click="boxFilterSearch('FYP')" class="grid-item"><i class="fa-solid fa-inbox fa-6x"></i>FYPs</div>
+    <div ng-click="boxFilterSearch('Article')" class="grid-item"><i class="fa-solid fa-newspaper fa-6x"></i>Articles</div>
+    <div ng-click="boxFilterSearch('Journal')" class="grid-item"><i class="fa-solid fa-book fa-6x"></i>Journals</div>
+    <div ng-click="boxFilterSearch('Thesis')" class="grid-item"><i class="fa-solid fa-file fa-6x"></i>Theses</div>
+    <div ng-click="boxFilterSearch('Audio Book')" class="grid-item"><i class="fa-solid fa-file-audio fa-6x"></i>Audio Books</div>
   </div>
 
   <div class="documents-container">

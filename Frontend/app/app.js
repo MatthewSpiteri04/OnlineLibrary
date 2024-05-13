@@ -87,7 +87,6 @@ OnlineLibrary.service('userService', function($rootScope, $http) {
                 sessionStorage.setItem('loginData', JSON.stringify(newValue));
                 $rootScope.$broadcast('dataChanged', newValue);
             });
-            console.log(newValue)
         }
         else {
             sessionStorage.setItem('loginData', JSON.stringify(null));
@@ -172,12 +171,10 @@ OnlineLibrary.controller('favourites-controller', ['$scope', '$http', 'favourite
                     var languageMatch = !$scope.filterData.language || document.language === $scope.filterData.language;
                     return categoryMatch && authorMatch && languageMatch;
                 });
-                console.log($scope.filteredItems);
             });
         };
 
         $scope.viewDocument = function(document){
-            console.log(document.id);
             window.location.href="#!/viewDocument/"+document.id;
         }
 
@@ -286,19 +283,17 @@ OnlineLibrary.service('homeService', function($http) {
             uploadService.getCategories()
             .then(data => {
                 $scope.categories = data;
-                console.log($scope.categories);
             });
 
             categoryService.getAccessLevels().then(response => {
                 $scope.AccessLevels = response.data;
-                console.log(response.data);
             });
-            
+             
             $scope.$on('dataChanged', function(event, data) {
                 $scope.user = data;
             });
 
-            function selectOption(value            ) {
+            function selectOption(value) {
                 var selectElement = document.getElementById("mySelect");
                 selectElement.selectedIndex = value;
               }
@@ -329,7 +324,6 @@ OnlineLibrary.service('homeService', function($http) {
             form.addEventListener('submit', handleSubmit);
         
             function handleSubmit(event) {
-                console.log('pressed');
                 var attributeList = [];
                 const formData = new FormData(event.currentTarget);
         
@@ -424,6 +418,16 @@ OnlineLibrary.service('homeService', function($http) {
         window.location.href="#!/viewDocument/"+document.id;
     }
 
+    $scope.boxFilterSearch = function(category) {
+        $scope.searchForDocuments(null).then(function(){
+            $scope.documents = angular.copy($scope.filteredItems);
+            $scope.filteredItems = $scope.documents.filter(function(document) {
+                var categoryMatch = document.category === category;
+                return categoryMatch
+            });
+        });
+    }
+
     $scope.submitFilterData = function() {
         $scope.searchForDocuments( $scope.searchString ).then(function(){
             $scope.documents = angular.copy($scope.filteredItems);
@@ -433,7 +437,6 @@ OnlineLibrary.service('homeService', function($http) {
                 var languageMatch = !$scope.filterData.language || document.language === $scope.filterData.language;
                 return categoryMatch && authorMatch && languageMatch;
             });
-            console.log($scope.filteredItems);
         });
     };
 
@@ -565,7 +568,6 @@ OnlineLibrary.service('homeService', function($http) {
             attributes: attr,
             userId: id
         };
-        console.log(docTemp)
 
         return $http.put('https://localhost:44311/api/UpdateDocument', docTemp);
     };
@@ -615,7 +617,6 @@ OnlineLibrary.service('homeService', function($http) {
                         element.value = false;
                     }
                 });
-                console.log($scope.Document);
         });
     }
 
@@ -755,7 +756,6 @@ OnlineLibrary.service('homeService', function($http) {
 
     $scope.requestStudentAccess = function() {
         var currentUser = userService.getCurrentUser();
-        console.log(currentUser);
         var request = {
             userId: currentUser.id,
             subject: "Request for Student Access from " + currentUser.firstName + " " + currentUser.lastName,
@@ -964,14 +964,12 @@ $scope.requestLibrarianAccess = function() {
                 else {
                     $scope.errorMessage = "User Already Exists";
                     $scope.showErrorMessage = true;
-                    console.log('FAILED TO CREATE USER');
                 }
             });
         }
         else {
             $scope.errorMessage = "Passwords Dont Match";
             $scope.showErrorMessage = true;
-            console.log("PASSWORDS DON'T MATCH");
         }
       
     
@@ -1066,7 +1064,6 @@ OnlineLibrary.controller('security-controller', ['$http', '$scope', 'userService
                 
                 $http.get('https://localhost:44311/api/User/Exists/' + $scope.userSecurity.username)
                 .then(response => {
-                    console.log(response.data)
                     if (response.data) {
                         $scope.usernameError = true;
                         $scope.editMode = true; 
@@ -1121,7 +1118,6 @@ OnlineLibrary.controller('security-controller', ['$http', '$scope', 'userService
                         
                     var passwordHash = CryptoJS.MD5(CryptoJS.enc.Utf8.parse(request.presentPassword)).toString(CryptoJS.enc.Hex);
                     var passwordHashCaps = passwordHash.toUpperCase();
-                    console.log(passwordHashCaps);
                 
                     if (passwordHashCaps != $scope.user.password || passwordHashCaps == null) {
                         $scope.editPassMode = true;
@@ -1296,7 +1292,6 @@ OnlineLibrary.controller('my-uploads-controller', ['$scope', 'userService', 'myU
         }
 
         $scope.viewDocument = function(document){
-            console.log(document.id)
             window.location.href="#!/viewDocument/"+document.id;
         }
 
@@ -1308,7 +1303,6 @@ OnlineLibrary.controller('my-uploads-controller', ['$scope', 'userService', 'myU
                     var languageMatch = !$scope.filterData.language || document.language === $scope.filterData.language;
                     return categoryMatch && languageMatch;
                 });
-                console.log($scope.filteredItems);
             });
         };
         
@@ -1561,7 +1555,6 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
             };
 
             $scope.assignToList = function(){
-                console.log($scope.tempItem);
                 $scope.inputFields.push($scope.tempItem);
                 $scope.tempItem = null;
                 $scope.updateAttributes($scope.inputFields);
@@ -1583,7 +1576,8 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
                     }
                 });
             };
-        
+            
+            
         
             $scope.createCategoryAndAttributes = function(categoryForm, inputFields) {
                 inputFields.forEach(element => {
@@ -1607,16 +1601,10 @@ OnlineLibrary.controller('categories-controller', ['$scope', '$http', 'categoryS
                     UserId: id
                 };
 
-                console.log(categoryRequest);
-
                 $http.post('https://localhost:44311/api/Categories/AddCategory', categoryRequest)
                     .then(function(response) {
                         if (response.status == 200) {
-                            
-
-                        
-
-                    window.location.href = "#!/home";
+                        window.location.href = "#!/home";
                 } 
             }) .catch(error => {console.log(error)});
 
@@ -1653,6 +1641,10 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
         $scope.showList = !$scope.showList
     }
 
+    categoryService.getAccessLevels().then(response => {
+        $scope.AccessLevels = response.data;
+    });
+
     $scope.updateAttributes = function(inputs){
         var counter = 0;
         var temp = angular.copy($scope.attributeList)
@@ -1679,7 +1671,6 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
             counter += 1;
         });
         $scope.availableAttributes = angular.copy(temp);
-        console.log($scope.availableAttributes);
     }
 
     $scope.tempItem = null;
@@ -1725,7 +1716,6 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
     };
 
     $scope.assignToList = function(){
-        console.log($scope.tempItem);
         $scope.inputFields.push($scope.tempItem);
         $scope.tempItem = null;
         $scope.updateAttributes($scope.inputFields);
@@ -1739,8 +1729,6 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
     $http.get('https://localhost:44311/api/Categories/GetCategories/' + $scope.categoryId)
     .then(response => {
         $scope.categoryResponse = response.data;
-        console.log($scope.categoryResponse)
-
     }).then(function(){
         categoryService.getAttributes()
         .then(response => {
@@ -1773,7 +1761,6 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
                 category: $scope.categoryResponse.category,
                 attributes: attributesListRequest
             }
-            
             $scope.editMode = false;
             $scope.inputFields = [];
             tempItem = null;
@@ -1799,6 +1786,7 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
                       }).result.then(function() {}, function(reason) {});
                 }) 
                 .catch(error => {
+                
                 $uibModal.open({
                     templateUrl: 'assets/elements/popup.html',
                     controller: 'popup-controller',
@@ -1813,7 +1801,7 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
                   }).result.then(function() {
                     
                   }, function(reason) {
-
+                    location.reload();
                 });
             });
         }
@@ -1836,8 +1824,5 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
                 }
               }).result.then(function() {}, function(reason) {});
         });
-    }
-
-   
-   
+    }  
 }]);

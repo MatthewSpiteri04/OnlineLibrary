@@ -119,6 +119,7 @@ INSERT INTO Languages VALUES  ('Malti'), ('English'), ('Italiano'), ('Español')
 INSERT INTO AttributeTypes VALUES ('Number', 'number'), ('Text', 'text'), ('True/False', 'checkbox'), ('Date', 'date');
 
 
+
 INSERT INTO Users VALUES ('Anakin', 'Skywalker', 'dvader', 'matthewspiteri04@gmail.com', '80457CF3A7B15AFB8F491F8AE06680DB', 5);
 
 INSERT INTO HelpDetails VALUES ('What is the client portal and how do I use it', '1234'), ('How do I download resources', 'Test');
@@ -145,5 +146,12 @@ INSERT INTO CategoryAttributes VALUES (5,2), (5,3), (5,8), (5,9), (5,10), (5,11)
 INSERT INTO Categories VALUES (1, 'Audio Book');
 INSERT INTO CategoryAttributes VALUES (6,2), (6,3), (6,4), (6,5), (6,6), (6,7), (6,13);
 
+INSERT INTO Users VALUES ('Anakin', 'Skywalker', 'dvader', 'matthewspiteri04@gmail.com', '80457CF3A7B15AFB8F491F8AE06680DB', 5);
 
+INSERT INTO HelpDetails VALUES ('How do I Upload Documents', 'First Sign Up or go into the My Info Page. Under your details, scroll down and there are 3 buttons. One for Student Access, one for Lecturer Access, and another one for Librarian Access. Choose accordingly depending on your status. Once approved, you will have the ability to upload documents. There will be a section named upload on the sidebar to the left. Fill in the sections accordingly and press "Upload File"');
+INSERT INTO HelpDetails VALUES ('How do I Download Resources', 'In the home section search for your desired document. Press on the second button and the document will download.');
+INSERT INTO HelpDetails VALUES ('How to Add a Category', 'Only Librarians can add categories. If you are a Librarian, press categories on the left sidebar, press add category, give it a name and add fields accordingly.');
+INSERT INTO HelpDetails VALUES ('How to Use the Advanced Filter', 'On the home screen, next to the search bar there is a filter button. One can search by Author, Language or Category. Once the wanted filters are selected, press the advanced search button and there will be search results based on the filters given.');
+INSERT INTO HelpDetails VALUES ('How to Edit Account', 'Press the security tab in the sidebar. Press on edit account and change accordingly. After the changes are made, confrim by pressing save changes. To change the password, press on change password, enter your current password, and enter the new password. Confirm the password and press save changes.');
+INSERT INTO HelpDetails VALUES ('How to Edit Upload', 'Go to the My Info tab in the sidebar on the left. Scroll down and press My Uploads. Choose the desired document and press on the first button on the right hand side. Scroll down and press edit. Change the fields accordingly and press save.');
 
