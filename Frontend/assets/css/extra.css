@@ -16,7 +16,7 @@
 .answer-Container{
     display:flex;
     margin-top: 1;
-    margin-left: auto;
+    margin-left: 130px;
     margin-right: auto;
     width:fit-content;
     /*border-style:solid;
