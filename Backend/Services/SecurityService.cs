@@ -8,6 +8,7 @@ using System.Data;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Reflection.PortableExecutable;
+using System.Security.Cryptography;
 
 
 namespace Backend.Services
@@ -18,11 +19,41 @@ namespace Backend.Services
         {
 
         }
-
         public User updateUserInfo(UpdateRequest request)
         {
             query = @"UPDATE Users
-                      SET [FirstName] = '" + request.FirstName + @"', [LastName] = '" + request.LastName + @"', [Username] = '" + request.Username + @"', [Email] = '" + request.Email + @"', [Password] = '" + request.Password + @"'
+                      SET [FirstName] = '" + request.FirstName + @"', [LastName] = '" + request.LastName + @"', [Username] = '" + request.Username + @"'
+                      WHERE Users.Id =" + request.Id + @";
+
+                      SELECT * FROM Users WHERE [Id] = " + request.Id;
+
+            SqlDataReader reader = executeQuery();
+
+            User user = new User();
+
+            while (reader.Read())
+            {
+                user = new User() { Id = reader.GetInt32(0), FirstName = reader.GetString(1), LastName = reader.GetString(2), Username = reader.GetString(3), Email = reader.GetString(4), Password = reader.GetString(5), RoleId = reader.GetInt32(6) };
+            }
+            reader.Close();
+            conn.Close();
+
+            if (user.Id <= 0)
+            {
+                return null;
+            }
+
+            return user;
+        }
+        public User updateUserPassword(UpdateRequest request)
+        {
+            MD5 hasher = MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(request.Password);
+            byte[] hashBytes = hasher.ComputeHash(inputBytes);
+
+            string passwordHash = Convert.ToHexString(hashBytes);
+            query = @"UPDATE Users
+                      SET [Password] = '" + passwordHash + @"'
                       WHERE Users.Id =" + request.Id + @";
 
                       SELECT * FROM Users WHERE [Id] = " + request.Id;

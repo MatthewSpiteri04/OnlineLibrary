@@ -20,12 +20,14 @@
       <tr style="color: white">
         <th>Id</th>
         <th>Category Name</th>
+        <th>Access Level</th>
         <th>Options</th>
       </tr>
       <tr ng-repeat="category in categories track by $index">
         <td>{{$index + 1}}</td>
         <td>{{category.type}}</td>
-        <td style="text-align: center">
+        <td>{{category.publicAccess}}</td>
+        <td style="text-align: left">
           <i
             ng-click="editCategory(category)"
             class="fa-solid fa-pencil table-icon"

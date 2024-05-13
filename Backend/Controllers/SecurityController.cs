@@ -18,6 +18,14 @@ namespace Backend.Controllers
 
         }
 
+        [HttpPut]
+        [Route("api/Update/UserPassword")]
+        public User UpdatePasswordInfo([FromBody] UpdateRequest request)
+        {
+            return _securityService.updateUserPassword(request);
+
+        }
+
         [HttpDelete]
         [Route("api/Delete/User/{id}")]
         public IActionResult DeleteUser(int id)
