@@ -124,7 +124,7 @@ INSERT INTO Users VALUES ('Anakin', 'Skywalker', 'dvader', 'matthewspiteri04@gma
 INSERT INTO HelpDetails VALUES ('What is the client portal and how do I use it', '1234'), ('How do I download resources', 'Test');
 
 
-INSERT INTO Attributes VALUES ('ISBN', 2), ('Author', 2), ('Publish Date', 4), ('Publisher', 2), ('Genre', 2), ('Bestseller', 3), ('Edition', 1), ('Pages', 1), ('Supervisor', 2), ('Faculty', 2), ('Degree Program', 2),  ('ISSN', 2);
+INSERT INTO Attributes VALUES ('ISBN', 2), ('Author', 2), ('Publish Date', 4), ('Publisher', 2), ('Genre', 2), ('Bestseller', 3), ('Edition', 1), ('Pages', 1), ('Supervisor', 2), ('Faculty', 2), ('Degree Program', 2),  ('ISSN', 2), ('Duration', 1);
 
 
 INSERT INTO Categories VALUES (1, 'Book');
@@ -140,10 +140,10 @@ INSERT INTO Categories VALUES (1, 'Journal');
 INSERT INTO CategoryAttributes VALUES (4,2), (4,3), (4,4), (4,5), (4,8), (4,12);
 
 INSERT INTO Categories VALUES (1, 'Thesis');
-INSERT INTO CategoryAttributes VALUES (5,2), (5,3), (5,4), (5,5), (5,8);
-
-INSERT INTO Categories VALUES (1, 'Thesis');
 INSERT INTO CategoryAttributes VALUES (5,2), (5,3), (5,8), (5,9), (5,10), (5,11);
 
 INSERT INTO Categories VALUES (1, 'Audio Book');
-INSERT INTO CategoryAttributes VALUES (5,2), (5,3), (5,8), (5,9), (5,10), (5,11);
+INSERT INTO CategoryAttributes VALUES (6,2), (6,3), (6,4), (6,5), (6,6), (6,7), (6,13);
+
+
+
