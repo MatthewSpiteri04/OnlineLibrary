@@ -1,18 +1,40 @@
-.security-form {
-    margin-top: 8%;
+.security{
+    display: flex;
+    flex-direction: row ;
+    justify-content:center;
+}
+
+.security-header{
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+h1{
+   color: #BA0C2F;
+   font-family: 'Lato';
+    font-size: 50px;
+    margin-top: 150px;
+}
+.security-form, .password-form{
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-inline: 20px;
 }
 
-.security-form form > h2 {
+.security-form form > h2,
+.password-form form > h2 {
     color: #BA0C2F;
     font-size: 40px;
     margin-bottom: 35px;
     margin-top: 20px;
 }
 
-.security-form form {
+.security-form form,
+.password-form form {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -33,7 +55,11 @@ label {
 }
 
 .security-form input[type="text"],
-.security-form button {
+.security-form input[type="password"],
+.password-form input[type="text"],
+.password-form input[type="password"],
+.security-form button,
+ .password-form button{
     font-family: 'Lato';
     margin-bottom: 15px;
     padding: 10px;
@@ -45,7 +71,8 @@ label {
     border: 2px solid #BA0C2F;
 }
 
-.security-form button {
+.security-form button,
+.password-form button{
     margin-top: 10px;
     background-color: #BA0C2F;
     color: white;
@@ -54,17 +81,19 @@ label {
     transition: background-color 0.3s ease;
 }
 
-.security-form button:hover {
+.security-form button:hover 
+.password-form button:hover{
+
     background-color: #950924;
     border: 2px solid #950924;
 }
 
-.edit-mode-on {
+.edit-mode-on, .editPass-mode-on {
     background-color: white;
     cursor: text;
 }
 
-.edit-mode-off {
+.edit-mode-off, .editPass-mode-off {
     background-color: rgb(242, 242, 242);
     cursor: not-allowed;
     
@@ -80,3 +109,20 @@ button {
     
     width: 100%;
 }
+
+.error-message {
+    color: red;
+    font-size: 20px;
+    margin-top: 5px; 
+}
+
+
+.input {
+    width: 100%;
+}
+
+.eye-button > i{
+    color:#BA0C2F
+}
+
+

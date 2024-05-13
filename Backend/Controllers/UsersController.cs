@@ -25,14 +25,7 @@ namespace Backend.Controllers
             return _userService.doesUserExist(login);
         }
 
-        [HttpGet]
-        [Route("api/User/UpdateRoles/{userId}/{newRole}")]
-
-        //public IActionResult UpdateRole(string userId, string newRole)
-       // {
-            
-
-        //}
+      
 
         [HttpPost]
         [Route("api/User/Login")]
@@ -58,33 +51,111 @@ namespace Backend.Controllers
         }
 
         [HttpPost]
-        [Route("api/User/Send")]
+        [Route("api/User/Send/Student")]
         public async Task<IActionResult> Index([FromBody] EmailRequestModel model)
         {
             var userId = model.UserId;
-            var email = model.Email;
             var subject = model.Subject;
             var message = model.Message;
 
             var localhostUrl = "https://localhost:44311";
-            var link = $"{localhostUrl}/api/User/UpdateRole?userId={userId}";
+            var link = $"{localhostUrl}/api/User/UpdateRole/Student?userId={userId}";
 
            
             var htmlMessageContent = $"Click <a href=\"{link}\">here</a> to update user roles";
 
             
             message += $"\n\n{htmlMessageContent}";
-            await emailSender.SendEmailAsync(email,subject, message);
-            return View();
+            var emails = _userService.GetEmailsByRoleId(4); 
+
+            foreach (var email in emails)
+            {
+                await emailSender.SendEmailAsync(email, subject, message);
+            }
+            return Ok();
           
         }
 
+        [HttpPost]
+        [Route("api/User/Send/Lecturer")]
+        public async Task<IActionResult> LecturerIndex([FromBody] EmailRequestModel model)
+        {
+            var userId = model.UserId;
+            var subject = model.Subject;
+            var message = model.Message;
+
+            var localhostUrl = "https://localhost:44311";
+            var link = $"{localhostUrl}/api/User/UpdateRole/Lecturer?userId={userId}";
+
+
+            var htmlMessageContent = $"Click <a href=\"{link}\">here</a> to update user roles";
+
+
+            message += $"\n\n{htmlMessageContent}";
+            var emails = _userService.GetEmailsByRoleId(4);
+
+            foreach (var email in emails)
+            {
+                await emailSender.SendEmailAsync(email, subject, message);
+            }
+            return Ok();
+
+        }
+
+        [HttpPost]
+        [Route("api/User/Send/Librarian")]
+        public async Task<IActionResult> LibrarianIndex([FromBody] EmailRequestModel model)
+        {
+            var userId = model.UserId;
+            var subject = model.Subject;
+            var message = model.Message;
+
+            var localhostUrl = "https://localhost:44311";
+            var link = $"{localhostUrl}/api/User/UpdateRole/Librarian?userId={userId}";
+
+
+            var htmlMessageContent = $"Click <a href=\"{link}\">here</a> to update user roles";
+
+
+            message += $"\n\n{htmlMessageContent}";
+            var emails = _userService.GetEmailsByRoleId(5);
+
+            foreach (var email in emails)
+            {
+                await emailSender.SendEmailAsync(email, subject, message);
+            }
+            return Ok();
+
+        }
+
+       
+
+
+
         [HttpGet]
-        [Route("api/User/UpdateRole")]
-        public IActionResult UpdateUserRole([FromQuery] int userId)
+        [Route("api/User/UpdateRole/Student")]
+        public IActionResult UpdateToStudent([FromQuery] int userId)
         {
             
-            _userService.UpdateUserRole(userId);
+            _userService.UpdateToStudent(userId);
+            return Redirect("http://127.0.0.1:5500/index.html#!/home");
+        }
+
+        [HttpGet]
+        [Route("api/User/UpdateRole/Lecturer")]
+        public IActionResult UpdateToLecturer([FromQuery] int userId)
+        {
+
+            _userService.UpdateToLecturer(userId);
+            return Redirect("http://127.0.0.1:5500/index.html#!/home");
+        }
+
+        [HttpGet]
+        [Route("api/User/UpdateRole/Librarian")]
+        public IActionResult UpdateToLibrarian([FromQuery] int userId)
+        {
+
+            _userService.UpdateToLibrarian(userId);
             return Redirect("http://127.0.0.1:5500/index.html#!/home");
         }
 

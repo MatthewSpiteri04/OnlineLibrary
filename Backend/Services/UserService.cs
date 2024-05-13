@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Backend.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -70,6 +72,13 @@ namespace Backend.Services
 
         public User createUser(User user)
         {
+            MD5 hasher = MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(user.Password);
+            byte[] hashBytes = hasher.ComputeHash(inputBytes);
+
+
+
+            string passwordHash = Convert.ToHexString(hashBytes);
             query = 
                 @"DECLARE @Result AS INT = -1;
 
@@ -83,7 +92,7 @@ namespace Backend.Services
                 IF @Result = 0
                 BEGIN
                     INSERT INTO Users ([FirstName], [LastName], [Username], [Email], [Password], [RoleId]) 
-                    VALUES ('" + user.FirstName + @"', '" + user.LastName + @"', '" + user.Username + @"', '" + user.Email + @"', '" + user.Password + @"', 1);
+                    VALUES ('" + user.FirstName + @"', '" + user.LastName + @"', '" + user.Username + @"', '" + user.Email + @"', '" + passwordHash + @"', 1);
                     SELECT CAST(SCOPE_IDENTITY() AS INT);
                 END
                 ELSE
@@ -123,8 +132,15 @@ namespace Backend.Services
         }
 
         public User loginUser(LoginData loginData)
-        { 
-            query = "SELECT * FROM Users WHERE ([Username] = '" + loginData.Login + "' AND  [Password] = '" + loginData.Password + "') OR ([Email] = '" + loginData.Login + "' AND  [Password] = '" + loginData.Password + "');";
+        {
+            MD5 hasher = MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(loginData.Password);
+            byte[] hashBytes = hasher.ComputeHash(inputBytes);
+
+            string passwordHash = Convert.ToHexString(hashBytes);
+
+
+            query = "SELECT * FROM Users WHERE ([Username] = '" + loginData.Login + "' AND  [Password] = '" + passwordHash + "') OR ([Email] = '" + loginData.Login + "' AND  [Password] = '" + loginData.Password + "');";
 
             SqlDataReader reader = executeQuery();
 
@@ -145,15 +161,48 @@ namespace Backend.Services
             return user;
         }
 
-        public void UpdateUserRole(int userId)
+        public void UpdateToStudent(int userId)
         {
             query = @"UPDATE Users SET[RoleId] = 2 WHERE [Id] = " + userId;
             executeCommand();
            
         }
 
-        // public IActionResult updateRole(string userId, string newRole)
-        //{
-        //      }
+        public void UpdateToLecturer(int userId)
+        {
+            query = @"UPDATE Users SET[RoleId] = 3 WHERE [Id] = " + userId;
+            executeCommand();
+
+        }
+
+        public void UpdateToLibrarian(int userId)
+        {
+            query = @"UPDATE Users SET[RoleId] = 4 WHERE [Id] = " + userId;
+            executeCommand();
+
+        }
+
+        public List<string> GetEmailsByRoleId(int roleId)
+        {
+            List<string> emails = new List<string>();
+            query = @"SELECT [Email] FROM Users WHERE [RoleId] = " + roleId;
+            SqlDataReader reader = executeQuery();
+
+            string email;
+
+            while (reader.Read())
+            {
+               email = reader["Email"].ToString();
+               emails.Add(email);
+            }
+            reader.Close();
+            conn.Close();
+
+            
+
+            return emails;
+        }
+
+
     }
 }

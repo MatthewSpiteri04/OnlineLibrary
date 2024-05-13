@@ -1,8 +1,12 @@
 <link rel="stylesheet" href="assets/css/security.css" type="text/css" />
 <div ng-include="'assets/elements/sidebar.html'"></div>
+<div class="security-header">
+<h1> <i style="padding-right: 10px;"  class="fa-solid fa-shield-halved"></i>Account Security</h1>
+</div>
+<div class="security">
 <div class="security-form">
     <form>
-      <h2> <i style="padding-right: 10px;"  class="fa-solid fa-user-lock"></i>  Account Security</h2>
+      <h2> <i style="padding-right: 10px;"  class="fa-solid fa-user-edit"></i>Manage Account</h2>
         <label>Name</label>
         <input placeholder="Enter First Name" type="text" ng-model="userSecurity.firstName" ng-disabled="!editMode" class="{{!editMode ? 'edit-mode-off' : 'edit-mode-on'}}">
 
@@ -12,15 +16,68 @@
         <label>Username</label>
         <input placeholder="Enter Username" type="text" ng-model="userSecurity.username" ng-disabled="!editMode" class="{{!editMode ? 'edit-mode-off' : 'edit-mode-on'}}">
 
-        <label>Email</label>
-        <input placeholder="Enter Email" type="text" ng-model="userSecurity.email" ng-disabled="!editMode" class="{{!editMode ? 'edit-mode-off' : 'edit-mode-on'}}">
+       
 
-        <label>Password</label>
-        <input placeholder="Enter Password" type="text" ng-model="userSecurity.password" ng-disabled="!editMode" class="{{!editMode ? 'edit-mode-off' : 'edit-mode-on'}}">
+       
+        <div class="error-message" ng-show="usernameError">Username Already Exists</div>
 
         <div class="button-group">
+          
           <button style="margin-right: 10px;" ng-click="updateSecurity()"><i class="{{!editMode ? 'fa-solid fa-pencil' : 'fa-solid fa-check'}}" style="margin-right: 10px;"></i><strong>{{!editMode ? 'Edit Account' : 'Save Changes'}}</strong></button>  
           <button ng-click="deleteAccount()"><i class="fa-solid fa-user-large-slash" style="margin-right: 10px;"></i><strong>Delete Account</strong></button>  
         </div>
       </form>
+</div>
+
+
+<div class="password-form">
+  <form>
+    <h2> <i style="padding-right: 15px;"  class="fa-solid fa-key"></i>Change Password</h2>
+  <div class="error-message" ng-show="presentPasswordError">Incorrect present password</div>
+  <label>Confirm Present Password</label>
+  <div class="input">
+    <input placeholder="Enter Present Password" type="{{ typePresentPassword ? 'text' : 'password'}}" ng-model="userSecurity.presentPassword" ng-disabled="!editPassMode" class="{{!editPassMode ? 'editPass-mode-off' : 'editPass-mode-on'}}">
+    <div class="eye-button" ng-click="togglePresentPassword()">
+      <i style="padding-top: 5px;"
+        class="{{typePresentPassword ? 'fa-solid fa-eye ' : 'fa-solid fa-eye-slash'}}"
+        ng-show="editPassMode"
+      ></i>
+    </div>
+</div>
+  <div class="error-message" ng-show="newIsOld">This is your current password</div>
+
+  <div class="error-message" ng-show="passwordsDoNotMatch">Passwords don't match</div>
+  <label>New Password</label>
+
+  <div class="input">
+    <input placeholder="Enter New Password" type="{{ typeNewPassword ? 'text' : 'password'}}" ng-model="userSecurity.password" ng-disabled="!editPassMode" class="{{!editPassMode ? 'editPass-mode-off' : 'editPass-mode-on'}}">
+    <div class="eye-button" ng-click="toggleNewPassword()">
+      <i style="padding-top: 5px;"
+        class="{{typeNewPassword ? 'fa-solid fa-eye ' : 'fa-solid fa-eye-slash'}}"
+        ng-show="editPassMode"
+
+      ></i>
+    </div>
+  </div>
+
+  <label>Confirm New Password</label>
+  <div class="input">
+     <input placeholder="Enter New Password"  type="{{ typeConfirmPassword ? 'text' : 'password'}}" ng-model="userSecurity.passwordConfirmation" ng-disabled="!editPassMode" class="{{!editPassMode ? 'editPass-mode-off' : 'editPass-mode-on'}}">
+     <div class="eye-button" ng-click="toggleConfirmPassword()">
+      <i style="padding-top: 5px;"
+        class="{{typeConfirmPassword ? 'fa-solid fa-eye ' : 'fa-solid fa-eye-slash'}}"
+        ng-show="editPassMode"
+
+      ></i>
+    </div>
+  </div>
+     <div class="button-group">
+    <button ng-click="updatePassword()">
+        <i class="{{!editPassMode ? 'fa-solid fa-pencil' : 'fa-solid fa-check'}}" style="margin-right: 10px;"></i>
+        <strong>{{!editPassMode ? 'Change Password' : 'Save Changes'}}</strong>
+    </button>
+    <button style="margin-left: 10px;" ng-show="editPassMode" ng-click="toggleEditPassMode()"><i class="fa-solid fa-xmark"  style="margin-right: 10px;"></i><strong>Cancel</strong></button>
+</div>  
+  </form>
+</div>
 </div>

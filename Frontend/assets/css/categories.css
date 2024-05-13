@@ -8,6 +8,7 @@
 
 .table-wrap {
     border-radius: 5px; /* Adjust the value to your preference */
+    width: 80%;
     overflow: hidden;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
@@ -60,25 +61,29 @@
     margin: 0;
 }
 
-table{
+table {
     font-family: 'Lato';
     border-collapse: collapse;
     border-radius: 8px;
+    width: 100%; /* Table takes full width of its container */
+}
+
+td,
+th {
+    padding: 10px 20px; /* Increase padding for better spacing */
+    font-size: 30px; /* Increase font size for better readability */
 
 }
 
-td, th {
-    padding: 5px 20px 0 5px;
-}
 
-td {
-    padding: 5px;
-}
+
 
 th {
     background-color: #BA0C2F;
+    color: white;
     text-align: start;
-    padding-bottom: 5px;
+    padding-bottom: 10px; /* Increase bottom padding */
+
 }
 
 tr:hover{
@@ -87,7 +92,10 @@ tr:hover{
 
 tr {
     border-radius: 8px;
+    
 }
+
+
 
 .table-icon {
     background-color: #BA0C2F;
@@ -96,7 +104,7 @@ tr {
     cursor: pointer;
     padding: 7px;
     margin-right: 5px;
-    font-size: 14px;
+    font-size: 25px;
 }
 
 .nameAndtypeDisabled{

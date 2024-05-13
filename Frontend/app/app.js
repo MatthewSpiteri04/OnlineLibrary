@@ -715,7 +715,7 @@ OnlineLibrary.service('homeService', function($http) {
 
   }]);
 
-  OnlineLibrary.controller('myInfo-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
+  OnlineLibrary.controller('myInfo-controller', ['$scope', '$http', 'userService', '$uibModal', function($scope, $http, userService, $uibModal){
     $scope.user = userService.getCurrentUser();
 
     $scope.$on('dataChanged', function(event, data) {
@@ -734,63 +734,195 @@ OnlineLibrary.service('homeService', function($http) {
         window.location.href = "#!/my-uploads"
     }
 
-    $scope.requestAcademicAccess = function() {
+    $scope.requestStudentAccess = function() {
         var currentUser = userService.getCurrentUser();
-        var userId = currentUser.id;
-        var email = "chriscalleja04@gmail.com";
-        var subject = "Request for Academic User Access";
-        var message = "New request to grant academic user access has been requested from user with ID: " + userId + " . Grant at your own discretion";
+        console.log(currentUser);
+        var request = {
+            userId: currentUser.id,
+            subject: "Request for Student Access from " + currentUser.firstName + " " + currentUser.lastName,
+            message: "New request to grant student access has been requested from user " + currentUser.firstName + " " + currentUser.lastName + " with ID " + currentUser.id + ". Grant at your own discretion\n"
+        };
 
-        // Send HTTP request to API to send the email
-        $http.post('https://localhost:44311/api/User/Send', { userId: userId, email: email, subject: subject, message: message })
-            .then(function(response) {
-                // Handle success
-                console.log("Email sent successfully.");
-            })
-            .catch(function(error) {
-                // Handle error
-                console.error("Error sending email:", error);
+        $http.post('https://localhost:44311/api/User/Send/Student', request)
+        .then(response =>{
+           
+                $uibModal.open({
+                    templateUrl: 'assets/elements/popup.html',
+                    controller: 'popup-controller',
+                    resolve: {
+                        title: function(){
+                            return "Success";
+                        },
+                        message: function(){
+                            return "Request has been sent successfully.";
+                        }
+                    }
+                }).result.then(function() { }, function(reason) {});
+            }).catch(error =>{
+           
+                $uibModal.open({
+                    templateUrl: 'assets/elements/popup.html',
+                    controller: 'popup-controller',
+                    resolve: {
+                        title: function(){
+                            return "Couldn't Send Request.";
+                        },
+                        message: function(){
+                            return "Please Contact System Administrator if issue persists.";
+                        }
+                    }
+                }).result.then(function() { }, function(reason) {
+                    location.reload();
+                });
             });
+            
+     
+                
+            
     };
-  }]);
+    $scope.requestLecturerAccess = function() {
+        var currentUser = userService.getCurrentUser();
+        var request = {
+            userId: currentUser.id,
+            subject: "Request for Lecturer Access from " + currentUser.firstName + " " + currentUser.lastName,
+            message: "New request to grant Lecturer access has been requested from user with ID: " + currentUser.id + ". Grant at your own discretion"
+        };
+    
+        $http.post('https://localhost:44311/api/User/Send/Lecturer', request)
+        .then(response =>{
+               
+            $uibModal.open({
+                templateUrl: 'assets/elements/popup.html',
+                controller: 'popup-controller',
+                resolve: {
+                    title: function(){
+                        return "Success";
+                    },
+                    message: function(){
+                        return "Request has been sent successfully.";
+                    }
+                }
+            }).result.then(function() { }, function(reason) {});
+        }).catch(error =>{
+       
+            $uibModal.open({
+                templateUrl: 'assets/elements/popup.html',
+                controller: 'popup-controller',
+                resolve: {
+                    title: function(){
+                        return "Error";
+                    },
+                    message: function(){
+                        return "Couldn't Send Request";
+                    }
+                }
+            }).result.then(function() { }, function(reason) {
+                location.reload();
+            });
+        });
+    };
+
+
+$scope.requestLibrarianAccess = function() {
+    var currentUser = userService.getCurrentUser();
+    var request = {
+        userId: currentUser.id,
+        subject: "Request for Librarian Access from " + currentUser.firstName + " " + currentUser.lastName,
+        message: "New request to grant Librarian access has been requested from user with ID: " + currentUser.id + ". Grant at your own discretion"
+    };
+
+    $http.post('https://localhost:44311/api/User/Send/Librarian', request)
+    .then(response =>{
+           
+        $uibModal.open({
+            templateUrl: 'assets/elements/popup.html',
+            controller: 'popup-controller',
+            resolve: {
+                title: function(){
+                    return "Success";
+                },
+                message: function(){
+                    return "Request has been sent successfully.";
+                }
+            }
+        }).result.then(function() { }, function(reason) {});
+    }).catch(error =>{
+   
+        $uibModal.open({
+            templateUrl: 'assets/elements/popup.html',
+            controller: 'popup-controller',
+            resolve: {
+                title: function(){
+                    return "Error";
+                },
+                message: function(){
+                    return "Couldn't Send Request";
+                }
+            }
+        }).result.then(function() { }, function(reason) {
+            location.reload();
+        });
+    });
+};
+}]);
 
   // USERS CONTROLLER
-  OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', function($scope, $http, userService){
+  OnlineLibrary.controller('users-controller', ['$scope', '$http', 'userService', function($scope, $http, userService) {
     $scope.currentUser = {};
-
-
-
-
+    $scope.showErrorMessage = false; // Initialize error message visibility to false
+  
     $scope.doesUserExist = function(loginForm) {
-        $scope.userFound = false;
-        $http.get('https://localhost:44311/api/User/Exists/'+ loginForm.login)
-            .then(response => {
-                $scope.login(response.data, loginForm);
-            })
-    };
-
+      $scope.userFound = false;
+      $http.get('https://localhost:44311/api/User/Exists/'+ loginForm.login)
+        .then(response => {
+          $scope.login(response.data, loginForm);
+        })
+    }
+   
+  
     $scope.login = function(userFound, loginForm) {
-        if (userFound) {
-            $http.post('https://localhost:44311/api/User/Login', {login: loginForm.login, password: loginForm.password})
-            .then(response => {
-                if (response.status == 200) {
-                    userService.setCurrentUser(response.data);
-                    $scope.currentUser = userService.getCurrentUser();
-                    userService.getCurrentUser($scope.currentUser);
-                    window.location.href = "#!/home";
-                }
-                else {
-                    console.log('NOT FOUND');
-                }
-                
-            });
-        }
-        else {
-            console.log('NOT FOUND');
-        };
+      if (userFound) {
+        $http.post('https://localhost:44311/api/User/Login', {login: loginForm.login, password: loginForm.password})
+          .then(response => {
+            if (response.status == 200) {
+              userService.setCurrentUser(response.data);
+              $scope.currentUser = userService.getCurrentUser();
+              userService.getCurrentUser($scope.currentUser);
+              window.location.href = "#!/home";
+            } else {
+              $scope.errorMessage = "Invalid password";
+              $scope.showErrorMessage = true;
+            }
+          })
+          .catch(error => {
+            console.error('Error occurred:', error);
+          });
+      } else {
+        $scope.errorMessage = "User not found";
+        $scope.showErrorMessage = true;
+      }
     };
+ 
+  
+    
 
     $scope.signUpUser = function(signUpForm) {
+        if (!signUpForm.firstName || !signUpForm.lastName || !signUpForm.email || !signUpForm.username || !signUpForm.password || !signUpForm.passwordConfirmation) {
+            $scope.errorMessage = "Please fill in all fields";
+            $scope.showErrorMessage = true;
+            return; 
+        }
+
+          function validateEmail(email) {
+            var re = /\S+@\S+\.\S+/;
+            return re.test(email);
+        }
+
+        if (!validateEmail(signUpForm.email)) {
+            $scope.errorMessage = "Invalid email format";
+            $scope.showErrorMessage = true;
+            return; 
+        }
         request = {
             firstName: signUpForm.firstName,
             lastName: signUpForm.lastName,
@@ -799,6 +931,8 @@ OnlineLibrary.service('homeService', function($http) {
             password: signUpForm.password,
             passwordConfirmation: signUpForm.passwordConfirmation
         }
+
+      
 
         if (request.password == request.passwordConfirmation) {
             $http.post('https://localhost:44311/api/User/Add', request)
@@ -809,13 +943,19 @@ OnlineLibrary.service('homeService', function($http) {
                     window.location.href = "#!/home";
                 }
                 else {
+                    $scope.errorMessage = "User Already Exists";
+                    $scope.showErrorMessage = true;
                     console.log('FAILED TO CREATE USER');
                 }
             });
         }
         else {
+            $scope.errorMessage = "Passwords Dont Match";
+            $scope.showErrorMessage = true;
             console.log("PASSWORDS DON'T MATCH");
         }
+      
+    
     };
 
    
@@ -836,6 +976,10 @@ OnlineLibrary.service('securityService', function($http) {
     this.updateAccountDetails = function(request) {
         return $http.put('https://localhost:44311/api/Update/UserInfo', request);
     };
+
+    this.updatePasswordDetails = function(request) {
+        return $http.put('https://localhost:44311/api/Update/UserPassword', request);
+    };
     
     this.deleteAccount = function(id) {
         return $http.delete('https://localhost:44311/api/Delete/User/' + id);
@@ -845,16 +989,48 @@ OnlineLibrary.service('securityService', function($http) {
     };
 }); 
 
-OnlineLibrary.controller('security-controller', ['$scope', 'userService', 'securityService', '$uibModal', function($scope, userService, securityService, $uibModal){
+OnlineLibrary.controller('security-controller', ['$http', '$scope', 'userService', 'securityService', '$uibModal', '$window', function($http, $scope, userService, securityService, $uibModal, $window){
     $scope.user = userService.getCurrentUser();
     $scope.editMode = false;
+    $scope.editPassMode = false;
+    $scope.usernameError = false;
+    $scope.toggleEditPassMode = function() {
+        $scope.editPassMode = !$scope.editPassMode;
+        
+        $scope.userSecurity.presentPassword = '';
+        $scope.userSecurity.password = '';
+        $scope.userSecurity.passwordConfirmation = '';
+        $scope.presentPasswordError = false;
+        $scope.passwordsDoNotMatch = false; 
+        $scope.newIsOld = false; 
+
+       
+    };
 
     $scope.$on('dataChanged', function(event, data) {
         $scope.user = data;
     });
+
+    $scope.togglePresentPassword = function() {
+        $scope.typePresentPassword = !$scope.typePresentPassword;
+        
+      };
+
+    $scope.toggleNewPassword = function() {
+    $scope.typeNewPassword = !$scope.typeNewPassword;
+    
+    };
+
+    $scope.toggleConfirmPassword = function() {
+        $scope.typeConfirmPassword = !$scope.typeConfirmPassword;
+       
+      };
+
+      
     
     if($scope.user != null) {
         $scope.userSecurity = angular.copy($scope.user);
+        $scope.userSecurity.password = "";
 
         $scope.updateSecurity = function(){
             if($scope.editMode == false)
@@ -862,24 +1038,108 @@ OnlineLibrary.controller('security-controller', ['$scope', 'userService', 'secur
                 $scope.editMode = true;
             }
             else 
-            {
-                $scope.editMode = false;
+            {  
+                if($scope.userSecurity.username == $scope.user.username){
+                    $scope.editMode = false;
+                    $scope.usernameError = false;
+
+                }else{
+                
+                $http.get('https://localhost:44311/api/User/Exists/' + $scope.userSecurity.username)
+                .then(response => {
+                    console.log(response.data)
+                    if (response.data) {
+                        $scope.usernameError = true;
+                        $scope.editMode = true; 
+                        
+                    } else {
+                        $scope.usernameError = false;
+                        $scope.editMode = false;
+
                 var request = {
                     id: $scope.user.id,
                     firstName: $scope.userSecurity.firstName,
                     lastName: $scope.userSecurity.lastName,
-                    username: $scope.userSecurity.username,
-                    email: $scope.userSecurity.email,
-                    password: $scope.userSecurity.password,
+                    username: $scope.userSecurity.username
+                    
                 };
 
-                securityService.updateAccountDetails(request)
-                .then(response => {
-                    userService.setCurrentUser(response.data);
-                });
-            }
-        };
 
+                
+                    securityService.updateAccountDetails(request)
+                        .then(response => {
+                            userService.setCurrentUser(response.data);
+                        });
+                    }
+                })
+               
+            }
+        }
+        };
+        
+
+                $scope.updatePassword = function(){
+                   
+
+                    if($scope.editPassMode == false)
+                        {
+                            $scope.editPassMode = true;
+                        }
+                        else 
+                        {
+                            $scope.editPassMode = false;
+                            
+                            var request = {
+                                id: $scope.user.id,
+                                presentPassword: $scope.userSecurity.presentPassword,
+                                password: $scope.userSecurity.password,
+                                passwordConfirmation: $scope.userSecurity.password
+                            };
+            
+                           
+            
+                           
+                        
+                    var passwordHash = CryptoJS.MD5(CryptoJS.enc.Utf8.parse(request.presentPassword)).toString(CryptoJS.enc.Hex);
+                    var passwordHashCaps = passwordHash.toUpperCase();
+                    console.log(passwordHashCaps);
+                
+                    if (passwordHashCaps != $scope.user.password || passwordHashCaps == null) {
+                        $scope.editPassMode = true;
+                        $scope.presentPasswordError = true;
+                    
+                    }else{
+                        $scope.presentPasswordError = false;
+
+                    if ($scope.userSecurity.password == $scope.userSecurity.passwordConfirmation) {
+                        $scope.passwordsDoNotMatch = false;
+                        var newpasswordHash = CryptoJS.MD5(CryptoJS.enc.Utf8.parse(request.password)).toString(CryptoJS.enc.Hex);
+                        var newpasswordHashCaps = newpasswordHash.toUpperCase();
+                        if (newpasswordHashCaps  == passwordHashCaps) {
+                            $scope.newIsOld = true;
+                            $scope.editPassMode = true;
+                        }else{
+                            $scope.newIsOld = false;
+                           
+
+                       
+                        securityService.updatePasswordDetails(request)
+                    .then(response => {
+                        userService.logout();
+                        window.location.href = "#!/login";
+
+                    });
+                    }
+                    }   
+                    else {
+                        $scope.newIsOld = false;
+                        $scope.editPassMode = true;
+                        $scope.passwordsDoNotMatch = true; 
+                    }
+
+            }
+        }
+        }
         $scope.deleteAccount = function(){
             $uibModal.open({
                 templateUrl: 'assets/elements/deleteUserModal.html',

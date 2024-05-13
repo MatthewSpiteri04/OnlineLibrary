@@ -5,15 +5,15 @@
       <form ng-submit="signUpUser(signUpForm)">
         <div class="row1">
           <div class="Left-Column">
-            <h2>First Name</h2>
+            <label>First Name</label>
             <input type="text" ng-model="signUpForm.firstName" />
             <br />
 
-            <h2>Email</h2>
+            <label>Email</label>
             <input type="text" ng-model="signUpForm.email" />
             <br />
 
-            <h2>Password</h2>
+            <label>Password</label>
             <div class="Password">
               <input
                 type="{{ typePassword ? 'text' : 'password'}}"
@@ -27,15 +27,15 @@
             </div>
           </div>
           <div class="Right-Column">
-            <h2>Last Name</h2>
+            <label>Last Name</label>
             <input type="text" ng-model="signUpForm.lastName" />
             <br />
 
-            <h2>Username</h2>
+            <label>Username</label>
             <input type="text" ng-model="signUpForm.username" />
             <br />
 
-            <h2>Confirm Password</h2>
+            <label>Confirm Password</label>
             <div class="Password-Confirmation">
               <input
                 type="{{ typeConfirmPassword ? 'text' : 'password'}}"
@@ -52,7 +52,10 @@
             </div>
           </div>
         </div>
+        <div class="error-message" ng-show="showErrorMessage">{{ errorMessage }}</div>
+
         <div class="row2">
+
           <button type="submit">Sign Up</button>
         </div>
       </form>
