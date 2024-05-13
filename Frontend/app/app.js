@@ -1627,7 +1627,7 @@ OnlineLibrary.service('categoryEditorService', function($http) {
 });
 
 
-OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categoryService', 'categoryEditorService',  '$uibModal', '$routeParams', function($scope, $http, categoryService, categoryEditorService, $uibModal, $routeParams){
+OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categoryService', 'categoryEditorService',  '$uibModal', '$routeParams', 'userService', function($scope, $http, categoryService, categoryEditorService, $uibModal, $routeParams, userService){
     $scope.categoryId = $routeParams.id;
     $scope.editMode = false;
 
@@ -1636,6 +1636,17 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
     $scope.attributeList = [];
 
     $scope.showList = false;
+
+    $scope.user = userService.getCurrentUser();
+    $scope.$on('dataChanged', function(event, data) {
+        $scope.user = data;
+    });
+
+    if(!$scope.user || ($scope.user && !$scope.user.Roles.includes('Manage Categories')))
+        {
+            console.log('dasdas');
+            window.location.href='#!/home'
+        }
 
     $scope.toggleShowList = function() {
         $scope.showList = !$scope.showList
@@ -1764,6 +1775,7 @@ OnlineLibrary.controller('categoryEditor-controller', ['$scope', '$http', 'categ
             $scope.editMode = false;
             $scope.inputFields = [];
             tempItem = null;
+            
             
             
             categoryEditorService.updateCategoryDetails(request)
