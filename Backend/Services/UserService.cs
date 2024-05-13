@@ -140,7 +140,7 @@ namespace Backend.Services
             string passwordHash = Convert.ToHexString(hashBytes);
 
 
-            query = "SELECT * FROM Users WHERE ([Username] = '" + loginData.Login + "' AND  [Password] = '" + passwordHash + "') OR ([Email] = '" + loginData.Login + "' AND  [Password] = '" + loginData.Password + "');";
+            query = "SELECT * FROM Users WHERE ([Username] = '" + loginData.Login + "' AND  [Password] = '" + passwordHash + "') OR ([Email] = '" + loginData.Login + "' AND  [Password] = '" + passwordHash + "');";
 
             SqlDataReader reader = executeQuery();
 
