@@ -6,16 +6,17 @@
         <div class="row1">
           <div class="Left-Column">
             <label>First Name</label>
-            <input type="text" ng-model="signUpForm.firstName" />
+            <input placeholder="Enter First Name" type="text" ng-model="signUpForm.firstName" />
             <br />
 
             <label>Email</label>
-            <input type="text" ng-model="signUpForm.email" />
+            <input placeholder="Enter Email" type="text" ng-model="signUpForm.email" />
             <br />
 
             <label>Password</label>
             <div class="Password">
               <input
+                placeholder="Enter Password"
                 type="{{ typePassword ? 'text' : 'password'}}"
                 ng-model="signUpForm.password"
               />
@@ -28,16 +29,17 @@
           </div>
           <div class="Right-Column">
             <label>Last Name</label>
-            <input type="text" ng-model="signUpForm.lastName" />
+            <input placeholder="Enter Last Name"type="text" ng-model="signUpForm.lastName" />
             <br />
 
             <label>Username</label>
-            <input type="text" ng-model="signUpForm.username" />
+            <input placeholder="Enter Username" type="text" ng-model="signUpForm.username" />
             <br />
 
             <label>Confirm Password</label>
             <div class="Password-Confirmation">
               <input
+                placeholder="Confirm Password"
                 type="{{ typeConfirmPassword ? 'text' : 'password'}}"
                 ng-model="signUpForm.passwordConfirmation"
               />
