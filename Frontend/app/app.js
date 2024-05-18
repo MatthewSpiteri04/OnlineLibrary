@@ -1055,43 +1055,59 @@ OnlineLibrary.controller('security-controller', ['$http', '$scope', 'userService
                 $scope.editMode = true;
             }
             else 
-            {  
-                if($scope.userSecurity.username == $scope.user.username){
-                    $scope.editMode = false;
-                    $scope.usernameError = false;
+            {                             
+                $scope.editMode = false;
 
-                }else{
-                
-                $http.get('https://localhost:44311/api/User/Exists/' + $scope.userSecurity.username)
-                .then(response => {
-                    if (response.data) {
-                        $scope.usernameError = true;
-                        $scope.editMode = true; 
-                        
-                    } else {
-                        $scope.usernameError = false;
-                        $scope.editMode = false;
-
-                var request = {
-                    id: $scope.user.id,
-                    firstName: $scope.userSecurity.firstName,
-                    lastName: $scope.userSecurity.lastName,
-                    username: $scope.userSecurity.username
-                    
-                };
+                        var request = {
+                            id: $scope.user.id,
+                            firstName: $scope.userSecurity.firstName,
+                            lastName: $scope.userSecurity.lastName,
+                            username: $scope.userSecurity.username
+                            
+                        };
 
 
                 
                     securityService.updateAccountDetails(request)
                         .then(response => {
-                            userService.setCurrentUser(response.data);
-                        });
-                    }
-                })
-               
+                            userService.setCurrentUser(response.data.result);
+                            return response
+                        }).then(function(response){
+                            $uibModal.open({
+                                templateUrl: 'assets/elements/popup.html',
+                                controller: 'popup-controller',
+                                resolve: {
+                                    title: function(){
+                                        return response.data.title;
+                                    },
+                                    message: function(){
+                                        return response.data.message;
+                                    }
+                                }
+                              }).result.then(function() {}, function(reason) {});
+                        }).catch(error => {      
+                                    
+                    
+                            $uibModal.open({
+                                templateUrl: 'assets/elements/popup.html',
+                                controller: 'popup-controller',
+                                resolve: {
+                                    title: function(){
+                                        return error.data.title;
+                                    },
+                                    message: function(){
+                                        return error.data.message;
+                                    }
+                                }
+                            }).result.then(function() {
+                                
+                            }, function(reason) {
+                                location.reload();
+                            });
+                        });        
+            
             }
         }
-        };
         
 
                 $scope.updatePassword = function(){
@@ -1116,7 +1132,7 @@ OnlineLibrary.controller('security-controller', ['$http', '$scope', 'userService
             
                            
                         
-                    var passwordHash = CryptoJS.MD5(CryptoJS.enc.Utf8.parse(request.presentPassword)).toString(CryptoJS.enc.Hex);
+                    var passwordHash = CryptoJS.MD5(CryptoJS.enc.Utf8.parse(request.presentPassword + $scope.user.salt)).toString(CryptoJS.enc.Hex);
                     var passwordHashCaps = passwordHash.toUpperCase();
                 
                     if (passwordHashCaps != $scope.user.password || passwordHashCaps == null) {
@@ -1128,7 +1144,7 @@ OnlineLibrary.controller('security-controller', ['$http', '$scope', 'userService
 
                     if ($scope.userSecurity.password == $scope.userSecurity.passwordConfirmation) {
                         $scope.passwordsDoNotMatch = false;
-                        var newpasswordHash = CryptoJS.MD5(CryptoJS.enc.Utf8.parse(request.password)).toString(CryptoJS.enc.Hex);
+                        var newpasswordHash = CryptoJS.MD5(CryptoJS.enc.Utf8.parse(request.password + $scope.user.salt)).toString(CryptoJS.enc.Hex);
                         var newpasswordHashCaps = newpasswordHash.toUpperCase();
                         if (newpasswordHashCaps  == passwordHashCaps) {
                             $scope.newIsOld = true;

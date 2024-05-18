@@ -18,7 +18,7 @@ namespace Backend.Services
 
         }
 
-        public  List<string> getRolePrivileges(int id)
+        public List<string> getRolePrivileges(int id)
         {
             List<string> user_permissions = new List<string>();
 
@@ -55,7 +55,7 @@ namespace Backend.Services
 
             while (reader.Read())
             {
-               flag = reader.GetInt32(0);
+                flag = reader.GetInt32(0);
             }
             reader.Close();
             conn.Close();
@@ -72,14 +72,17 @@ namespace Backend.Services
 
         public User createUser(User user)
         {
+            byte[] salt = GenerateSalt();
+
+            string saltString = Convert.ToHexString(salt);
+
+            string saltedPassword = user.Password + saltString;
             MD5 hasher = MD5.Create();
-            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(user.Password);
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(saltedPassword);
             byte[] hashBytes = hasher.ComputeHash(inputBytes);
 
-
-
             string passwordHash = Convert.ToHexString(hashBytes);
-            query = 
+            query =
                 @"DECLARE @Result AS INT = -1;
 
                 IF EXISTS (SELECT 1 FROM Users WHERE [Username] = '" + user.Username + @"' OR [Email] = '" + user.Username + @"')
@@ -91,8 +94,8 @@ namespace Backend.Services
 
                 IF @Result = 0
                 BEGIN
-                    INSERT INTO Users ([FirstName], [LastName], [Username], [Email], [Password], [RoleId]) 
-                    VALUES ('" + user.FirstName + @"', '" + user.LastName + @"', '" + user.Username + @"', '" + user.Email + @"', '" + passwordHash + @"', 1);
+                    INSERT INTO Users ([FirstName], [LastName], [Username], [Email], [Password], [Salt], [RoleId]) 
+                    VALUES ('" + user.FirstName + @"', '" + user.LastName + @"', '" + user.Username + @"', '" + user.Email + @"', '" + passwordHash + @"', '" + saltString + @"',1);
                     SELECT CAST(SCOPE_IDENTITY() AS INT);
                 END
                 ELSE
@@ -108,7 +111,7 @@ namespace Backend.Services
             }
             reader.Close();
             conn.Close();
-            
+
             if (id > 0)
             {
                 query = "SELECT * FROM Users WHERE [Id] = " + id;
@@ -118,7 +121,7 @@ namespace Backend.Services
 
                 while (reader.Read())
                 {
-                    new_user = new User() { Id = reader.GetInt32(0), FirstName = reader.GetString(1), LastName = reader.GetString(2), Username = reader.GetString(3), Email = reader.GetString(4), Password = reader.GetString(5), RoleId = reader.GetInt32(6) };
+                    new_user = new User() { Id = reader.GetInt32(0), FirstName = reader.GetString(1), LastName = reader.GetString(2), Username = reader.GetString(3), Email = reader.GetString(4), Password = reader.GetString(5), Salt = reader.GetString(6), RoleId = reader.GetInt32(7) };
                 }
                 reader.Close();
                 conn.Close();
@@ -131,16 +134,25 @@ namespace Backend.Services
             }
         }
 
+        private byte[] GenerateSalt()
+        {
+            byte[] salt = new byte[16];
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(salt);
+            }
+            return salt;
+        }
+
         public User loginUser(LoginData loginData)
         {
-            MD5 hasher = MD5.Create();
-            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(loginData.Password);
-            byte[] hashBytes = hasher.ComputeHash(inputBytes);
-
-            string passwordHash = Convert.ToHexString(hashBytes);
 
 
-            query = "SELECT * FROM Users WHERE ([Username] = '" + loginData.Login + "' AND  [Password] = '" + passwordHash + "') OR ([Email] = '" + loginData.Login + "' AND  [Password] = '" + passwordHash + "');";
+
+
+
+
+            query = "SELECT * FROM Users WHERE ([Username] = '" + loginData.Login + "' OR [Email] = '" + loginData.Login + "');";
 
             SqlDataReader reader = executeQuery();
 
@@ -148,18 +160,35 @@ namespace Backend.Services
 
             while (reader.Read())
             {
-                user = new User() { Id = reader.GetInt32(0), FirstName = reader.GetString(1), LastName = reader.GetString(2), Username = reader.GetString(3), Email = reader.GetString(4), Password = reader.GetString(5), RoleId = reader.GetInt32(6) };
+                user = new User() { Id = reader.GetInt32(0), FirstName = reader.GetString(1), LastName = reader.GetString(2), Username = reader.GetString(3), Email = reader.GetString(4), Password = reader.GetString(5), Salt = reader.GetString(6), RoleId = reader.GetInt32(7) };
+
             }
             reader.Close();
             conn.Close();
 
             if (user.Id <= 0)
             {
-                return null ;
+                return null;
             }
+            string saltedPassword = loginData.Password + user.Salt;
+            MD5 hasher = MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(saltedPassword);
+            byte[] hashBytes = hasher.ComputeHash(inputBytes);
+            string inputPasswordHash = Convert.ToHexString(hashBytes);
 
-            return user;
+            if (inputPasswordHash.Equals(user.Password, StringComparison.OrdinalIgnoreCase))
+            {
+                
+                return user;
+            }
+        
+
+    
+    return null;
+            
+           
         }
+    
 
         public void UpdateToStudent(int userId)
         {

@@ -12,9 +12,16 @@ namespace Backend.Controllers
 
         [HttpPut]
         [Route("api/Update/UserInfo")]
-        public User UpdateLoginInfo([FromBody] UpdateRequest request)
+        public IActionResult UpdateLoginInfo([FromBody] UpdateRequest request)
         {
-            return _securityService.updateUserInfo(request);
+            if(_securityService.checkUniqueUser(request.Username, request.Id)){
+                return Ok(new { result = _securityService.updateUserInfo(request), title = "Success", message = "Your details have been updated successfully" });
+            }
+            else
+            {
+                return BadRequest(new { title = "Error", message = "This username is taken. Please try again" });
+            }
+           
 
         }
 
