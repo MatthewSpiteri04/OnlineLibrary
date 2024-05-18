@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Reflection.PortableExecutable;
 using System.Security.Cryptography;
+using System.Xml.Linq;
 
 
 namespace Backend.Services
@@ -17,6 +18,26 @@ namespace Backend.Services
 	{
         public SecurityService() : base()
         {
+
+        }
+
+        public bool checkUniqueUser(string username, int id)
+        {
+            bool bit = false;
+            query = @"SELECT CAST(
+					 CASE 
+					   WHEN EXISTS (SELECT 1 FROM Users WHERE [Username] = '" + username + @"' AND Id != " + id + @") THEN 0 
+					   ELSE 1 
+					 END AS BIT
+				   ) AS Result;";
+            SqlDataReader reader = executeQuery();
+            while (reader.Read())
+            {
+                bit = reader.GetBoolean(0);
+            }
+            reader.Close();
+            conn.Close();
+            return bit;
 
         }
         public User updateUserInfo(UpdateRequest request)
@@ -33,7 +54,7 @@ namespace Backend.Services
 
             while (reader.Read())
             {
-                user = new User() { Id = reader.GetInt32(0), FirstName = reader.GetString(1), LastName = reader.GetString(2), Username = reader.GetString(3), Email = reader.GetString(4), Password = reader.GetString(5), RoleId = reader.GetInt32(6) };
+                user = new User() { Id = reader.GetInt32(0), FirstName = reader.GetString(1), LastName = reader.GetString(2), Username = reader.GetString(3), Email = reader.GetString(4), Password = reader.GetString(5), Salt = reader.GetString(6), RoleId = reader.GetInt32(7) };
             }
             reader.Close();
             conn.Close();
@@ -45,15 +66,27 @@ namespace Backend.Services
 
             return user;
         }
+        private byte[] GenerateSalt()
+        {
+            byte[] salt = new byte[16];
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(salt);
+            }
+            return salt;
+        }
         public User updateUserPassword(UpdateRequest request)
         {
-            MD5 hasher = MD5.Create();
-            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(request.Password);
-            byte[] hashBytes = hasher.ComputeHash(inputBytes);
+            byte[] salt = GenerateSalt();
+            string saltString = Convert.ToHexString(salt);
 
+            MD5 hasher = MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(request.Password + saltString);
+            byte[] hashBytes = hasher.ComputeHash(inputBytes);
             string passwordHash = Convert.ToHexString(hashBytes);
             query = @"UPDATE Users
-                      SET [Password] = '" + passwordHash + @"'
+                      SET [Password] = '" + passwordHash + @"',
+                      [Salt] = '" + saltString + @"'
                       WHERE Users.Id =" + request.Id + @";
 
                       SELECT * FROM Users WHERE [Id] = " + request.Id;
@@ -64,7 +97,7 @@ namespace Backend.Services
 
             while (reader.Read())
             {
-                user = new User() { Id = reader.GetInt32(0), FirstName = reader.GetString(1), LastName = reader.GetString(2), Username = reader.GetString(3), Email = reader.GetString(4), Password = reader.GetString(5), RoleId = reader.GetInt32(6) };
+                user = new User() { Id = reader.GetInt32(0), FirstName = reader.GetString(1), LastName = reader.GetString(2), Username = reader.GetString(3), Email = reader.GetString(4), Password = reader.GetString(5), Salt = reader.GetString(6), RoleId = reader.GetInt32(7) };
             }
             reader.Close();
             conn.Close();
@@ -94,7 +127,7 @@ namespace Backend.Services
 
             while (reader.Read())
             {
-                user = new User() { Id = reader.GetInt32(0), FirstName = reader.GetString(1), LastName = reader.GetString(2), Username = reader.GetString(3), Email = reader.GetString(4), Password = reader.GetString(5), RoleId = reader.GetInt32(6) };
+                user = new User() { Id = reader.GetInt32(0), FirstName = reader.GetString(1), LastName = reader.GetString(2), Username = reader.GetString(3), Email = reader.GetString(4), Password = reader.GetString(5), Salt = reader.GetString(6), RoleId = reader.GetInt32(7) };
             }
             reader.Close();
             conn.Close();
