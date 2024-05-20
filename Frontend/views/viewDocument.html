@@ -49,9 +49,9 @@
 
 
             <div class="button-group">
-                <button style="margin-right: 10px;" ng-click="toggleEdit()" ><i class="{{!editMode ? 'fa-solid fa-pencil' : 'fa-solid fa-check'}}" ng-if="user.id == Document.document.userId" style="margin-right: 10px;"></i>{{!editMode ? 'Edit' : 'Save'}}</button>
-                <button style="margin-right: 10px;" ng-click="downloadItem(Document.document)"><i style="margin-right: 10px;" class="fa-solid fa-download"></i>Download</button>
-                <button ng-if="Document.document.author == user.firstName + ' ' + user.lastName || user.Roles.includes('Delete Documents')" ng-click="deleteItem()"><i style="margin-right: 10px;" class="fa-solid fa-trash"></i>Delete</button>
+                <button ng-if="user.id == Document.document.userId" style="margin-right: 10px;" ng-click="toggleEdit()" ><i class="{{!editMode ? 'fa-solid fa-pencil' : 'fa-solid fa-check'}}" style="margin-right: 10px;"></i>{{!editMode ? 'Edit' : 'Save'}}</button>
+                <button ng-style="{'margin-right': user.id == Document.document.userId ? '10px' : '0px'}" ng-click="downloadItem(Document.document)"><i style="margin-right: 10px;" class="fa-solid fa-download"></i>Download</button>
+                <button ng-if="Document.document.userId == user.id || user.Roles.includes('Delete Documents')" ng-click="deleteItem()"><i style="margin-right: 10px;" class="fa-solid fa-trash"></i>Delete</button>
             </div>
     </form>
 </div>

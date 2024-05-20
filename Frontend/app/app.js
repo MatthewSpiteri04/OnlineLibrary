@@ -891,6 +891,17 @@ $scope.requestLibrarianAccess = function() {
     $scope.showErrorMessage = false; // Initialize error message visibility to false
   
     $scope.doesUserExist = function(loginForm) {
+        if(!loginForm){
+            $scope.errorMessage = "Please fill in all fields";
+            $scope.showErrorMessage = true;
+            return; 
+        }
+        else if ((!loginForm.password || !loginForm.login) ) {
+            $scope.errorMessage = "Please fill in all fields";
+            $scope.showErrorMessage = true;
+            return; 
+        }
+
       $scope.userFound = false;
       $http.get('https://localhost:44311/api/User/Exists/'+ loginForm.login)
         .then(response => {
@@ -926,13 +937,18 @@ $scope.requestLibrarianAccess = function() {
     
 
     $scope.signUpUser = function(signUpForm) {
-        if (!signUpForm.firstName || !signUpForm.lastName || !signUpForm.email || !signUpForm.username || !signUpForm.password || !signUpForm.passwordConfirmation) {
+        if(!signUpForm){
+            $scope.errorMessage = "Please fill in all fields";
+            $scope.showErrorMessage = true;
+            return; 
+        }
+        else if ((!signUpForm.firstName || !signUpForm.lastName || !signUpForm.email || !signUpForm.username || !signUpForm.password || !signUpForm.passwordConfirmation) ) {
             $scope.errorMessage = "Please fill in all fields";
             $scope.showErrorMessage = true;
             return; 
         }
 
-          function validateEmail(email) {
+        function validateEmail(email) {
             var re = /\S+@\S+\.\S+/;
             return re.test(email);
         }
