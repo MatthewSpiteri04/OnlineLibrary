@@ -146,12 +146,6 @@ namespace Backend.Services
 
         public User loginUser(LoginData loginData)
         {
-
-
-
-
-
-
             query = "SELECT * FROM Users WHERE ([Username] = '" + loginData.Login + "' OR [Email] = '" + loginData.Login + "');";
 
             SqlDataReader reader = executeQuery();

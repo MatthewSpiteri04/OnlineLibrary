@@ -121,7 +121,7 @@ INSERT INTO AttributeTypes VALUES ('Number', 'number'), ('Text', 'text'), ('True
 
 
 
-INSERT INTO Users VALUES ('Anakin', 'Skywalker', 'dvader', 'matthewspiteri04@gmail.com', '80457CF3A7B15AFB8F491F8AE06680DB', 5);
+INSERT INTO Users VALUES ('Anakin', 'Skywalker', 'dvader', 'matthewspiteri04@gmail.com', '474D5123AF090F92F6D310F76B22624F ', 'E3A3C7D2B8571ACF1F3F5B7B6A2A9D44' 5);
 
 INSERT INTO HelpDetails VALUES ('What is the client portal and how do I use it', '1234'), ('How do I download resources', 'Test');
 
@@ -147,7 +147,6 @@ INSERT INTO CategoryAttributes VALUES (5,2), (5,3), (5,8), (5,9), (5,10), (5,11)
 INSERT INTO Categories VALUES (1, 'Audio Book');
 INSERT INTO CategoryAttributes VALUES (6,2), (6,3), (6,4), (6,5), (6,6), (6,7), (6,13);
 
-INSERT INTO Users VALUES ('Anakin', 'Skywalker', 'dvader', 'matthewspiteri04@gmail.com', '80457CF3A7B15AFB8F491F8AE06680DB', 5);
 
 INSERT INTO HelpDetails VALUES ('How do I Upload Documents', 'First Sign Up or go into the My Info Page. Under your details, scroll down and there are 3 buttons. One for Student Access, one for Lecturer Access, and another one for Librarian Access. Choose accordingly depending on your status. Once approved, you will have the ability to upload documents. There will be a section named upload on the sidebar to the left. Fill in the sections accordingly and press "Upload File"');
 INSERT INTO HelpDetails VALUES ('How do I Download Resources', 'In the home section search for your desired document. Press on the second button and the document will download.');
